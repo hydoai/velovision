@@ -41,7 +41,58 @@ def make_parser():
     parser.add_argument("--trt", dest="trt", default=False, action="store_true", help="Using tensorRT for testing")
     return parser
 
+class AvgTimer:
+    """
+    Simple timer to get average elapsed time.
+
+    Usage:
+
+    avgtimer = AvgTimer()
+
+    for frame in video:
+        avgtimer.start("preprocess")
+        preprocess()
+        avgtimer.end("preprocess")
+        .
+        .
+        .
+        print("Rolling average of preprocessing time: {avgtimer.rolling_avg("preprocess")}")
+    """
+    def __init__(self, rolling_length = 100):
+        self.in_progress = {}
+        self.elapsed_history = {}
+        self.rolling_length = rolling_length
+    def start(self, task_name):
+        self.in_progress.update({task_name: time.time()})
+    def end(self, task_name):
+        elapsed_time = time.time() - self.in_progress[task_name] 
+
+        if task_name in self.elapsed_history.keys():
+            prev_times = self.elapsed_history[task_name]
+            if len(prev_times) >= self.rolling_length:
+                prev_times = prev_times[1:]
+            prev_times.append(elapsed_time)
+            self.elapsed_history.update({task_name: prev_times})
+        else:
+            self.elapsed_history.update({task_name: [elapsed_time]})
+    def rolling_avg(self, task_name):
+        try:
+            rolling_times = self.elapsed_history[task_name]
+        except KeyError:
+            rolling_times = [-1]
+
+        rolling_sum = sum(self.elapsed_history[task_name])
+        length = len(self.elapsed_history[task_name])
+        rolling_avg = rolling_sum / length
+        return rolling_avg
+
+
+
+
 def imageflow(predictor, vis_folder, current_time, args):
+
+    # profiling
+    avg_timer = AvgTimer()
     
     sort_tracker = Sort()
 
@@ -72,14 +123,23 @@ def imageflow(predictor, vis_folder, current_time, args):
 
     rolling_sums = [] # frame time calculation
     while cap.isOpened():
-        t_loop_start = time.time()
+        avg_timer.start("frame")
         
+        avg_timer.start("read_video")
         ret_val, frame = cap.read()
-        #frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        avg_timer.end("read_video")
+        if args.mode == "camera":
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            # color conversion not required for video file input
 
         if ret_val:
+            avg_timer.start("YOLOX_inference")
             outputs, img_info = predictor.inference(frame)
-            result_frame = predictor.visual(outputs[0], img_info, predictor.confthre)
+            avg_timer.end("YOLOX_inference")
+
+            avg_timer.start("YOLOX_visual")
+            #result_frame = predictor.visual(outputs[0], img_info, predictor.confthre)
+            avg_timer.end("YOLOX_visual")
 
             # predictor outputs format: a 2d tensor where each row is:
             # [x1,y1,x2,y2, object-ness confidence, class confidence, predicted class index]
@@ -88,21 +148,20 @@ def imageflow(predictor, vis_folder, current_time, args):
             # [x1,y1,x2,y2,class confidence, predicted class index]
 
             # Convert Predictor outputs to SORT input
-            t_sort_preprocess = time.time()
 
             if outputs[0] is not None:
+                avg_timer.start("SORT_preprocess")
                 pred_box = outputs[0][:,:4].cpu().numpy()
                 class_conf = outputs[0][:,5:6].cpu().numpy()
                 class_ind = outputs[0][:,6:7].cpu().numpy()
                 track_input = np.hstack((pred_box, class_conf, class_ind))
-                t_sort_start = time.time()
+                avg_timer.end("SORT_preprocess")
+                avg_timer.start("SORT")
                 track_output = sort_tracker.update(track_input)
-                t_sort_end = time.time()
-
-
-                t_watchout_start = time.time()
+                avg_timer.end("SORT")
+                avg_timer.start("watchout")
                 watchout_output = watchout.step(track_output)
-                t_watchout_end = time.time()
+                avg_timer.end("watchout")
 
             if args.save_result:
                 vid_writer.write(result_frame)
@@ -111,14 +170,16 @@ def imageflow(predictor, vis_folder, current_time, args):
                 break
         else:
             break
-        t_loop_end = time.time()
-        rolling_sums.append(t_loop_end - t_loop_start)
-        rolling_avg = sum(rolling_sums) / len(rolling_sums)
+        avg_timer.end("frame")
+        logger.info(f"Rolling frame rate: {1/avg_timer.rolling_avg('frame')} FPS")
+        logger.info(f"Read video: {avg_timer.rolling_avg('read_video')}")
+        logger.info(f"YOLOX inference: {avg_timer.rolling_avg('YOLOX_inference')}")
+        #logger.info(f"YOLOX visual: {avg_timer.rolling_avg('YOLOX_visual')}")
 
-        if len(rolling_sums) == 100:
-            rolling_sums = rolling_sums[1:]
-            framerate = 1/rolling_avg
-            logger.info(f"Rolling frame rate: {framerate} FPS")
+        logger.info(f"SORT preprocess: {avg_timer.rolling_avg('SORT_preprocess')}")
+        logger.info(f"SORT: {avg_timer.rolling_avg('SORT')}")
+        logger.info(f"Watchout: {avg_timer.rolling_avg('watchout')}")
+        print('\n')
 def main(exp, args):
     args.experiment_name = exp.exp_name
 
