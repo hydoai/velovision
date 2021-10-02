@@ -13,6 +13,9 @@ from yolox.utils import fuse_model, get_model_info, postprocess, vis
 # Classes
 HYDO_CLASSES = ['bicycle', 'bus', 'car', 'cyclist', 'motorcycle', 'pedestrian', 'truck']
 
+# rolling average timer
+from avgtimer import AvgTimer
+
 # YOLOX predictor
 from yolox_inference import Predictor
 
@@ -40,53 +43,6 @@ def make_parser():
     parser.add_argument("--fuse", dest="fuse", default=False, action = "store_true", help="Fuse conv and bn for testing")
     parser.add_argument("--trt", dest="trt", default=False, action="store_true", help="Using tensorRT for testing")
     return parser
-
-class AvgTimer:
-    """
-    Simple timer to get average elapsed time.
-
-    Usage:
-
-    avgtimer = AvgTimer()
-
-    for frame in video:
-        avgtimer.start("preprocess")
-        preprocess()
-        avgtimer.end("preprocess")
-        .
-        .
-        .
-        print("Rolling average of preprocessing time: {avgtimer.rolling_avg("preprocess")}")
-    """
-    def __init__(self, rolling_length = 100):
-        self.in_progress = {}
-        self.elapsed_history = {}
-        self.rolling_length = rolling_length
-    def start(self, task_name):
-        self.in_progress.update({task_name: time.time()})
-    def end(self, task_name):
-        elapsed_time = time.time() - self.in_progress[task_name] 
-
-        if task_name in self.elapsed_history.keys():
-            prev_times = self.elapsed_history[task_name]
-            if len(prev_times) >= self.rolling_length:
-                prev_times = prev_times[1:]
-            prev_times.append(elapsed_time)
-            self.elapsed_history.update({task_name: prev_times})
-        else:
-            self.elapsed_history.update({task_name: [elapsed_time]})
-    def rolling_avg(self, task_name):
-        try:
-            rolling_times = self.elapsed_history[task_name]
-        except KeyError:
-            rolling_times = [-1]
-
-        rolling_sum = sum(self.elapsed_history[task_name])
-        length = len(self.elapsed_history[task_name])
-        rolling_avg = rolling_sum / length
-        return rolling_avg
-
-
 
 
 def imageflow(predictor, vis_folder, current_time, args):

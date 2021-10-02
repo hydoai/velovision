@@ -1,11 +1,14 @@
 import os
 import time
+from loguru import logger
 
 import cv2
 import torch
 
 from yolox.data.data_augment import ValTransform
 from yolox.utils import postprocess, vis
+
+from avgtimer import AvgTimer
 
 # Classes
 HYDO_CLASSES = ['bicycle', 'bus', 'car', 'cyclist', 'motorcycle', 'pedestrian', 'truck']
@@ -31,6 +34,8 @@ class Predictor():
         self.fp16 = fp16
         self.preproc = ValTransform(legacy=False)
 
+        self.avgtimer = AvgTimer()
+
         if trt_file is not None:
             from torch2trt import TRTModule
 
@@ -41,6 +46,7 @@ class Predictor():
             self.model(x)
             self.model = model_trt
     def inference(self, img):
+        self.avgtimer.start('model-preproc')
         img_info = {"id":0}
         if isinstance(img, str):
             img_info["file_name"] = os.path.basename(img)
@@ -61,15 +67,22 @@ class Predictor():
             img = img.cuda()
             if self.fp16:
                 img = img.half()
+        self.avgtimer.end('model-preproc')
+        logger.info(f"Model pre-processing: {self.avgtimer.rolling_avg('model-preproc')}")
         with torch.no_grad():
-            t0 = time.time()
+            self.avgtimer.start('model-only')
             outputs = self.model(img)
-            t1 = time.time()
+            self.avgtimer.end('model-only')
+
+            logger.info(f"Model only: {self.avgtimer.rolling_avg('model-only')}")
             
+            self.avgtimer.start('model-postproc')
             if self.decoder is not None: 
                 outputs = self.decoder(outputs, dtype=outputs.type())
             outputs = postprocess(
                     outputs, self.num_classes, self.confthre, self.nmsthre, class_agnostic=True)
+            self.avgtimer.end('model-postproc')
+            logger.info(f"Model postprocessing: {self.avgtimer.rolling_avg('model-postproc')}")
         return outputs, img_info
 
     def visual(self, output, img_info, cls_conf=0.35):
