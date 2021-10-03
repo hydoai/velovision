@@ -38,6 +38,7 @@ Average FPS: 13.5
 
 #### Planned (Hoped) Optimizations
 
++ DeepStream pipeline (https://paulbridger.com/posts/video-analytics-deepstream-pipeline/) -> Video saved directly to GPU memory, removing slow CPU-GPU transfer.
 + Use unified CPU-GPU memory (reduce transfer time): "In order to use Unified Memory you just need to replace malloc() calls with cudaMallocManaged()" (https://www.fastcompression.com/blog/jetson-zero-copy.htm)
 
 #### Completed Optimizations
