@@ -36,7 +36,11 @@ Average FPS: 13.5
 
 ### In progress
 
-#### Optimizations
+#### Planned (Hoped) Optimizations
+
++ Use unified CPU-GPU memory (reduce transfer time): "In order to use Unified Memory you just need to replace malloc() calls with cudaMallocManaged()" (https://www.fastcompression.com/blog/jetson-zero-copy.htm)
+
+#### Completed Optimizations
 
 + Line 161 in `data_augment.py: preproc()`: Switch cv2 resize interpolation from 'Linear' to 'Nearest' (save 1.5ms)
 
