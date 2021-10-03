@@ -16,7 +16,7 @@ python3 main.py video -f exps/nano-alpha.py --trt --path ~/maroz-gumuz.mp4
 
 Performance is measured on test video which is intentionally edited to have lots of objects and passing events.
 
-[Download benchmark video in Google Drive: '2021-10-03-passingcut.mp4'](https://drive.google.com/file/d/1Z5rp_d7r6JPkoP2mBSLsu9PbdELaxwt2/view?usp=sharing)
+Download benchmark video from [Google Drive: '2021-10-03-passingcut.mp4'](https://drive.google.com/file/d/1Z5rp_d7r6JPkoP2mBSLsu9PbdELaxwt2/view?usp=sharing)
 
 ### Initial pre-optimization
 + all-Python code
