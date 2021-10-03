@@ -44,7 +44,7 @@ Average FPS: 13.5
 
 + Line 161 in `data_augment.py: preproc()`: Switch cv2 resize interpolation from 'Linear' to 'Nearest' (save 1.5ms)
 
-### Real-time goal
+### Goal
 
 Step | Time (ms)
 --- | ---
