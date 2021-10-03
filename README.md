@@ -31,3 +31,18 @@ SORT | 13
 Watchout | 0.3
 
 Average FPS: 13.5 
+
+### Real-time goal
+
+Step | Time (ms)
+--- | ---
+Read video from one camera (or video file) | 3 (27)
+YOLOX pre-processing | 3 (3x faster)
+YOLOX model inference | 21
+YOLOX post-processing | 5 (3x faster)
+SORT pre-process | 2
+SORT | 4 (3x faster)
+Watchout | 0.3
+
+Average FPS: 25
+
