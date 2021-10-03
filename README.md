@@ -22,7 +22,7 @@ Performance is measured on test video which is intentionally edited to have lots
 
 Step | Time (ms)
 --- | ---
-Read video from one camera (or video file) | 3 (15)
+Read video from one camera (or video file) | 3 (27)
 YOLOX pre-processing | 10
 YOLOX model inference | 21
 YOLOX post-processing | 14
