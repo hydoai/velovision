@@ -40,7 +40,7 @@ class AvgTimer:
         except KeyError:
             rolling_times = [-1]
 
-        rolling_sum = sum(self.elapsed_history[task_name])
-        length = len(self.elapsed_history[task_name])
+        rolling_sum = sum(rolling_times)
+        length = len(rolling_times)
         rolling_avg = rolling_sum / length
         return rolling_avg

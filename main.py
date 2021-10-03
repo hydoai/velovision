@@ -55,8 +55,8 @@ def imageflow(predictor, vis_folder, current_time, args):
     # watchout parameters
     wo_names = HYDO_CLASSES
     wo_names_to_height_dict = {}
-    wo_width = 256
-    wo_height = 256
+    wo_width = 320 
+    wo_height = 320 
     watchout = Watchout(wo_names, wo_names_to_height_dict, wo_width, wo_height)
 
     cap = cv2.VideoCapture(args.path  if args.mode == "video" else args.camid)
@@ -84,18 +84,17 @@ def imageflow(predictor, vis_folder, current_time, args):
         avg_timer.start("read_video")
         ret_val, frame = cap.read()
         avg_timer.end("read_video")
-        if args.mode == "camera":
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            # color conversion not required for video file input
+        #frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
         if ret_val:
             avg_timer.start("YOLOX_inference")
             outputs, img_info = predictor.inference(frame)
             avg_timer.end("YOLOX_inference")
 
-            avg_timer.start("YOLOX_visual")
-            #result_frame = predictor.visual(outputs[0], img_info, predictor.confthre)
-            avg_timer.end("YOLOX_visual")
+            if args.save_result:
+                avg_timer.start("YOLOX_visual")
+                result_frame = predictor.visual(outputs[0], img_info, predictor.confthre)
+                avg_timer.end("YOLOX_visual")
 
             # predictor outputs format: a 2d tensor where each row is:
             # [x1,y1,x2,y2, object-ness confidence, class confidence, predicted class index]
