@@ -17,6 +17,8 @@ python3 main.py video -f exps/nano-alpha.py --trt --path ~/maroz-gumuz.mp4
 Performance is measured on test video which is intentionally edited to have lots of objects and passing events.
 
 ### Initial pre-optimization
++ all-Python code
++ `nano-alpha.py` model
 
 Step | Time (ms)
 --- | ---
