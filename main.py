@@ -3,12 +3,15 @@ import os
 import time
 from loguru import logger
 
+import copy
+
 import cv2
 import torch
 
-from yolox.data.data_augment import ValTransform
+#from yolox.data.data_augment import ValTransform
 from yolox.exp import get_exp
-from yolox.utils import fuse_model, get_model_info, postprocess, vis
+from yolox.utils import fuse_model, get_model_info
+#from yolox.utils import fuse_model, get_model_info, postprocess, vis
 
 # Classes
 HYDO_CLASSES = ['bicycle', 'bus', 'car', 'cyclist', 'motorcycle', 'pedestrian', 'truck']
@@ -46,6 +49,7 @@ def make_parser():
 
 
 def imageflow(predictor, vis_folder, current_time, args):
+    TWO_SOURCES = True
 
     # profiling
     avg_timer = AvgTimer()
@@ -74,6 +78,9 @@ def imageflow(predictor, vis_folder, current_time, args):
         
         logger.info(f"Video is saved to: {save_path}")
 
+        if TWO_SOURCES:
+            height *= 2
+        
         vid_writer = cv2.VideoWriter(
                 save_path, cv2.VideoWriter_fourcc(*"mp4v"), fps, (int(width), int(height)))
 
@@ -83,12 +90,16 @@ def imageflow(predictor, vis_folder, current_time, args):
         
         avg_timer.start("read_video")
         ret_val, frame = cap.read()
+
+        # TWO SOURCES simulation
+        frame2 = copy.deepcopy(frame)
+
         avg_timer.end("read_video")
         #frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
         if ret_val:
             avg_timer.start("YOLOX_inference")
-            outputs, img_info = predictor.inference(frame)
+            outputs, img_info = predictor.inference(frame, img2=frame2)
             avg_timer.end("YOLOX_inference")
 
             if args.save_result:

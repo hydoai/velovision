@@ -4,8 +4,13 @@ from loguru import logger
 
 import cv2
 import torch
+import numpy as np
 
-from yolox.data.data_augment import ValTransform
+#from yolox.data.data_augment import ValTransform
+# has been moved for development to
+from data_augment import ValTransform
+
+
 from yolox.utils import postprocess, vis
 
 from avgtimer import AvgTimer
@@ -45,7 +50,8 @@ class Predictor():
 
             self.model(x)
             self.model = model_trt
-    def inference(self, img):
+    def inference(self, img, img2 = None):
+        # assuming img2 has all the same characteristics as img
         self.avgtimer.start('model-preproc')
         img_info = {"id":0}
         if isinstance(img, str):
@@ -53,20 +59,43 @@ class Predictor():
             img = cv2.imread(img)
         else:
             img_info["file_name"] = None
+
         height, width = img.shape[:2]
         img_info["height"] = height
         img_info["width"] = width
-        img_info["raw_img"] = img
-        ratio = min(self.test_size[0] / img.shape[0], self.test_size[1] / img.shape[1])
+        if img2 is None:
+            img_info["raw_img"] = img
+        else:
+            img_info["raw_img"] = np.append(img, img2, axis=0)
+
+        if img2 is None:
+            ratio = min(self.test_size[0] / img.shape[0], self.test_size[1] / img.shape[1])
+        else:
+            ratio = self.test_size[0] / img.shape[0] / 2 # assuming horizontal images and same shape of the two imgs
         img_info["ratio"] = ratio
 
-        img, _ = self.preproc(img, None, self.test_size)
+        img, _ = self.preproc(img, img2, None, self.test_size)
         img = torch.from_numpy(img).unsqueeze(0)
+        self.avgtimer.start("pin-mem")
+        #img = img.pin_memory() # sometimes faster cpu-gpu transfer
+        self.avgtimer.end("pin-mem")
+        logger.info(f"Pin memory: {self.avgtimer.rolling_avg('pin-mem')}")
+
         img = img.float()
+
         if self.device == "gpu":
-            img = img.cuda()
+
+            self.avgtimer.start('cuda-copy')
+           # img = img.cuda()
+            # FASTER alternative to above: pinned non_blocking transfer
+            #torch.cuda.synchronize()
+            img = img.to(torch.device('cuda'), non_blocking=True) # 3ms
+            self.avgtimer.end('cuda-copy')
+            logger.info(f"CUDA copy: {self.avgtimer.rolling_avg('cuda-copy')}")
+
             if self.fp16:
                 img = img.half()
+
         self.avgtimer.end('model-preproc')
         logger.info(f"Model pre-processing: {self.avgtimer.rolling_avg('model-preproc')}")
         with torch.no_grad():
