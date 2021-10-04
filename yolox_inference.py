@@ -107,9 +107,15 @@ class Predictor():
             
             self.avgtimer.start('model-postproc')
             if self.decoder is not None: 
+                self.avgtimer.start('decoder')
                 outputs = self.decoder(outputs, dtype=outputs.type())
+                self.avgtimer.end('decoder')
+                logger.info(f"Decoder: {self.avgtimer.rolling_avg('decoder')}")
+            self.avgtimer.start('postprocess')
             outputs = postprocess(
                     outputs, self.num_classes, self.confthre, self.nmsthre, class_agnostic=True)
+            self.avgtimer.end('postprocess')
+            logger.info(f"postprocess: {self.avgtimer.rolling_avg('postprocess')}")
             self.avgtimer.end('model-postproc')
             logger.info(f"Model postprocessing: {self.avgtimer.rolling_avg('model-postproc')}")
         return outputs, img_info

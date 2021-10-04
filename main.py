@@ -49,7 +49,7 @@ def make_parser():
 
 
 def imageflow(predictor, vis_folder, current_time, args):
-    TWO_SOURCES = True # in development: simulating two sources (front and rear camera by duplicating source) 
+    TWO_SOURCES = False # in development: simulating two sources (front and rear camera by duplicating source) 
 
     # profiling
     avg_timer = AvgTimer()
@@ -193,6 +193,7 @@ def main(exp, args):
                 trt_file), "TensorRT model is not found!\n Run `python3 tools/trt.py` first!"
         model.head.decode_in_inference = False
         decoder = model.head.decode_outputs
+
         logger.info("Using TensorRT for inference")
     else:
         trt_file = None
