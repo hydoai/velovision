@@ -174,8 +174,7 @@ def preproc(img, img2, input_size, swap=(2, 0, 1)):
 
     #import IPython; IPython.embed()
     padded_img[: int(img.shape[0] * r), : int(img.shape[1] * r)] = resized_img
-    if img is not None:
-        padded_img[: int(img.shape[0] * r), : int(img.shape[1] * r)] = resized_img
+    if img2 is not None:
         padded_img[int(img.shape[0] * r): 2*int(img.shape[0] * r), : int(img.shape[1] * r)] = resized_img2
 
 

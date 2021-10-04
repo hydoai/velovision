@@ -49,7 +49,7 @@ def make_parser():
 
 
 def imageflow(predictor, vis_folder, current_time, args):
-    TWO_SOURCES = True
+    TWO_SOURCES = True # in development: simulating two sources (front and rear camera by duplicating source) 
 
     # profiling
     avg_timer = AvgTimer()
@@ -92,7 +92,10 @@ def imageflow(predictor, vis_folder, current_time, args):
         ret_val, frame = cap.read()
 
         # TWO SOURCES simulation
-        frame2 = copy.deepcopy(frame)
+        if TWO_SOURCES:
+            frame2 = copy.deepcopy(frame)
+        else:
+            frame2 =None
 
         avg_timer.end("read_video")
         #frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
