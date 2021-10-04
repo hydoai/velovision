@@ -8,7 +8,9 @@ Install YOLOX (see installation instructions from gi-YOLOX)
 
 ## Run Example
 
-Download example / benchmark video from [Google Drive: '2021-10-03-passingcut.mp4'](https://drive.google.com/file/d/1Z5rp_d7r6JPkoP2mBSLsu9PbdELaxwt2/view?usp=sharing)
+Download example / benchmark video from [Google Drive](https://drive.google.com/drive/folders/1e3EbNgNbieoMMaJbaPvsRraDk2AW9iou?usp=sharing)
++ `short-passing.mp4` is 14 seconds long, and used for the below benchmarks
++ `long-passing.mp4` is 2 min 34 seconds long and contains many examples of passing.
 
 ```bash
 python3 main.py video -f exps/nano-alpha.py --trt --path 2021-10-03-passingcut.mp4
