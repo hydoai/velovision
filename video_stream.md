@@ -97,8 +97,7 @@ Create a second virtual stream from `/dev/video2` to `/dev/video3`:
 ```bash
 gst-launch-1.0 v4l2src device=/dev/video2 ! v4l2sink device=/dev/video3
 ```
-
-## USB Camera
+Open `/dev/video3` with OpenCV in Python:
 ```python3
 import cv2
 import numpy as np
