@@ -45,7 +45,7 @@ Assuming USB camera is plugged into `/dev/video1`:
 
 Add two new virtual /dev/video* devices.
 ```bash
-sudo modprobe v4l2loopback devices=2
+sudo modprobe v4l2loopback devices=2 max_buffers=2
 ```
 
 See that new video/dev* devices have been created:
