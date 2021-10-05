@@ -39,11 +39,13 @@ List possible formats for `/dev/video0`:
 v4l2-ctl -d /dev/video0 --list-formats-ext
 ```
 
-## Run
+## Minimal Demo
 
-Add four new virtual /dev/video* devices.
+Assuming USB camera is plugged into `/dev/video1`:
+
+Add two new virtual /dev/video* devices.
 ```bash
-sudo modprobe v4l2loopback devices=4
+sudo modprobe v4l2loopback devices=2
 ```
 
 See that new video/dev* devices have been created:
@@ -51,5 +53,19 @@ See that new video/dev* devices have been created:
 ls /dev/video*
 ```
 
+Create two new virtual streams:
+```bash
+gst-launch-1.0 v4l2src device=/dev/video1 ! v4l2sink device=/dev/video2
+```
+```bash
+gst-launch-1.0 v4l2src device=/dev/video2 ! v4l2sink device=/dev/video3
+```
 
+View the two virtual streams:
+```bash
+gst-launch-1.0 v4l2src device=/dev/video2 ! xvimagesink
+```
 
+```bash
+gst-launch-1.0 v4l2src device=/dev/video3 ! xvimagesink
+```
