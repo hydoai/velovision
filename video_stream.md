@@ -173,7 +173,7 @@ gst-launch-1.0 nvarguscamerasrc sensor-id=0 ! 'video/x-raw(memory:NVMM), width=1
 
 **Start recording**:
 ```bash
-gst-launch-1.0 v4l2src device=/dev/video5 ! 'video/x-raw,width=1920, height=1080, framerate=30/1' ! nvvidconv ! 'video/x-raw(memory:NVMM),format=I420' ! nvv4l2h264enc maxperf-enable=1 bitrate=8000000 ! h264parse ! qtmux ! filesink location=/OUTPUT.mp4 -e
+gst-launch-1.0 v4l2src device=/dev/video4 ! 'video/x-raw,width=1920, height=1080, framerate=30/1' ! nvvidconv ! 'video/x-raw(memory:NVMM),format=I420' ! nvv4l2h264enc maxperf-enable=1 bitrate=8000000 ! h264parse ! qtmux ! filesink location=/OUTPUT.mp4 -e
 ```
 
 **Create second virtual stream for CSI**:
