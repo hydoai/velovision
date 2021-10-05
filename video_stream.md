@@ -97,6 +97,19 @@ Create a second virtual stream from `/dev/video2` to `/dev/video3`:
 ```bash
 gst-launch-1.0 v4l2src device=/dev/video2 ! v4l2sink device=/dev/video3
 ```
+
+**Start jetson-inference session**:
+Navigate to jetson-inference detectNet demo:
+```bash
+cd jetson-inference/aarch/build
+```
+Start detectNet demo with virtual stream as input:
+```bash
+./detectnet /dev/video3
+```
+Currently, this runs Mobilenet-SSD. It has terrible accuracy. Hope to use YOLOX nano.
+
+Alternative:
 Open `/dev/video3` with OpenCV in Python:
 ```python3
 import cv2
