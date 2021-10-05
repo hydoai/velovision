@@ -68,7 +68,7 @@ View first virtual stream:
 ```bash
 gst-launch-1.0 v4l2src device=/dev/video2 ! xvimagesink
 ```
-Save video from second virtual stream:
+Save video from second virtual stream: (note: very inefficient on Jetson Nano because no hardware acceleration)
 ```bash
 gst-launch-1.0 v4l2src device=/dev/video3 ! videoconvert ! x264enc ! mp4mux ! filesink location=/home/dwight/Videos/test-gst.mp4 -e
 ```
