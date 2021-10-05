@@ -70,3 +70,10 @@ Save video from second virtual stream:
 gst-launch-1.0 v4l2src device=/dev/video3 ! videoconvert ! x264enc ! mp4mux ! filesink location=/home/dwight/Videos/test-gst.mp4 -e
 ```
 + `-e` is important: It sends EOS message to the video file when process is exited. Without it, the video file will not play.
+
+## Raspberry Pi V2 CSI Camera + NVIDIA Accelerated Gstreamer
+
+### View camera
+```bash
+gst-launch-1.0 nvarguscamerasrc ! 'video/x-raw(memory:NVMM), width=1280, height=720, framerate=60/1, format=NV12' ! nvvidconv flip-method=0 ! 'video/x-raw, width=960, height=616' ! nvvidconv ! nvegltransform ! nveglglessink -e
+```
