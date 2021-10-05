@@ -119,7 +119,7 @@ while cap.isOpened():
 
 
 
-## Raspberry Pi V2 CSI Camera + NVIDIA Accelerated Gstreamer
+## Raspberry Pi V2 CSI Camera
 
 ### View camera
 ```bash
