@@ -109,7 +109,7 @@ Start detectNet demo with virtual stream as input:
 ```
 Currently, this runs Mobilenet-SSD. It has terrible accuracy. Hope to use YOLOX nano.
 
-Alternative:
+Alternative: (very slow, 10FPS on 30FPS stream)
 Open `/dev/video3` with OpenCV in Python:
 ```python3
 import cv2
