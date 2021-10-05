@@ -10,6 +10,9 @@ https://github.com/umlaeute/v4l2loopback/wiki
 ### NVIDIA Gstreamer plugin
 https://docs.nvidia.com/jetson/l4t/index.html#page/Tegra%20Linux%20Driver%20Package%20Development%20Guide/accelerated_gstreamer.html#wwpID0E0R40HA
 
+### How to run GStreamer in Python
+http://lifestyletransfer.com/how-to-launch-gstreamer-pipeline-in-python/
+
 ## Installation
 
 **Install V4L2loopback**
