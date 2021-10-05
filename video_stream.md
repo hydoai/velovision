@@ -76,6 +76,21 @@ gst-launch-1.0 v4l2src device=/dev/video3 ! videoconvert ! x264enc ! mp4mux ! fi
 
 # Camera-Specific Settings & Examples
 
+## USB Camera -> Virtual Stream -> Hardware Accelerated Video Encode (saving)
+
+Assuming USB camera input is at `/dev/video1`.
+
+Create a virtual stream at `/dev/video2`:
+
+```bash
+gst-launch-1.0 v4l2src device=/dev/video1 ! v4l2sink device=/dev/video2
+```
+
+Convert stream to NVIDIA hardware accceleration format and save to `OUTPUT.mp4`:
+```bash
+gst-launch-1.0 v4l2src device=/dev/video2 ! 'video/x-raw,width=1280, height=720, framerate=30/1' ! nvvidconv ! 'video/x-raw(memory:NVMM), format=I420' ! nvv4l2h264enc maxperf-enable=1 bitrate=8000000 ! h264parse ! qtmux ! filesink location=OUTPUT.mp4 -e
+```
+
 ## USB Camera
 ```python3
 import cv2
