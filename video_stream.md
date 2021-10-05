@@ -160,7 +160,22 @@ gst-launch-1.0 nvarguscamerasrc ! \
 
 ### Create virtual loopback stream from NVARGUSCAMSRC
 
-Very inefficient, near max CPU usage
 ```bash 
 gst-launch-1.0 nvarguscamerasrc sensor-id=0 ! 'video/x-raw(memory:NVMM), width=1920, height=1080, framerate=30/1' ! nvvidconv ! 'video/x-raw(memory:NVMM), width=1920, height=1080, framerate=30/1, format=I420' ! nvvidconv output-buffers=4 ! 'video/x-raw, width=1920, height=1080, framerate=30/1, format=UYVY' ! identity drop-allocation=true ! v4l2sink device=/dev/video1
 ```
+
+**Start recording**:
+```bash
+gst-launch-1.0 v4l2src device=/dev/video5 ! 'video/x-raw,width=1920, height=1080, framerate=30/1' ! nvvidconv ! 'video/x-raw(memory:NVMM),format=I420' ! nvv4l2h264enc maxperf-enable=1 bitrate=8000000 ! h264parse ! qtmux ! filesink location=/OUTPUT.mp4 -e
+```
+
+**Create second virtual stream for CSI**:
+```bash
+gst-launch-1.0 v4l2src device=/dev/video4 ! v4l2sink device=/dev/video5
+```
+
+**Run jetson-inference on virtual stream**:
+```bash
+./detectnet /dev/video5
+```
+
