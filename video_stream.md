@@ -71,6 +71,28 @@ gst-launch-1.0 v4l2src device=/dev/video3 ! videoconvert ! x264enc ! mp4mux ! fi
 ```
 + `-e` is important: It sends EOS message to the video file when process is exited. Without it, the video file will not play.
 
+# Camera-Specific Settings & Examples
+
+## USB Camera
+```python3
+import cv2
+import numpy as np
+
+cap = cv2.VideoCapture(1,cv2.CAP_V4L)
+cap.set(6, cv2.VideoWriter_fourcc(*"MJPG"))
+cap.set(3, 1280)
+cap.set(4, 720)
+cap.set(5, 30)
+print(cap)
+print(cap.isOpened())
+while cap.isOpened():
+    _, frame = cap.read()
+    print(cap.get(5))
+    print(frame.shape)
+```
+
+
+
 ## Raspberry Pi V2 CSI Camera + NVIDIA Accelerated Gstreamer
 
 ### View camera
