@@ -76,6 +76,13 @@ gst-launch-1.0 v4l2src device=/dev/video3 ! videoconvert ! x264enc ! mp4mux ! fi
 
 # Camera-Specific Settings & Examples
 
++ `/dev/video0`: Raspberry Pi V2 CSI camera
++ `/dev/video1`: USB camera
++ (virtual) `/dev/video2`: USB camera saved to mp4 file
++ (virtual) `/dev/video3`: USB camera into jetson inference
++ (virtual) `/dev/video4`: CSI camera saved to mp4 file
++ (virtual) `/dev/video5`: CSI camera into jetson inference
+
 ## USB Camera -> 1st Virtual Stream -> Hardware Accelerated Video Encode (saving)
 
 Assuming USB camera input is at `/dev/video1`.
