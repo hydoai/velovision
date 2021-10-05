@@ -103,7 +103,9 @@ gst-launch-1.0 v4l2src device=/dev/video2 ! v4l2sink device=/dev/video3
 import cv2
 import numpy as np
 
-cap = cv2.VideoCapture(1,cv2.CAP_V4L)
+CAM_INDEX = 3
+
+cap = cv2.VideoCapture(CAM_INDEX,cv2.CAP_V4L)
 cap.set(6, cv2.VideoWriter_fourcc(*"MJPG"))
 cap.set(3, 1280)
 cap.set(4, 720)
