@@ -101,7 +101,7 @@ gst-launch-1.0 nvarguscamerasrc ! 'video/x-raw(memory:NVMM), width=1280, height=
 ```
 ### Save video from camera (selected ones from NVIDIA Docs](https://docs.nvidia.com/jetson/l4t/index.html#page/Tegra%20Linux%20Driver%20Package%20Development%20Guide/accelerated_gstreamer.html#wwpID0E0R40HA))
 
-**H.264:**
+**H.264:** (efficient hardware acceleration)
 ```bash
 gst-launch-1.0 nvarguscamerasrc ! \
   'video/x-raw(memory:NVMM), width=(int)1920, height=(int)1080, \
@@ -110,7 +110,7 @@ gst-launch-1.0 nvarguscamerasrc ! \
   location=<filename_h264.mp4> -e
   ```
 
-**H.265**:
+**H.265**: (efficient hardware acceleration)
 ```bash
 gst-launch-1.0 nvarguscamerasrc ! \
   'video/x-raw(memory:NVMM), width=(int)1920, height=(int)1080, \
@@ -120,6 +120,8 @@ gst-launch-1.0 nvarguscamerasrc ! \
   ```
 
 ### Create virtual loopback stream from NVARGUSCAMSRC
-```bash
+
+Very inefficient, near max CPU usage
+```bash 
 gst-launch-1.0 nvarguscamerasrc sensor-id=0 ! 'video/x-raw(memory:NVMM), width=1920, height=1080, framerate=30/1' ! nvvidconv ! 'video/x-raw(memory:NVMM), width=1920, height=1080, framerate=30/1, format=I420' ! nvvidconv output-buffers=4 ! 'video/x-raw, width=1920, height=1080, framerate=30/1, format=UYVY' ! identity drop-allocation=true ! v4l2sink device=/dev/video1
 ```
