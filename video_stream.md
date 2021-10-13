@@ -176,6 +176,14 @@ gst-launch-1.0 nvarguscamerasrc sensor-id=0 ! 'video/x-raw(memory:NVMM), width=1
 gst-launch-1.0 v4l2src device=/dev/video4 ! 'video/x-raw,width=1920, height=1080, framerate=30/1' ! nvvidconv ! 'video/x-raw(memory:NVMM),format=I420' ! nvv4l2h264enc maxperf-enable=1 bitrate=8000000 ! h264parse ! qtmux ! filesink location=/OUTPUT.mp4 -e
 ```
 
+(**End recording safely**):
+For the output file to be readable, 'EOS' has to be written at the very end of the file.
+When running the above pipeline, a SIGINT (ctrl-c) signal will safely stop the recording and write the EOS byte.
+Here is a script to find all recording scripts and stop them:
+```bash
+pkill -e --signal SIGINT gst-launch-1.0
+```
+
 **Create second virtual stream for CSI**:
 ```bash
 gst-launch-1.0 v4l2src device=/dev/video4 ! v4l2sink device=/dev/video5
