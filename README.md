@@ -1,6 +1,22 @@
 # gi-edge
 Top level repo for computer vision running on Jetson Nano edge device
 
+## Repository Schematic
+
+```
+┌─────────────────┐   ┌──────────────────────────┐
+│Sensing Interface│   │ User Interface (UI) Input│
+└───────────────┬─┘   └───┬──────────────────────┘
+                │         │
+              ┌─▼─────────▼───┐
+              │Computer Vision│
+              └─┬─────────┬───┘
+                │         │
+┌───────────────▼──┐   ┌──▼───────────────────────┐
+│Feedback Interface│   │User Interface (UI) Output│
+└──────────────────┘   └──────────────────────────┘
+```
+
 ## Installation 
 See `codename-gimondi/gi-dev-setup` for Jetson Nano setup instructions.
 
