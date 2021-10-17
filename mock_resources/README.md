@@ -1,9 +1,12 @@
+# Mock Resources
+Videos and testing-specific scripts
 
 ## Run Mock Video Example
 
 Download example / benchmark video from [Google Drive](https://drive.google.com/drive/folders/1e3EbNgNbieoMMaJbaPvsRraDk2AW9iou?usp=sharing)
 + `short-passing.mp4` is 14 seconds long, and used for the below benchmarks
-+ `long-passing.mp4` is 2 min 34 seconds long and contains many examples of passing.
++ `long-passing.mp4` is 2 min 34 seconds long and contains many examples of passing other people.
++ `long-being-overtaken.mp4` is 3 min 52 seconds long. The first few are simple examples, and latter ones are more complex (some contain no actual overtakes).
 
 ```bash
 python3 main.py video -f exps/nano-alpha.py --trt --path 2021-10-03-passingcut.mp4
