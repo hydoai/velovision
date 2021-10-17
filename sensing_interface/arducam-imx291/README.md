@@ -6,6 +6,17 @@ Official website: [link](https://www.arducam.com/product/arducam-1080p-low-light
 
 ## Minimal Use
 
+Show list of connected devices (cameras)
+```bash
+ls /dev/video*
+```
+
+Figure out what formats are supported for a given camera (example uses /dev/video1)
+```bash
+sudo apt install v4l-utils
+v4l2-ctl -d /dev/video1 --list-formats-ext
+```
+See camera stream in a window
 ```bash
 gst-launch-1.0 device=/dev/video1 ! xvimagesink
 ```
@@ -14,4 +25,18 @@ gst-launch-1.0 device=/dev/video1 ! xvimagesink
 
 + Add NVIDIA hardware accelerated MJPEG decoding
 
+
+### NVIDIA-only pipeline
+
+Read image frames into GPU memory and display it from there. The stream is displayed as full screen window.
+```bash
+gst-launch-1.0 v4l2src device=/dev/video2 io-mode=2 ! image/jpeg, width=1280, height=720, framerate=30/1, format=MJPG ! nvjpegdec ! video/x-raw ! nvvidconv ! 'video/x-raw(memory:NVMM), width=1280, height=720' ! nvoverlaysink
+```
+
+### Hardware Accelerated, but Universal output pipeline
+
+Similar to above, but converts the stream into a more common, universal format.
+```bash
+gst-launch-1.0 v4l2src device=/dev/video2 io-mode=2 ! image/jpeg, width=1280, height=720, framerate=30/1, format=MJPG ! nvjpegdec ! video/x-raw ! videoconvert ! xvimagesink
+```
 
