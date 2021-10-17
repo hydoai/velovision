@@ -16,6 +16,11 @@ Top level repo for computer vision running on Jetson Nano edge device
 │Feedback Interface│   │User Interface (UI) Output│
 └──────────────────┘   └──────────────────────────┘
 ```
++ [Sensing Interface](sensing_interface): Camera info, gstreamer pipeline setup
++ [UI Input](ui_input): Buttons and switches for user input
++ [Computer Vision](computer_vision): Vision neural network + postprocessing 
++ [Feedback Interface](feedback_interface): Speaker (warning sounds) interfacing
++ [UI Output](ui_output): Display output interfacing
 
 ## Installation 
 See `codename-gimondi/gi-dev-setup` for Jetson Nano setup instructions.
