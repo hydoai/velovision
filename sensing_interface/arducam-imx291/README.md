@@ -30,13 +30,18 @@ gst-launch-1.0 device=/dev/video1 ! xvimagesink
 
 Read image frames into GPU memory and display it from there. The stream is displayed as full screen window.
 ```bash
-gst-launch-1.0 v4l2src device=/dev/video2 io-mode=2 ! image/jpeg, width=1280, height=720, framerate=30/1, format=MJPG ! nvjpegdec ! video/x-raw ! nvvidconv ! 'video/x-raw(memory:NVMM), width=1280, height=720' ! nvoverlaysink
+gst-launch-1.0 v4l2src device=/dev/video1 io-mode=2 ! image/jpeg, width=1280, height=720, framerate=30/1, format=MJPG ! nvjpegdec ! video/x-raw ! nvvidconv ! 'video/x-raw(memory:NVMM), width=1280, height=720' ! nvoverlaysink
 ```
 
 ### Hardware Accelerated, but Universal output pipeline
 
 Similar to above, but converts the stream into a more common, universal format.
 ```bash
-gst-launch-1.0 v4l2src device=/dev/video2 io-mode=2 ! image/jpeg, width=1280, height=720, framerate=30/1, format=MJPG ! nvjpegdec ! video/x-raw ! videoconvert ! xvimagesink
+gst-launch-1.0 v4l2src device=/dev/video1 io-mode=2 ! image/jpeg, width=1280, height=720, framerate=30/1, format=MJPG ! nvjpegdec ! video/x-raw ! videoconvert ! xvimagesink
 ```
 
+Open up `jtop` to see that under [HW engines], NVJPG is on.
+```bash
+sudo -H pip install -U jetson-stats # installation
+jtop
+```
