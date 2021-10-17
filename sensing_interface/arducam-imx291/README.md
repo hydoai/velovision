@@ -13,7 +13,7 @@ ls /dev/video*
 
 Figure out what formats are supported for a given camera (example uses /dev/video1)
 ```bash
-sudo apt install v4l-utils
+sudo apt install v4l-utils # installation
 v4l2-ctl -d /dev/video1 --list-formats-ext
 ```
 See camera stream in a window
