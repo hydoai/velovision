@@ -4,24 +4,40 @@ Top level repo for computer vision running on Jetson Nano edge device
 ## Repository Schematic
 
 ```
-┌─────────────────┐   ┌──────────────────────────┐
-│Sensing Interface│   │ User Interface (UI) Input│
-└───────────────┬─┘   └───┬──────────────────────┘
-                │         │
-              ┌─▼─────────▼───┐
-              │Computer Vision│
-              └─┬─────────┬───┘
-                │         │
-┌───────────────▼──┐   ┌──▼───────────────────────┐
-│Feedback Interface│   │User Interface (UI) Output│
-└──────────────────┘   └──────────────────────────┘
+┌───────────────────┐
+│Jetson Installation│
+└───────────────────┘
+
+┌─────────────────────────────────────────────────────┐
+│Live Session Code                                    │
+│ ┌─────────────────┐   ┌──────────────────────────┐  │
+│ │Sensing Interface│   │ User Interface (UI) Input│  │
+│ └───────────────┬─┘   └───┬──────────────────────┘  │
+│                 │         │                         │
+│               ┌─▼─────────▼───┐                     │
+│               │Computer Vision│                     │
+│               └─┬─────────┬───┘                     │
+│                 │         │                         │
+│ ┌───────────────▼──┐   ┌──▼───────────────────────┐ │
+│ │Feedback Interface│   │User Interface (UI) Output│ │
+│ └──────────────────┘   └──────────────────────────┘ │
+│                                                     │
+└─────────────────────────────────────────────────────┘
+
+┌────────────────┐
+│Blackbox Access │
+└────────────────┘
 ```
++ [Jetson Installation](jetson_installation): Installing required packages
+
+**Live Session Code**: Code that runs when Hydo is on and active.
 + [Sensing Interface](sensing_interface): Camera info, gstreamer pipeline setup
 + [UI Input](ui_input): Buttons and switches for user input
 + [Computer Vision](computer_vision): Vision neural network + postprocessing 
 + [Feedback Interface](feedback_interface): Speaker (warning sounds) interfacing
 + [UI Output](ui_output): Display output interfacing
 
++ [Blackbox Access](blackbox_access): When you plug in the Jetson to a computer, it registers as a USB drive containing the recorded videos.
 ## Installation 
 See `codename-gimondi/gi-dev-setup` for Jetson Nano setup instructions.
 
