@@ -5,4 +5,10 @@
 Simple one button switch electrical diagram and sample code:
 ![](jetson-gpio-basic.png)
 
-Applied code: shutdown all gstreamer streams (sending EOS to video recording, thereby making the files complete): [safe_shutdown.py](safe_shutdown.py). This shut
+## Safe Shutdown Button [safe_shutdown.py](safe_shutdown.py)
++ Runs in background
++ Polls button 
++ If button is pressed
+  + Find and send SIGINT to gstreamer pipelines
+  + Which gracefully ends recording streams (sends EOS)
+  + Initiate system shutdown
