@@ -32,6 +32,7 @@ Created with [asciiflow](https://asciiflow.com)
 + [Mock Resources](mock_resources): Mock videos, etc. for desktop development and testing
 
 **Live Session Code**: Code that runs when Hydo is on and active.
+
 + [Sensing Interface](sensing_interface): Camera info, gstreamer pipeline setup
 + [UI Input](ui_input): Buttons and switches for user input
 + [Computer Vision](computer_vision): Vision neural network + postprocessing 
