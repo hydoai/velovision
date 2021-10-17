@@ -1,4 +1,4 @@
-## Installation 
+# Installation 
 See `codename-gimondi/gi-dev-setup` for Jetson Nano setup instructions.
 
 Clone this repository with submodules:
