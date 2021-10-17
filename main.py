@@ -63,7 +63,11 @@ def imageflow(predictor, vis_folder, current_time, args):
     wo_height = 320 
     watchout = Watchout(wo_names, wo_names_to_height_dict, wo_width, wo_height)
 
-    cap = cv2.VideoCapture(args.path  if args.mode == "video" else args.camid)
+    if args.mode=="video":
+        cap = cv2.VideoCapture(args.path)
+    else:
+        cap = cv2.VideoCapture(f"v4l2src device=/dev/video{args.camid} ! appsink")
+
     width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
     height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
     fps = cap.get(cv2.CAP_PROP_FPS)
