@@ -1,3 +1,5 @@
+# Mock Resources
+Videos and testing-specific scripts
 
 ## Run Mock Video Example
 
