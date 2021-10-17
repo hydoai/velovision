@@ -2,11 +2,11 @@
 Top level repo for computer vision running on Jetson Nano edge device
 
 ## Repository Schematic
-
+Created with [asciiflow](https://asciiflow.com)
 ```
-┌───────────────────┐
-│Jetson Installation│
-└───────────────────┘
+┌───────────────────┐      ┌──────────────┐
+│Jetson Installation│      │Mock Resources│
+└───────────────────┘      └──────────────┘
 
 ┌─────────────────────────────────────────────────────┐
 │Live Session Code                                    │
