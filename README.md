@@ -29,6 +29,7 @@ Created with [asciiflow](https://asciiflow.com)
 └────────────────┘
 ```
 + [Jetson Installation](jetson_installation): Installing required packages
++ [Mock Resources](mock_resources): Mock videos, etc. for development and testing
 
 **Live Session Code**: Code that runs when Hydo is on and active.
 + [Sensing Interface](sensing_interface): Camera info, gstreamer pipeline setup
