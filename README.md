@@ -28,10 +28,9 @@ Created with [asciiflow](https://asciiflow.com)
 │Blackbox Access │
 └────────────────┘
 ```
-+ [Jetson Installation](jetson_installation): Installing required packages
-+ [Mock Resources](mock_resources): Mock videos, etc. for desktop development and testing
 
-**Live Session Code**: Code that runs when Hydo is on and active.
+
+### Live Session Code: Code that runs when Hydo is on and active.
 
 + [Sensing Interface](sensing_interface): Camera info, gstreamer pipeline setup
 + [UI Input](ui_input): Buttons and switches for user input
@@ -39,6 +38,10 @@ Created with [asciiflow](https://asciiflow.com)
 + [Feedback Interface](feedback_interface): Speaker (warning sounds) interfacing
 + [UI Output](ui_output): Display output interfacing
 
+### Other Non-Live Code
+
++ [Jetson Installation](jetson_installation): Installing required packages
++ [Mock Resources](mock_resources): Mock videos, etc. for desktop development and testing
 + [Blackbox Access](blackbox_access): When you plug in the Jetson to a computer, it registers as a USB drive containing the recorded videos.
 
 
