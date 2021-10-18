@@ -23,10 +23,6 @@ Created with [asciiflow](https://asciiflow.com)
 │ └──────────────────┘   └──────────────────────────┘ │
 │                                                     │
 └─────────────────────────────────────────────────────┘
-
-┌────────────────┐
-│Blackbox Access │
-└────────────────┘
 ```
 
 
@@ -42,6 +38,3 @@ Created with [asciiflow](https://asciiflow.com)
 
 + [Jetson Installation](jetson_installation): Installing required packages
 + [Mock Resources](mock_resources): Mock videos, etc. for desktop development and testing
-+ [Blackbox Access](blackbox_access): When you plug in the Jetson to a computer, it registers as a USB drive containing the recorded videos.
-
-
