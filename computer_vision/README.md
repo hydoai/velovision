@@ -1,6 +1,21 @@
-# Computer Vision
+#Computer Vision
 
 Core image processing and actionable output producing code.
+
+## Install YOLOX
+
+```bash
+git clone git@github.com:Megvii-BaseDetection/YOLOX.git
+cd YOLOX
+pip3 install -U pip && pip3 install -r requirements.txt
+pip3 install -v -e .  # or  python3 setup.py develop
+```
+
+Install pycocotools
+```bash
+pip3 install cython; pip3 install 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI'
+```
+
 
 ## Todo / Hopeful Improvements
 
