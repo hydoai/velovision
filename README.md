@@ -1,5 +1,5 @@
 # gi-edge
-Top level repo for computer vision running on Jetson Nano edge device
+Top level repo for all Hydo functionality on Jetson Xavier NX device operating on the edge (on bike).
 
 ## Repository Schematic
 Created with [asciiflow](https://asciiflow.com)
