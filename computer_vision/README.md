@@ -2,6 +2,13 @@
 
 Core image processing and actionable output producing code.
 
+## Development Right Now
+
+Running vision script on test videos.
+```bash
+python3 vision.py --vid0 ~/Videos/long-passing.mp4 --vid1 ~/Videos/long-being-overtaken.mp4 -f YOLOX/exps/hydo/nano-alpha.py --save_result
+```
+
 ## Todo / Hopeful Improvements
 
 + NVIDIA DeepStream: (https://github.com/NVIDIA-AI-IOT/deepstream_python_apps/blob/master/HOWTO.md)
