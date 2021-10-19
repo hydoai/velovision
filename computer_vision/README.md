@@ -12,3 +12,11 @@ Download example / benchmark video from [Google Drive](https://drive.google.com/
 ```bash
 python3 vision.py
 ```
+
+## From Training to Inference
+
+1. (desktop) Define parameters to train a new neural network by creating a new python file at `YOLOX/exps/`.
+2. (desktop) Train the neural network with `YOLOX/tools/train.py`.
+3. (desktop) The results of training are saved to `YOLOX/YOLOX_outputs/`.
+4. (jetson) Copy python files from desktop `YOLOX/exps` to `gi-edge/computer_vision/hydo_exps`.
+5. (jetson) Copy training results (weights) from desktop `YOLOX/YOLOX_outputs` to `gi-edge/computer_vision/YOLOX/YOLOX_outputs`.
