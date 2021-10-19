@@ -19,7 +19,7 @@ Download example / benchmark video from [Google Drive](https://drive.google.com/
 Run inference
 
 ```bash
-python3 vision.py -vid0 ~/Videos/long-passing.mp4 -vid1 ~/Videos/long-being-overtaken.mp4 -f hydo_exps/nano-alpha.py --save_result
+python3 vision.py -vid0 ~/Videos/long-passing.mp4 -vid1 ~/Videos/long-being-overtaken.mp4 -f yolox_exps/nano-alpha.py --save_result
 ```
 + the `-f` argument will retrieve neural network information from `exps` file
 + and also automatically find the best checkpoint from `YOLOX_outputs`
