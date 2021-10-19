@@ -16,6 +16,7 @@ from subvision.watchout.watchout import Watchout
 
 from debug_utils.avgtimer import AvgTimer # timer with rolling averages
 
+
 HYDO_CLASSES = ['bicycle', 'bus', 'car', 'cyclist', 'motorcycle', 'pedestrian', 'truck'] # alphabetically ordered because that's how it's trained
 
 
@@ -111,6 +112,26 @@ class Predictor:
                 outputs = self.decoder(outputs, dtype=outputs.type())
             outputs = postprocess(outputs, self.num_classes, self.confthre, self.nmsthre, class_agnostic=True)
         return outputs, img_info
+
+    def expand_bboxes(self, output, img_info):
+        '''
+        move neural network output to CPU,
+        expand bboxes to raw_img's scale
+
+        '''
+        ratio = img_info['ratio']
+        if output[0] is None:
+            return None
+        output = output[0].cpu().numpy()
+        bboxes = output[:,0:4]
+
+        # resize bboxes from neural network's output size to raw_img's size
+        bboxes /= ratio
+        cls = output[:,6:7]
+        scores = output[:,4:5] * output [:,5:6]
+        
+        expanded_output = np.hstack((bboxes, scores, cls))
+        return expanded_output
 
     def visual(self, output, img_info, cls_conf=0.35):
         ratio = img_info['ratio']
@@ -227,16 +248,36 @@ def main(exp, args):
 
     avgtimer = AvgTimer()
     sort_tracker = Sort()
-    watchout = Watchout()
+    watchout_f = Watchout()
+    watchout_r = Watchout()
 
     while True:
         ret_val0, frame0 = cap0.read()
         ret_val1, frame1 = cap1.read()
-        if ret_val0 and ret_val1:
+        if not (ret_val0 and ret_val1):
+            break
+        else:
             frame0 = center_crop(frame0, args.crop0_width, args.crop0_height, nudge_down=-150)
-            frame1 = center_crop(frame1, args.crop1_width, args.crop1_height)
+            frame1 = center_crop(frame1, args.crop1_width, args.crop1_height, nudge_down=0)
             avgtimer.start('frame')
+
             outputs, img_info = predictor.inference(frame0, frame1)
+            expanded_outputs = predictor.expand_bboxes(outputs, img_info)
+
+            detections = expanded_outputs
+            if detections is not None:
+                avgtimer.start('sort')
+                tracked_output = sort_tracker.update(detections)
+                avgtimer.end('sort')
+
+                # split detections into front and rear, then run watchout separately
+                front_dets, rear_dets = split_dets(tracked_output, args.crop0_width, args.crop0_height)
+               # 
+                avgtimer.start('watchout')
+                front_watchout_output = watchout_f.step(front_dets)
+                rear_watchout_output = watchout_r.step(rear_dets)
+                avgtimer.end('watchout')
+
             result_frame = predictor.visual(outputs[0], img_info, predictor.confthre)
             if args.save_result:
                 vid_writer.write(result_frame)
@@ -244,22 +285,96 @@ def main(exp, args):
             if ch==27 or ch==ord('q') or ch==ord('Q'):
                 break
 
-            if outputs[0] is not None:
-                pred_box = outputs[0][:,:4].cpu().numpy()
-                class_conf = outputs[0][:,5:6].cpu().numpy()
-                class_ind = outputs[0][:,6:7].cpu().numpy()
-                track_input = np.hstack((pred_box, class_conf, class_ind))
-                
-                tracked_output = sort_tracker.update(track_input)
-
-                watched_output = watchout.step(tracked_output)
-
             avgtimer.end('frame')
             logger.info('\n')
             logger.info(f"{1/(avgtimer.rolling_avg('frame'))} FPS")
+            logger.info(f"SORT: {avgtimer.rolling_avg('sort')} seconds")
+            logger.info(f"Watchout: {avgtimer.rolling_avg('watchout')} seconds")
             logger.info(f"{len(outputs[0]) if outputs[0] is not None else 0} objects detected")
-        else:
-            break
+
+def split_dets(dets, width, height):
+    '''
+    Summary: (extend screen width to see correctly)
+    ┌─────────────────────────────────┐
+    │                                 │
+    │                                 │
+    │    ┌────────┐                   │
+    │    │        │                   │       ┌────────────────────────────────┐     ┌────────────────────┬────────┬──┐
+    │    │        │                   │       │                                │     │                    │        │  │
+    │    │        │                   │       │                                │     │                    │  rear  │  │
+    │    │        │                   │       │    ┌─────────┐                 │     │     ┌─────────┐    │        │  │
+    │    │        │     ┌────────┐    │       │    │         │                 │     │     │         │    │        │  │
+    │    │        │     │        │    │       │    │         │                 │     │     │  rear   │    └────────┘  │
+    │ ── └────────┴─ ── │        ├── ─┤  ──►  │    │         │                 │     │     │         │                │
+    │                   │        │    │       │    │  front  │                 │     │     └─────────┘                │
+    │                   │        │    │       │    │         │                 │     │                                │
+    │     ┌─────────┐   │        │    │       │    │         │                 │     │                                │
+    │     │         │   │        │    │       └────┴─────────┴─────────────────┘     └────────────────────────────────┘
+    │     │         │   └────────┘    │
+    │     │         │                 │
+    │     └─────────┘                 │
+    │                                 │
+    │                                 │
+    └─────────────────────────────────┘
+    Input:
+        dets are vertically stacked (front video on top, rear video at the bottom)
+        width and height of video (assumed to be the same for front and rear)
+
+
+        The shape of dets is (num_detections, 9)
+        for each row, the index corresponds to
+            0 : x1
+            1 : y1
+            2 : x2
+            3 : y2
+            4 : class index
+            5 : empty (0)
+            6 : empty (0)
+            7 : empty (0)
+            8 : track id
+
+    Output:
+        (front dets, rear dets), where each contain boxes within (0,width), (0,height) range.
+
+    In addition, any bounding boxes that go beyond their origin video frames are cut so that they don't stretch beyond it.
+
+        The shape of outputs is (num_detections, 9)
+        for each row, the index corresponds to
+            0 : x1 (within raw_img shape)
+            1 : y1 (within raw_img shape)
+            2 : x2 (within raw_img shape)
+            3 : y2 (within raw_img shape)
+            4 : class index
+            5 : x_center # added
+            6 : y_center # added
+            7 : assigned to front (0) or rear(1)
+            8 : track id
+    
+    '''
+
+    # development
+    dets = np.round(dets)
+    input_dets = dets
+
+    # calculate x and y centers
+    dets[:,5] = (dets[:,2] + dets[:,0])/2
+    dets[:,6] = (dets[:,3] + dets[:,1])/2
+
+    # assign box to front(0) or rear(1)-facing camera
+    dets[:,7] = dets[:,6] > (height)
+
+    front_dets = dets[np.where(dets[:,7] == 0)]
+    rear_dets = dets[np.where(dets[:,7] == 1)]
+
+    # move rear coordinates back (un-stack)
+    rear_dets[:,(1,3,6)] -= height
+
+    # extra: trim any spillover bounding boxes bits
+    for dets in (front_dets, rear_dets):
+        dets[:, 3:4] = np.where(dets[:,3:4] > height, height, dets[:,3:4]) # trim any below bottom limit
+        dets[:, 3:4] = np.where(dets[:,3:4] < 0, 0, dets[:,3:4]) # trim any above top limit
+    
+    return front_dets, rear_dets 
 
 def center_crop(image, width, height, nudge_down=0, nudge_right=0):
     x = image.shape[1]/2 - width/2
