@@ -12,6 +12,7 @@ from yolox.exp import get_exp
 from yolox.utils import fuse_model, get_model_info, postprocess, vis
 
 from subvision.sort.sort_minimal import Sort
+from subvision.watchout.watchout import Watchout
 
 from debug_utils.avgtimer import AvgTimer # timer with rolling averages
 
@@ -26,10 +27,10 @@ def make_parser():
     parser.add_argument("-cam1", "--cam1_index", type=int, default=None, help="Camera 1 index. See 'ls /dev/video*'")
     parser.add_argument("-vid0", "--vid0_file", type=str, default=None, help="Video 0 file path.")
     parser.add_argument("-vid1", "--vid1_file", type=str, default=None, help="Video 1 file path.")
-    parser.add_argument("--crop0_width", type=int, default=480, help="Width of center-cropped video 0 ")
-    parser.add_argument("--crop0_height", type=int, default=360, help="Height of center-cropped video 0")
-    parser.add_argument("--crop1_width", type=int, default=480, help="Width of center-cropped video 1")
-    parser.add_argument("--crop1_height", type=int, default=360, help="height of center-cropped video 1")
+    parser.add_argument("--crop0_width", type=int, default=960, help="Width of center-cropped video 0 ")
+    parser.add_argument("--crop0_height", type=int, default=540, help="Height of center-cropped video 0")
+    parser.add_argument("--crop1_width", type=int, default=960, help="Width of center-cropped video 1")
+    parser.add_argument("--crop1_height", type=int, default=540, help="height of center-cropped video 1")
     parser.add_argument("-f", "--exp_file", type=str, default=None, help="Please input your experiment description python file (in 'exps' folder)")
     parser.add_argument("-c", "--ckpt", type=str, default=None, help="Specify specific ckpt for evaluation. Otherwise, best_ckpt of exp_file will be used")
     parser.add_argument("--device", type=str, default='gpu', help="Specify device to run model. 'cpu' or 'gpu'")
@@ -226,6 +227,7 @@ def main(exp, args):
 
     avgtimer = AvgTimer()
     sort_tracker = Sort()
+    watchout = Watchout()
 
     while True:
         ret_val0, frame0 = cap0.read()
@@ -249,6 +251,8 @@ def main(exp, args):
                 track_input = np.hstack((pred_box, class_conf, class_ind))
                 
                 tracked_output = sort_tracker.update(track_input)
+
+                watched_output = watchout.step(tracked_output)
 
             avgtimer.end('frame')
             logger.info('\n')
