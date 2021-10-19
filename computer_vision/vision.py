@@ -278,6 +278,7 @@ def main(exp, args):
                 rear_watchout_output = watchout_r.step(rear_dets)
                 avgtimer.end('watchout')
 
+            # TODO show distance (meters) in visualization
             result_frame = predictor.visual(outputs[0], img_info, predictor.confthre)
             if args.save_result:
                 vid_writer.write(result_frame)
