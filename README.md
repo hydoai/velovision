@@ -28,13 +28,13 @@ Created with [asciiflow](https://asciiflow.com)
 
 ### Live Session Code: Code that runs when Hydo is on and active.
 
-+ [Sensing Interface](sensing_interface): Camera info, gstreamer pipeline setup
-+ [UI Input](ui_input): Buttons and switches for user input
-+ [Computer Vision](computer_vision): Vision neural network + postprocessing 
-+ [Feedback Interface](feedback_interface): Speaker (warning sounds) interfacing
-+ [UI Output](ui_output): Display output interfacing
++ [Sensing Interface](sensing_interface): Set up NVIDIA hardware accelerated camera video input stream. Implement always-on hardware accelerated video saving.
++ [UI Input](ui_input): Interface with buttons and switches on the case.
++ [Computer Vision](computer_vision): Object detection neural network, tracking, and warning algorithms. 
++ [Feedback Interface](feedback_interface): Interface with warning sound speaker.
++ [UI Output](ui_output): Interface with OLED display
 
 ### Other Non-Live Code
 
-+ [Jetson Installation](jetson_installation): Installing required packages
-+ [Mock Resources](mock_resources): Mock videos, etc. for desktop development and testing
++ [Jetson Installation](jetson_installation): Install required packages for running the live session code.
++ [Mock Resources](mock_resources): Mock test video files, etc. for desktop development and testing
