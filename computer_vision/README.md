@@ -9,9 +9,6 @@ Download example / benchmark video from [Google Drive](https://drive.google.com/
 
 ## Current Desktop Testing Script
 
-```bash
-python3 vision.py
-```
 
 ## From Training to Inference
 
@@ -20,3 +17,11 @@ python3 vision.py
 3. (desktop) The results of training are saved to `YOLOX/YOLOX_outputs/`.
 4. (jetson) Copy python files from desktop `YOLOX/exps` to `gi-edge/computer_vision/hydo_exps`.
 5. (jetson) Copy training results (weights) from desktop `YOLOX/YOLOX_outputs` to `gi-edge/computer_vision/YOLOX/YOLOX_outputs`.
+
+Run inference
+
+```bash
+python3 vision.py -vid0 ~/Videos/long-passing.mp4 -vid1 ~/Videos/long-being-overtaken.mp4 -f hydo_exps/nano-alpha.py --save_result
+```
++ the `-f` argument will retrieve neural network information from `exps` file
++ and also automatically find the best checkpoint from `YOLOX_outputs`
