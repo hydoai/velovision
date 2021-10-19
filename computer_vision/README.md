@@ -7,8 +7,6 @@ Download example / benchmark video from [Google Drive](https://drive.google.com/
 + `long-passing.mp4` is 2 min 34 seconds long and contains many examples of passing.
 + `long-being-overtaken.mp4` is 3 min 52 seconds and contains many examples of being passed, and also some more complex scenes where passing doesn't actually occur.
 
-## Current Desktop Testing Script
-
 
 ## From Training to Inference
 
