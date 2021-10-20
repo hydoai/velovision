@@ -64,7 +64,6 @@ class Watchout:
         self.rolling_filter = [False for _ in range(buffer_len)] # queue filter to reduce false positives
 
         self.memory = {} # dictionary where key is track_id, and value is a 'Thing' object which contains all the other information.
-        self.memory_earliest_remaining_index = 0
 
     def step(self, tracked_dets = np.empty((0,9))):
         '''
@@ -82,23 +81,32 @@ class Watchout:
 
         Returns:
             tracked_dets + 
-            9 : danger_rating (0-none, 10-max)
+            9 : distance
 
         '''
-        for obj in tracked_dets:
+        row, col = tracked_dets.shape
+        watchout_output_dets = np.empty((0,col+1))
+
+        for i in range(len(tracked_dets)):
+            obj = tracked_dets[i]
             if obj[8].item() in self.memory.keys(): #we've seen this guy before
                 watchedthing = self.memory[obj[8].item()]
                 watchedthing.step(obj)
-                print(f"Predicted distance: {watchedthing.pred_distance}m")
+                #print(f"Predicted distance: {watchedthing.pred_distance}m")
+                obj = np.hstack((obj, watchedthing.pred_distance))
 
             else:
                 self.memory.update({obj[8].item(): WatchedThing(obj)}) # create new Thing
 
-                # if memory contains more than 100, delete 10 earliest entries
-                if len(self.memory) > 100:
-                    for i in range(self.memory_earliest_remaining_index, self.memory_earliest_remaining_index + 10):
-                        del self.memory[i]
-                    self.memory_earliest_remaining_index += 10
+                # if memory contains more than 100, delete 25 earliest entries
+                if len(self.memory) > 50:
+                    earliest_indexes = [x for x in sorted(self.memory.keys())][:25]
+                    for ind in earliest_indexes:
+                        del self.memory[ind]
+                obj = np.hstack((obj, 1e10))
+            watchout_output_dets = np.vstack((obj, watchout_output_dets))
+        return watchout_output_dets
+
 
 class WatchedThing:
     def __init__(self, obj):
@@ -154,7 +162,7 @@ class WatchedThing:
         if self.y2 > frame_height/2:
             d_pred_bottom = cam_installation_height / ( math.tan( 0.5*height_fov * ( self.y2 - frame_height/2 ) / ( frame_height/2 )))
         else: # above horizon
-            d_pred_bottom = 9999999999999999999
+            d_pred_bottom = None 
 
         distance_predictions = [d_pred_width, d_pred_height, d_pred_bottom]
         enabled_preds = [x for x in distance_predictions if x is not None]

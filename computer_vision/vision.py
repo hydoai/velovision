@@ -10,6 +10,7 @@ import torch
 from yolox.data.data_augment import ValTransform
 from yolox.exp import get_exp
 from yolox.utils import fuse_model, get_model_info, postprocess, vis
+from yolox.utils.visualize import _COLORS
 
 from subvision.sort.sort_minimal import Sort
 from subvision.watchout.watchout import Watchout
@@ -133,6 +134,19 @@ class Predictor:
         expanded_output = np.hstack((bboxes, scores, cls))
         return expanded_output
 
+    def custom_visual(self, output, img_info, cls_conf=0.35):
+        ratio = img_info['ratio']
+        img = img_info['raw_img']
+        output = output * ratio # re-shrink output
+        if output is None: 
+            return img
+        bboxes = output[0:4]
+        cls = output[6]
+        scores = output[4] * output[5]
+        vis_res = vis(img, bboxes, scores, cls, cls_conf, self.cls_names)
+        return vis_res
+
+
     def visual(self, output, img_info, cls_conf=0.35):
         ratio = img_info['ratio']
         img = img_info['raw_img']
@@ -246,6 +260,7 @@ def main(exp, args):
 
         vid_writer = cv2.VideoWriter(save_path,cv2.VideoWriter_fourcc(*"mp4v"), fps, (int(width), int(height)))
 
+
     avgtimer = AvgTimer()
     sort_tracker = Sort()
     watchout_f = Watchout()
@@ -262,9 +277,13 @@ def main(exp, args):
             avgtimer.start('frame')
 
             outputs, img_info = predictor.inference(frame0, frame1)
+
             expanded_outputs = predictor.expand_bboxes(outputs, img_info)
 
             detections = expanded_outputs
+
+            front_watchout_output = None
+            rear_watchout_output = None
             if detections is not None:
                 avgtimer.start('sort')
                 tracked_output = sort_tracker.update(detections)
@@ -278,8 +297,25 @@ def main(exp, args):
                 rear_watchout_output = watchout_r.step(rear_dets)
                 avgtimer.end('watchout')
 
+                # then combine the split detections back into one array for visualization.
+                combined_dets = combine_dets(front_watchout_output, rear_watchout_output, args.crop0_height)
+
             # TODO show distance (meters) in visualization
-            result_frame = predictor.visual(outputs[0], img_info, predictor.confthre)
+            img = img_info['raw_img']
+            if outputs[0] is None:
+                result_frame = img
+            else:
+                output = outputs[0].cpu()
+                bboxes = combined_dets[:,0:4]
+                cls = combined_dets[:,4]
+                scores = output[:,4] * output[:,5]
+                cls_conf = 0.35
+                distance = combined_dets[:,9]
+                track_id = combined_dets[:,8]
+
+                #result_frame = vis(img,bboxes,scores,cls,cls_conf, predictor.cls_names)
+                result_frame = custom_vis(img,bboxes,scores,cls, distance, track_id, cls_conf, predictor.cls_names)
+
             if args.save_result:
                 vid_writer.write(result_frame)
             ch = cv2.waitKey(1)
@@ -292,6 +328,58 @@ def main(exp, args):
             logger.info(f"SORT: {avgtimer.rolling_avg('sort')} seconds")
             logger.info(f"Watchout: {avgtimer.rolling_avg('watchout')} seconds")
             logger.info(f"{len(outputs[0]) if outputs[0] is not None else 0} objects detected")
+
+def custom_vis(img, boxes, scores, cls_ids, distance, track_id, conf=0.5, class_names=None):
+    for i in range(len(boxes)):
+        box = boxes[i]
+        cls_id = int(cls_ids[i])
+        score = scores[i]
+        if score < conf:
+            continue
+        x0 = int(box[0])
+        y0 = int(box[1])
+        x1 = int(box[2])
+        y1 = int(box[3])
+        color = (_COLORS[cls_id] * 255).astype(np.uint8).tolist()
+        distance_value = distance[i]
+        track_value = track_id[i]
+        text = f"{class_names[cls_id]} {int(track_value)} : {round(distance_value,1)} m"
+        txt_color = (0,0,0) if np.mean(_COLORS[cls_id]) > 0.5 else (255,255,255)
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        txt_size = cv2.getTextSize(text, font, 0.4 , 1)[0]
+        cv2.rectangle(img, (x0,y0), (x1,y1), color ,2)
+        txt_bk_color = (_COLORS[cls_id] * 255 * 0.7).astype(np.uint8).tolist()
+        cv2.rectangle(
+                img,
+                (x0,y0+1),
+                (x0 + txt_size[0] + 1 , y0 + int(1.5*txt_size[1])),
+                txt_bk_color,
+                -1
+                )
+        cv2.putText(img, text, (x0,y0 + txt_size[1]), font, 0.4, txt_color, thickness=1)
+
+    return img
+def combine_dets(front_dets, rear_dets, height):
+    '''
+    Input: 
+        The shape of front_dets and rear_dets is (num_detections, 9)
+        for each row, the index corresponds to
+            0 : x1 (within raw_img shape)
+            1 : y1 (within raw_img shape)
+            2 : x2 (within raw_img shape)
+            3 : y2 (within raw_img shape)
+            4 : class index
+            5 : x_center # added
+            6 : y_center # added
+            7 : assigned to front (0) or rear(1)
+            8 : track id
+            9 : distance
+
+    Output:
+        hstacked dets, where the rear_dets coordinates are shifted down
+    '''
+    rear_dets[:,(1,3,6)] = rear_dets[:,(1,3,6)] + height
+    return np.vstack((front_dets, rear_dets))
 
 def split_dets(dets, width, height):
     '''
