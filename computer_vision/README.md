@@ -1,5 +1,19 @@
 # Computer Vision
 
+## Directory Structure
+
+```
+.
+├── debug_utils: timer class, etc.
+├── PARAMETERS.py: empirical parameter information (measure things directly)
+├── README.md: this file
+├── subvision: parts of vision processing pipeline (called from vision.py)
+├── vision.py: top-level vision
+├── YOLOX: Megvii YOLOX library
+├── yolox_exps: neural network definitions for trained YOLOX networks
+└── YOLOX_outputs: neural network weights, and saved inference results
+```
+
 ## Run Video File Example
 
 Download example / benchmark video from [Google Drive](https://drive.google.com/drive/folders/1e3EbNgNbieoMMaJbaPvsRraDk2AW9iou?usp=sharing)
