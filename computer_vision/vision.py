@@ -14,6 +14,7 @@ from yolox.utils.visualize import _COLORS
 
 from subvision.sort.sort_minimal import Sort
 from subvision.watchout.watchout import Watchout
+from subvision.utils import center_crop, combine_dets, split_dets
 
 from debug_utils.avgtimer import AvgTimer # timer with rolling averages
 
@@ -73,7 +74,7 @@ class Predictor:
             x = torch.ones(1,3,exp.test_size[0], exp.test_size[1]).cuda()
             self.model(x) # run once
             self.model = model_trt
-    
+
     def inference(self, img0, img1=None):
         '''
         Arguments
@@ -130,22 +131,9 @@ class Predictor:
         bboxes /= ratio
         cls = output[:,6:7]
         scores = output[:,4:5] * output [:,5:6]
-        
+
         expanded_output = np.hstack((bboxes, scores, cls))
         return expanded_output
-
-    def custom_visual(self, output, img_info, cls_conf=0.35):
-        ratio = img_info['ratio']
-        img = img_info['raw_img']
-        output = output * ratio # re-shrink output
-        if output is None: 
-            return img
-        bboxes = output[0:4]
-        cls = output[6]
-        scores = output[4] * output[5]
-        vis_res = vis(img, bboxes, scores, cls, cls_conf, self.cls_names)
-        return vis_res
-
 
     def visual(self, output, img_info, cls_conf=0.35):
         ratio = img_info['ratio']
@@ -185,7 +173,7 @@ def main(exp, args):
         exp.nmsthre = args.nms
     if args.tsize is not None:
         exp.test_size = (args.tsize, args.tsize)
-        
+
     model = exp.get_model()
     logger.info(f"Model summary: {get_model_info(model, exp.test_size)}")
 
@@ -214,7 +202,7 @@ def main(exp, args):
         trt_file = os.path.join(file_name, "model_trt.pth")
         assert os.path.exists(trt_file), "TensorRT model not found! Please run 'python3 tools/trt.py' to create a TRT model first"
         model.head.decode_in_inference = False
-        decoder = model.head.decode_outputs 
+        decoder = model.head.decode_outputs
         logger.info("Using TensorRT for inference")
     else:
         trt_file = None
@@ -244,7 +232,7 @@ def main(exp, args):
         logger.warning("FPS does not match. Using lower of the two FPSs")
     fps = min(fps0, fps1)
 
-    
+
     if args.save_result:
         save_folder = os.path.join(vis_folder, time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime()))
         os.makedirs(save_folder, exist_ok=True)
@@ -291,7 +279,7 @@ def main(exp, args):
 
                 # split detections into front and rear, then run watchout separately
                 front_dets, rear_dets = split_dets(tracked_output, args.crop0_width, args.crop0_height)
-               # 
+               #
                 avgtimer.start('watchout')
                 front_watchout_output = watchout_f.step(front_dets)
                 rear_watchout_output = watchout_r.step(rear_dets)
@@ -359,116 +347,6 @@ def custom_vis(img, boxes, scores, cls_ids, distance, track_id, conf=0.5, class_
         cv2.putText(img, text, (x0,y0 + txt_size[1]), font, 0.4, txt_color, thickness=1)
 
     return img
-def combine_dets(front_dets, rear_dets, height):
-    '''
-    Input: 
-        The shape of front_dets and rear_dets is (num_detections, 9)
-        for each row, the index corresponds to
-            0 : x1 (within raw_img shape)
-            1 : y1 (within raw_img shape)
-            2 : x2 (within raw_img shape)
-            3 : y2 (within raw_img shape)
-            4 : class index
-            5 : x_center # added
-            6 : y_center # added
-            7 : assigned to front (0) or rear(1)
-            8 : track id
-            9 : distance
-
-    Output:
-        hstacked dets, where the rear_dets coordinates are shifted down
-    '''
-    rear_dets[:,(1,3,6)] = rear_dets[:,(1,3,6)] + height
-    return np.vstack((front_dets, rear_dets))
-
-def split_dets(dets, width, height):
-    '''
-    Summary: (extend screen width to see correctly)
-    ┌─────────────────────────────────┐
-    │                                 │
-    │                                 │
-    │    ┌────────┐                   │
-    │    │        │                   │       ┌────────────────────────────────┐     ┌────────────────────┬────────┬──┐
-    │    │        │                   │       │                                │     │                    │        │  │
-    │    │        │                   │       │                                │     │                    │  rear  │  │
-    │    │        │                   │       │    ┌─────────┐                 │     │     ┌─────────┐    │        │  │
-    │    │        │     ┌────────┐    │       │    │         │                 │     │     │         │    │        │  │
-    │    │        │     │        │    │       │    │         │                 │     │     │  rear   │    └────────┘  │
-    │ ── └────────┴─ ── │        ├── ─┤  ──►  │    │         │                 │     │     │         │                │
-    │                   │        │    │       │    │  front  │                 │     │     └─────────┘                │
-    │                   │        │    │       │    │         │                 │     │                                │
-    │     ┌─────────┐   │        │    │       │    │         │                 │     │                                │
-    │     │         │   │        │    │       └────┴─────────┴─────────────────┘     └────────────────────────────────┘
-    │     │         │   └────────┘    │
-    │     │         │                 │
-    │     └─────────┘                 │
-    │                                 │
-    │                                 │
-    └─────────────────────────────────┘
-    Input:
-        dets are vertically stacked (front video on top, rear video at the bottom)
-        width and height of video (assumed to be the same for front and rear)
-
-
-        The shape of dets is (num_detections, 9)
-        for each row, the index corresponds to
-            0 : x1
-            1 : y1
-            2 : x2
-            3 : y2
-            4 : class index
-            5 : empty (0)
-            6 : empty (0)
-            7 : empty (0)
-            8 : track id
-
-    Output:
-        (front dets, rear dets), where each contain boxes within (0,width), (0,height) range.
-
-    In addition, any bounding boxes that go beyond their origin video frames are cut so that they don't stretch beyond it.
-
-        The shape of outputs is (num_detections, 9)
-        for each row, the index corresponds to
-            0 : x1 (within raw_img shape)
-            1 : y1 (within raw_img shape)
-            2 : x2 (within raw_img shape)
-            3 : y2 (within raw_img shape)
-            4 : class index
-            5 : x_center # added
-            6 : y_center # added
-            7 : assigned to front (0) or rear(1)
-            8 : track id
-    
-    '''
-
-    # development
-    dets = np.round(dets)
-    input_dets = dets
-
-    # calculate x and y centers
-    dets[:,5] = (dets[:,2] + dets[:,0])/2
-    dets[:,6] = (dets[:,3] + dets[:,1])/2
-
-    # assign box to front(0) or rear(1)-facing camera
-    dets[:,7] = dets[:,6] > (height)
-
-    front_dets = dets[np.where(dets[:,7] == 0)]
-    rear_dets = dets[np.where(dets[:,7] == 1)]
-
-    # move rear coordinates back (un-stack)
-    rear_dets[:,(1,3,6)] -= height
-
-    # extra: trim any spillover bounding boxes bits
-    for dets in (front_dets, rear_dets):
-        dets[:, 3:4] = np.where(dets[:,3:4] > height, height, dets[:,3:4]) # trim any below bottom limit
-        dets[:, 3:4] = np.where(dets[:,3:4] < 0, 0, dets[:,3:4]) # trim any above top limit
-    
-    return front_dets, rear_dets 
-
-def center_crop(image, width, height, nudge_down=0, nudge_right=0):
-    x = image.shape[1]/2 - width/2
-    y = image.shape[0]/2 - height/2
-    return image[int(y+nudge_down):int(y+height+nudge_down) , int(x+nudge_right):int(x+width+nudge_right)]
 
 if __name__ == "__main__":
     args = make_parser().parse_args()
