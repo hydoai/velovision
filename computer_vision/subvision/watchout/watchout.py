@@ -8,17 +8,19 @@ from PARAMETERS import KNOWN_CLASS_SIZES, CAM_LENS_INFO
 
 class Watchout:
     '''
-    Send warning sound to user if area of bounding box is increasing at a defined rate
-    
+    Calculate the distance to an object from bounding box coordinates, camera information, and expected object sizes in meters.
+
+    Implements a 'ensemble' approach, where 2~3 different ways of triangulating the distance are averaged out.
+
     Usage:
         sort = Sort()
         watchout = Watchout()
-        
+
         for frame in video:
             detections = yolo_detector(frame)
             tracked_dets = sort(detections)
-            sound_alarm = watchout(tracked_dets) # a boolean whether to sound alarm right now
-    
+            watchout_results = watchout(tracked_dets) # a boolean whether to sound alarm right now
+
     '''
 
     def __init__(
@@ -63,7 +65,7 @@ class Watchout:
             8 : object_id (tracked, unique id)
 
         Returns:
-            tracked_dets + 
+            tracked_dets +
             9 : distance
 
         '''
@@ -124,8 +126,8 @@ class WatchedThing:
         '''
 
         distance predicted using vertical = known_height(meters) / {tan(camera_angle_vertical(rad) * (object_height(pixels) / frame_height(pixels)) }
-        distance predicted using horizontal = known_width(meters) / {tan(camera_angle_horizontal(rad) * (object_width(pixels) / frame_width(pixels)) } 
-        distance predicted using bottom-center of box = camera_installation_height / { tan( 0.5*camera_angle_vertical * ( obj_y2 - (frame_height / 2)) / ( frame_height / 2 ))} 
+        distance predicted using horizontal = known_width(meters) / {tan(camera_angle_horizontal(rad) * (object_width(pixels) / frame_width(pixels)) }
+        distance predicted using bottom-center of box = camera_installation_height / { tan( 0.5*camera_angle_vertical * ( obj_y2 - (frame_height / 2)) / ( frame_height / 2 ))}
         '''
         cat_ind = self.cat_ind
         sizes_dict = KNOWN_CLASS_SIZES
@@ -145,7 +147,7 @@ class WatchedThing:
         if self.y2 > frame_height/2:
             d_pred_bottom = cam_installation_height / ( math.tan( 0.5*height_fov * ( self.y2 - frame_height/2 ) / ( frame_height/2 )))
         else: # above horizon
-            d_pred_bottom = None 
+            d_pred_bottom = None
 
         distance_predictions = [d_pred_width, d_pred_height, d_pred_bottom]
         enabled_preds = [x for x in distance_predictions if x is not None]
