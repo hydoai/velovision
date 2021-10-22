@@ -52,17 +52,17 @@ class KalmanPointObject:
         # state covariance
         self.kf.P = np.array([
             [500.,0,0,0], # 500 is set high for initial x value
-            [0.,9,0,0] #9 is from (max x velocity/3)^2 in m/s.
+            [0.,  9,0,0] #9 is from (max x velocity/3)^2 in m/s.
             [0.,0,100,0], # initial y value variance is a bit lower than that for x
-            [0.,0,0,1]]) # initial y velocity variance is also lower
+            [0.,0,  0,1]]) # initial y velocity variance is also lower
 
         # state transition function: old state is multiplied by this array to get naive prediction of new state
         dt = 0.03 # time step is 30 frames/sec
         self.kf.F = np.array([
-            [1.,dt,0,0], # new x value = prev_x_value * 1 + prev_x_velocity*dt
-            [0.,1,0,0,0], # new_x_velocity = old_x_velocity (constant velocity model)
-            [0.,0,0,1,dt], # same but for y
-            [0.,0,0,0,1])
+            [1.,dt,0, 0], # new x value = prev_x_value * 1 + prev_x_velocity*dt
+            [0.,1, 0, 0], # new_x_velocity = old_x_velocity (constant velocity model)
+            [0.,0, 1,dt], # same but for y
+            [0.,0, 0, 1])
 
         # Process noise: external factors that alter kinematics of object out of the expected Newtonian mechanics
         self.kf.Q = Q_discrete_white_noise(dim=4, dt=0.03, var=0.5)
