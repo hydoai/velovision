@@ -1,5 +1,13 @@
 import numpy as np
 
+class CameraFacing(Enum):
+    FRONT = 0
+    REAR = 1
+
+class FrameHalf(Enum):
+    LEFT = 0
+    RIGHT = 0
+
 def center_crop(image, width, height, nudge_down=0, nudge_right=0):
     x = image.shape[1]/2 - width/2
     y = image.shape[0]/2 - height/2

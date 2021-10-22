@@ -256,6 +256,7 @@ def main(exp, args):
     watchout_f = Watchout()
     watchout_r = Watchout()
     perspective = Perspective()
+    intercept = Intercept()
 
     while True:
         ret_val0, frame0 = cap0.read()
@@ -307,6 +308,8 @@ def main(exp, args):
                 result_frame = custom_vis(img,bboxes,scores,cls, distance, track_id, cls_conf, predictor.cls_names)
 
                 perspective_output = perspective.step(combined_dets)
+
+                intercept_output = intercept.step(perspective_output)
 
                 for persp in perspective_output:
                     print(f"x: {persp[10]} , y: {persp[11]}")
