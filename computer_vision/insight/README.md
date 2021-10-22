@@ -1,6 +1,6 @@
 # Insight: Visualizing the internal workings of HYDO Computer Vision for presentations and development.
 
-## Plan View
+## Perspective View to Plan View Conversion
 
 Convert (distance, angle from center) to a top-down view of the situation (x,y)
 
@@ -51,12 +51,15 @@ Rear   @@@@@@@@@@┌─┴─┐********** Front
 
 ```
 
+## Kalman Filter Object Trajectory Prediction
+
 Then, the (x,y) coordinate values for each object are fed into a Kalman Filter, which returns (x,y,dx/dt,dy/dt) for the next time step.
+
+## Overtaking-relevant feature calculation
 
 This value is is used to calculate two overtaking-relevant features:
 
 + **time_to_encounter** = x / (dx/dt)
 + **passing_separation (y-intercept)** = (dy/dt) * time_to_encounter
 
-
-
+This is the final interface. Modify these two values to change program behavior.
