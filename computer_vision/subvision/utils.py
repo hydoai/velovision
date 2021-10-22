@@ -6,7 +6,7 @@ class CameraFacing(Enum):
 
 class FrameHalf(Enum):
     LEFT = 0
-    RIGHT = 0
+    RIGHT = 1
 
 def center_crop(image, width, height, nudge_down=0, nudge_right=0):
     x = image.shape[1]/2 - width/2

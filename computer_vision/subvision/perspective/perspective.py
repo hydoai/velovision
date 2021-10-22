@@ -4,13 +4,9 @@ from math import pi
 
 import numpy as np
 
-class CameraFacing(Enum):
-    FRONT = 0
-    REAR = 1
-
-class FrameHalf(Enum):
-    LEFT = 0
-    RIGHT = 0
+import sys
+sys.path.append('../')
+from utils import CameraFacing, FrameHalf
 
 class Perspective:
     def __init__(self, frame_width=960, cam_fov_deg=45):
