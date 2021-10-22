@@ -15,6 +15,7 @@ from yolox.utils.visualize import _COLORS
 from subvision.sort.sort_minimal import Sort
 from subvision.watchout.watchout import Watchout
 from subvision.utils import center_crop, combine_dets, split_dets
+from insight.overlayed_vis import custom_vis
 
 from debug_utils.avgtimer import AvgTimer # timer with rolling averages
 
@@ -288,7 +289,6 @@ def main(exp, args):
                 # then combine the split detections back into one array for visualization.
                 combined_dets = combine_dets(front_watchout_output, rear_watchout_output, args.crop0_height)
 
-            # TODO show distance (meters) in visualization
             img = img_info['raw_img']
             if outputs[0] is None:
                 result_frame = img
@@ -316,37 +316,6 @@ def main(exp, args):
             logger.info(f"SORT: {avgtimer.rolling_avg('sort')} seconds")
             logger.info(f"Watchout: {avgtimer.rolling_avg('watchout')} seconds")
             logger.info(f"{len(outputs[0]) if outputs[0] is not None else 0} objects detected")
-
-def custom_vis(img, boxes, scores, cls_ids, distance, track_id, conf=0.5, class_names=None):
-    for i in range(len(boxes)):
-        box = boxes[i]
-        cls_id = int(cls_ids[i])
-        score = scores[i]
-        if score < conf:
-            continue
-        x0 = int(box[0])
-        y0 = int(box[1])
-        x1 = int(box[2])
-        y1 = int(box[3])
-        color = (_COLORS[cls_id] * 255).astype(np.uint8).tolist()
-        distance_value = distance[i]
-        track_value = track_id[i]
-        text = f"{class_names[cls_id]} {int(track_value)} : {round(distance_value,1)} m"
-        txt_color = (0,0,0) if np.mean(_COLORS[cls_id]) > 0.5 else (255,255,255)
-        font = cv2.FONT_HERSHEY_SIMPLEX
-        txt_size = cv2.getTextSize(text, font, 0.4 , 1)[0]
-        cv2.rectangle(img, (x0,y0), (x1,y1), color ,2)
-        txt_bk_color = (_COLORS[cls_id] * 255 * 0.7).astype(np.uint8).tolist()
-        cv2.rectangle(
-                img,
-                (x0,y0+1),
-                (x0 + txt_size[0] + 1 , y0 + int(1.5*txt_size[1])),
-                txt_bk_color,
-                -1
-                )
-        cv2.putText(img, text, (x0,y0 + txt_size[1]), font, 0.4, txt_color, thickness=1)
-
-    return img
 
 if __name__ == "__main__":
     args = make_parser().parse_args()

@@ -9,6 +9,7 @@
 ├── README.md: this file
 ├── subvision: parts of vision processing pipeline (called from vision.py)
 ├── vision.py: top-level vision
+├── insight: code for visualization, presentation, and development
 ├── YOLOX: Megvii YOLOX library
 ├── yolox_exps: neural network definitions for trained YOLOX networks
 └── YOLOX_outputs: neural network weights, and saved inference results
