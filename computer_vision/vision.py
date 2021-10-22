@@ -10,10 +10,11 @@ import torch
 from yolox.data.data_augment import ValTransform
 from yolox.exp import get_exp
 from yolox.utils import fuse_model, get_model_info, postprocess, vis
-from yolox.utils.visualize import _COLORS
+#from yolox.utils.visualize import _COLORS
 
 from subvision.sort.sort_minimal import Sort
 from subvision.watchout.watchout import Watchout
+from subvision.perspective.perspective import Perspective
 from subvision.utils import center_crop, combine_dets, split_dets
 from insight.overlayed_vis import custom_vis
 
@@ -254,6 +255,7 @@ def main(exp, args):
     sort_tracker = Sort()
     watchout_f = Watchout()
     watchout_r = Watchout()
+    perspective = Perspective()
 
     while True:
         ret_val0, frame0 = cap0.read()
@@ -303,6 +305,11 @@ def main(exp, args):
 
                 #result_frame = vis(img,bboxes,scores,cls,cls_conf, predictor.cls_names)
                 result_frame = custom_vis(img,bboxes,scores,cls, distance, track_id, cls_conf, predictor.cls_names)
+
+                perspective_output = perspective.step(combined_dets)
+
+                for persp in perspective_output:
+                    print(f"x: {persp[10]} , y: {persp[11]}")
 
             if args.save_result:
                 vid_writer.write(result_frame)

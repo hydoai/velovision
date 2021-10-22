@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Insight
 
 Code for displaying the internal workings of this project.

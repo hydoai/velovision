@@ -1,6 +1,8 @@
 import numpy as np
 import cv2
 
+from yolox.utils.visualize import _COLORS
+
 def custom_vis(img, boxes, scores, cls_ids, distance, track_id, conf=0.5, class_names=None):
     for i in range(len(boxes)):
         box = boxes[i]
