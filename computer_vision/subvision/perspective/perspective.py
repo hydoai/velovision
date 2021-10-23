@@ -1,12 +1,11 @@
-from enum import Enum
+import sys
+
 import math
 from math import pi
 
 import numpy as np
 
-import sys
-sys.path.append('../')
-from utils import CameraFacing, FrameHalf
+from ..utils import CameraFacing, FrameHalf
 
 class Perspective:
     def __init__(self, frame_width=960, cam_fov_deg=45):
@@ -124,18 +123,14 @@ def convert_pov_to_cartesian(
     if cam_facing == CameraFacing.FRONT:
         if frame_half == FrameHalf.LEFT:
             th_abs = th_deviation
-        if frame_half == FrameHalf.RIGHT:
+        else: #FrameHalf.RIGHT:
             th_abs= 2*pi - th_deviation
-        else:
-            assert False
 
     if cam_facing == CameraFacing.REAR:
         if frame_half == FrameHalf.LEFT:
             th_abs= pi + th_deviation
-        if frame_half == FrameHalf.RIGHT:
+        else: #FrameHalf.RIGHT:
             th_abs= pi - th_deviation
-        else:
-            assert False
 
     x_coord = distance * math.cos(th_abs)
     y_coord = distance * math.sin(th_abs)

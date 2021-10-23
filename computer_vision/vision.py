@@ -14,9 +14,14 @@ from yolox.utils import fuse_model, get_model_info, postprocess, vis
 
 from subvision.sort.sort_minimal import Sort
 from subvision.watchout.watchout import Watchout
+from subvision.watchout.custom_vis import distance_custom_vis
+
 from subvision.perspective.perspective import Perspective
+
+from subvision.intercept.intercept import Intercept
+from subvision.intercept.custom_vis import TTE_EQ_custom_vis
+
 from subvision.utils import center_crop, combine_dets, split_dets
-from insight.overlayed_vis import custom_vis
 
 from debug_utils.avgtimer import AvgTimer # timer with rolling averages
 
@@ -46,6 +51,7 @@ def make_parser():
     parser.add_argument("--fuse", dest="fuse", default=False, action="store_true", help="Fuse conv and bn for testing.")
     parser.add_argument("--trt", dest='trt', default=False, action="store_true", help="Use TensorRT for faster inference. Always use on Jetson")
     parser.add_argument("--save_result", action="store_true", help="whether to save inference result")
+    parser.add_argument("--view_result", action="store_true", help="whether to view inference result live (slow)")
     return parser
 
 class Predictor:
@@ -305,17 +311,26 @@ def main(exp, args):
                 track_id = combined_dets[:,8]
 
                 #result_frame = vis(img,bboxes,scores,cls,cls_conf, predictor.cls_names)
-                result_frame = custom_vis(img,bboxes,scores,cls, distance, track_id, cls_conf, predictor.cls_names)
+                result_frame = distance_custom_vis(img,bboxes,scores,cls, distance, track_id, cls_conf, predictor.cls_names)
 
                 perspective_output = perspective.step(combined_dets)
+                #for persp in perspective_output:
+                #    print(f"x: {persp[10]} , y: {persp[11]}")
 
-                intercept_output = intercept.step(perspective_output)
+                front_dangers, rear_dangers = intercept.step(perspective_output)
 
-                for persp in perspective_output:
-                    print(f"x: {persp[10]} , y: {persp[11]}")
+                # custom visualization : if bbox id is in front_dangers or rear_dangers,
+                # color it something different
+
+                # front_dangers is a dictionary where key: track_id, value: (TTE, EQ)
+
+
 
             if args.save_result:
                 vid_writer.write(result_frame)
+            if args.view_result:
+                cv2.imshow("results", result_frame)
+                cv2.waitKey(1)
             ch = cv2.waitKey(1)
             if ch==27 or ch==ord('q') or ch==ord('Q'):
                 break
