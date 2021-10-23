@@ -323,6 +323,13 @@ def main(exp, args):
                 # color it something different
 
                 # front_dangers is a dictionary where key: track_id, value: (TTE, EQ)
+                logger.info("Front Threats")
+                for fd in front_dangers:
+                    logger.info(f"Object id {fd} will pass me in {round(front_dangers[fd][0].item(), 2)} seconds, at a distance of {round(front_dangers[fd][1].item(), 2)} meters.")
+
+                logger.info("Rear Threats")
+                for rd in rear_dangers:
+                    logger.info(f"Object id {rd} will pass me in {round(rear_dangers[rd][0].item(), 2)} seconds, at a distance of {round(rear_dangers[rd][1].item(), 2)} meters.")
 
 
 
@@ -335,12 +342,13 @@ def main(exp, args):
             if ch==27 or ch==ord('q') or ch==ord('Q'):
                 break
 
+
             avgtimer.end('frame')
-            logger.info('\n')
-            logger.info(f"{1/(avgtimer.rolling_avg('frame'))} FPS")
-            logger.info(f"SORT: {avgtimer.rolling_avg('sort')} seconds")
-            logger.info(f"Watchout: {avgtimer.rolling_avg('watchout')} seconds")
-            logger.info(f"{len(outputs[0]) if outputs[0] is not None else 0} objects detected")
+           # logger.info('\n')
+           # logger.info(f"{1/(avgtimer.rolling_avg('frame'))} FPS")
+           # logger.info(f"SORT: {avgtimer.rolling_avg('sort')} seconds")
+           # logger.info(f"Watchout: {avgtimer.rolling_avg('watchout')} seconds")
+           # logger.info(f"{len(outputs[0]) if outputs[0] is not None else 0} objects detected")
 
 if __name__ == "__main__":
     args = make_parser().parse_args()

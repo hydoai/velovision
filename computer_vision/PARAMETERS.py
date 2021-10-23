@@ -43,27 +43,29 @@ REAR_TTE_THRESH = {
     6 : 3.,
     }
 FRONT_EP_THRESH= {
-    # category id : encounter proximity threshold (meters)
-    0 : 5.,
-    1 : 5.,
-    2 : 5.,
-    3 : 5.,
-    4 : 5.,
-    5 : 5.,
-    6 : 5.,
+    # category_id : (left_proximity, right_proximity)
+    # in meters
+    0 : ( 5., 5.),
+    1 : ( 5., 5.),
+    2 : ( 5., 5.),
+    3 : ( 5., 5.),
+    4 : ( 5., 5.),
+    5 : ( 5., 5.),
+    6 : ( 5., 5.),
     }
 REAR_EP_THRESH= {
-    # category id : encounter proximity threshold (meters)
-    0 : 5.,
-    1 : 5.,
-    2 : 5.,
-    3 : 5.,
-    4 : 5.,
-    5 : 5.,
-    6 : 5.,
+    # category_id : (left_proximity, right_proximity)
+    # in meters
+    0 : ( 5., 5.),
+    1 : ( 5., 5.),
+    2 : ( 5., 5.),
+    3 : ( 5., 5.),
+    4 : ( 5., 5.),
+    5 : ( 5., 5.),
+    6 : ( 5., 5.),
     }
 
 # Hit streak threshold (TTE and EQ are both true)
 
-FRONT_HIT_STREAK_THRESH = 5
+FRONT_HIT_STREAK_THRESH = 3
 REAR_HIT_STREAK_THRESH = 3

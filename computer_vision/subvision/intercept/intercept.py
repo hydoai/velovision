@@ -18,20 +18,22 @@ class KalmanPointObject:
         self.category_id = category_id
         self.camera_facing = camera_facing
         self.birth_location = init_point # used to avoid warning in group riding / paceline situations; only warn about people approach from a distance
-        self.hit_streak = 0 # used as a dumb filter
-        self.warned_about = False
+
+        self.history = []
+        self.hits = 0
+        self.hit_streak = 0
+        self.age = 0
 
         # important calculated features
-        self.time_to_encounter = 9999 # time_to_encounter(tte)
-        self.encounter_proximity = 9999 # encounter_proximity (ep)
+        self.time_to_encounter = None# time_to_encounter(tte)
+        self.encounter_proximity = None# encounter_proximity (ep)
 
-        if camera_facing == CameraFacing.FRONT:
-            self.tte_thresh = FRONT_TTE_THRESH[category_id]
-            self.ep_thresh = FRONT_EP_THRESH[category_id]
+        if self.camera_facing == CameraFacing.FRONT:
+            self.tte_thresh = FRONT_TTE_THRESH[self.category_id]
+            self.ep_thresh = FRONT_EP_THRESH[self.category_id]
         else: # CameraFacing.REAR
-            self.tte_thresh = REAR_TTE_THRESH[category_id]
-            self.ep_thresh = REAR_EP_THRESH[category_id]
-
+            self.tte_thresh = REAR_TTE_THRESH[self.category_id]
+            self.ep_thresh = REAR_EP_THRESH[self.category_id]
 
         self.over_threshold = []
         # to be filled with tuple (time_to_encounter, encounter_proximity) if both thresholds are reached at every frame
@@ -66,10 +68,10 @@ class KalmanPointObject:
 
         # state covariance
         self.kf.P = np.array([
-            [500.,0,0,0], # 500 is set high for initial x value
-            [0.,  9,0,0], #9 is from (max x velocity/3)^2 in m/s.
-            [0.,0,100,0], # initial y value variance is a bit lower than that for x
-            [0.,0,  0,1]]) # initial y velocity variance is also lower
+            [100.,0,0,0], # 500 is set high for initial x value
+            [0.,5,0,0], #9 is from (max x velocity/3)^2 in m/s.
+            [0.,0,10,0], # initial y value variance is a bit lower than that for x
+            [0.,0,0,0.1]]) # initial y velocity variance is also lower
 
         # state transition function: old state is multiplied by this array to get naive prediction of new state
         dt = 0.03 # time step is 30 frames/sec
@@ -80,7 +82,7 @@ class KalmanPointObject:
             [0.,0, 0, 1]])
 
         # Process noise: external factors that alter kinematics of object out of the expected Newtonian mechanics
-        self.kf.Q = Q_discrete_white_noise(dim=4, dt=0.03, var=0.5)
+        self.kf.Q = Q_discrete_white_noise(dim=4, dt=0.03, var=10)
         # dt is 30 fps
         # var is a guess
 
@@ -95,18 +97,28 @@ class KalmanPointObject:
         self.kf.update(coordinates)
         x_pred = self.kf.x
 
-
-
-        # TODO pseudocode
         x = x_pred[0]
-        vx = x_pred[1]
+        dxdt = x_pred[1]
         y = x_pred[2]
-        vy = x_pred[3]
+        dydt = x_pred[3]
 
-        self.time_to_encounter = x / vx
-        self.encounter_proximity = vy * self.time_to_encounter # assuming linear motion
+        # KEY FEATURES
+        self.time_to_encounter = - x / dxdt
+        self.encounter_proximity = dydt * self.time_to_encounter # assuming linear motion
 
-        if self.time_to_encounter < self.tte_thresh and self.encounter_proximity < self.ep_thresh:
+        # threshold constants are defined with respect to 'left/right' of frame
+        # a x,y coordinate system is used here.
+        # therefore some signs need flipping
+        if self.camera_facing == CameraFacing.FRONT:
+            upper_ep_bound = self.ep_thresh[0]
+            lower_ep_bound = self.ep_thresh[1] * -1
+        else: # CameraFacing.REAR
+            lower_ep_bound = self.ep_thresh[0] * -1
+            upper_ep_bound = self.ep_thresh[1]
+
+        ep_thresh_violated = (self.encounter_proximity > lower_ep_bound) and (self.encounter_proximity < upper_ep_bound)
+
+        if (self.time_to_encounter < self.tte_thresh) and self.time_to_encounter > 0 and ep_thresh_violated:
             self.over_threshold.append((self.time_to_encounter, self.encounter_proximity))
 
         if self.camera_facing == CameraFacing.FRONT:
@@ -129,8 +141,12 @@ class Intercept:
     KalmanPointObjects whose above values are within a threshold are considered 'dangerous'.
 
     '''
-    def __init__(self):
+    def __init__(self,
+            max_age=2
+            ):
         self.kf_points= {} # a dict, where key is track_id and value is a KalmanPointObject
+        self.max_age = 2
+
 
     def step(self, input):
         '''
@@ -150,22 +166,6 @@ class Intercept:
             10 : x coordinate
             11: y coordinate
 
-        an np.array of shape (n,14) where
-        output:
-            0 : x1
-            1 : y1
-            2 : x2
-            3 : y2
-            4 : class index
-            5 : x_center
-            6 : y_center
-            7 : assigned to front (0) or rear(1)
-            8 : track id
-            9 : distance
-            10 : x coordinate
-            11 : y coordinate
-        NEW 12 : time to encounter
-        NEW 13 : y-intercept of encounter
         '''
 
         clean_input = self.preprocess(input)
@@ -186,11 +186,17 @@ class Intercept:
                 kf_point = self.kf_points[track_id]
                 kf_point_state = kf_point.update(coordinates)
             else:
+                #
                 self.kf_points.update(
                         {track_id : KalmanPointObject(track_id, camera_facing, category_id, coordinates)}
                         )
 
+
         # TODO delete old kalman filter objects
+        for track_id in self.kf_points:
+            pass
+
+
 
 
         # check if any point objects are posing immediate threat
@@ -205,11 +211,6 @@ class Intercept:
                 else:
                     rear_dangers.update({int(point.track_id) : (point.time_to_encounter, point.encounter_proximity)})
         return front_dangers, rear_dangers
-
-
-
-
-
 
     def preprocess(self, inp):
         '''
