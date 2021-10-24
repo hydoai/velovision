@@ -113,4 +113,6 @@ SORT_MAX_AGE = 1000
 SORT_MIN_HITS = 2
 SORT_IOU_THRESH = 0.2
 
-
+# Audio parameters
+FRONT_MIN_RING_GAP = 3 # avoid overlapping audio alarm
+REAR_MIN_RING_GAP = 3

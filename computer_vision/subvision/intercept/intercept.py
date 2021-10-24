@@ -1,7 +1,9 @@
-from ..utils import CameraFacing
-from PARAMETERS import *
+import time
 
 import numpy as np
+
+from ..utils import CameraFacing
+from PARAMETERS import *
 
 from filterpy.kalman import KalmanFilter
 from filterpy.common import Q_discrete_white_noise
@@ -180,7 +182,14 @@ class Intercept:
             ):
         self.kf_points= {} # a dict, where key is track_id and value is a KalmanPointObject
 
+        # objects that are about to overtake me; live updated
+        self.front_dangers = {}
+        self.rear_dangers = {}
 
+        self.front_last_ring_time = 0
+        self.rear_last_ring_time = 0
+
+        self.already_warned_ids = [] # do not emit multiple rings for the same object
     def step(self, input):
         '''
         expected input:
@@ -231,25 +240,51 @@ class Intercept:
 
 
         # check if any point objects are posing immediate threat
-        front_dangers = {}
-        rear_dangers = {}
         for point_key in self.kf_points:
             point = self.kf_points[point_key]
 
             if point.dangerous == True:
                 if point.camera_facing == CameraFacing.FRONT:
-                    front_dangers.update({int(point.track_id) : (point.time_to_encounter, point.encounter_proximity)})
+                    self.front_dangers.update({int(point.track_id) : (point.time_to_encounter, point.encounter_proximity)})
                 else:
-                    rear_dangers.update({int(point.track_id) : (point.time_to_encounter, point.encounter_proximity)})
+                    self.rear_dangers.update({int(point.track_id) : (point.time_to_encounter, point.encounter_proximity)})
             else: #point.dangerous == False
                 if point.camera_facing == CameraFacing.FRONT:
-                    if int(point.track_id) in front_dangers.keys():
-                        front_dangers.pop(point.track_id)
+                    if int(point.track_id) in self.front_dangers.keys():
+                        self.front_dangers.pop(point.track_id)
                 else:
-                    if int(point.track_id) in rear_dangers.keys():
-                        rear_dangers.pop(point.track_id)
+                    if int(point.track_id) in self.rear_dangers.keys():
+                        self.rear_dangers.pop(point.track_id)
 
-        return front_dangers, rear_dangers
+        return self.front_dangers, self.rear_dangers
+
+    def should_ring_now(self):
+        '''
+        Output: Whether to send front and/or rear alarm at this time step
+        '''
+        front_ring_now = False
+        rear_ring_now = False
+
+        for key in self.front_dangers:
+            if key in self.already_warned_ids:
+                continue
+            else:
+                if time.time() - self.front_last_ring_time > FRONT_MIN_RING_GAP:
+                    front_ring_now = True
+                    self.already_warned_ids.append(key)
+                    self.front_last_ring_time = time.time()
+
+        for key in self.rear_dangers:
+            if key in self.already_warned_ids:
+                continue
+            else:
+                if time.time() - self.front_last_ring_time > REAR_MIN_RING_GAP:
+                    rear_ring_now = True
+                    self.already_warned_ids.append(key)
+                    self.rear_last_ring_time = time.time()
+
+        return front_ring_now, rear_ring_now
+
 
     def preprocess(self, inp):
         '''

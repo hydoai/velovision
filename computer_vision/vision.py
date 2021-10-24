@@ -1,4 +1,5 @@
 import argparse
+import sys
 import os
 import time
 from loguru import logger
@@ -25,6 +26,9 @@ from subvision.intercept.custom_vis import TTE_EQ_custom_vis
 from subvision.utils import center_crop, combine_dets, split_dets
 
 from debug_utils.avgtimer import AvgTimer # timer with rolling averages
+
+sys.path.append('../')
+from feedback_interface.sounds import GiSpeaker
 
 def make_parser():
     parser = argparse.ArgumentParser("YOLOX for Hydo")
@@ -157,6 +161,8 @@ def main(exp, args):
     perspective = Perspective()
     intercept = Intercept()
 
+    gi_speaker = GiSpeaker()
+
     while True:
         ret_val0, frame0 = cap0.read()
         ret_val1, frame1 = cap1.read()
@@ -191,6 +197,7 @@ def main(exp, args):
                 # then combine the split detections back into one array for visualization.
                 combined_dets = combine_dets(front_watchout_output, rear_watchout_output, args.crop0_height)
 
+
             img = img_info['raw_img']
             if outputs[0] is None:
                 result_frame = img
@@ -207,24 +214,19 @@ def main(exp, args):
                 #result_frame = distance_custom_vis(img,bboxes,scores,cls, distance, track_id, cls_conf, predictor.cls_names)
 
                 perspective_output = perspective.step(combined_dets)
-                #for persp in perspective_output:
-                #    print(f"x: {persp[10]} , y: {persp[11]}")
 
                 front_dangers, rear_dangers = intercept.step(perspective_output)
 
-                # custom visualization : if bbox id is in front_dangers or rear_dangers,
-                # color it something different
-
-                # front_dangers is a dictionary where key: track_id, value: (TTE, EQ)
-                #logger.info("Front Threats")
-                #for fd in front_dangers:
-                #    logger.info(f"Object id {fd} will pass me in {round(front_dangers[fd][0].item(), 2)} seconds, at a distance of {round(front_dangers[fd][1].item(), 2)} meters.")
-
-                #logger.info("Rear Threats")
-                #for rd in rear_dangers:
-                #    logger.info(f"Object id {rd} will pass me in {round(rear_dangers[rd][0].item(), 2)} seconds, at a distance of {round(rear_dangers[rd][1].item(), 2)} meters.")
-
                 result_frame = TTE_EQ_custom_vis(img, bboxes, scores, cls, distance, front_dangers, rear_dangers, track_id, conf=0.5, class_names=HYDO_CLASSES)
+
+                front_ring_now, rear_ring_now = intercept.should_ring_now()
+
+                if front_ring_now:
+                    gi_speaker.play_left()
+
+                if rear_ring_now:
+                    gi_speaker.play_right() # front speaker is connect to right channel
+
 
 
             if args.save_result:
