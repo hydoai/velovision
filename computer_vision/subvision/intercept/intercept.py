@@ -1,5 +1,5 @@
 from ..utils import CameraFacing
-from PARAMETERS import FRONT_TTE_THRESH, REAR_TTE_THRESH, FRONT_EP_THRESH, REAR_EP_THRESH, FRONT_HIT_STREAK_THRESH, REAR_HIT_STREAK_THRESH
+from PARAMETERS import *
 
 import numpy as np
 
@@ -35,7 +35,7 @@ class KalmanPointObject:
             self.tte_thresh = REAR_TTE_THRESH[self.category_id]
             self.ep_thresh = REAR_EP_THRESH[self.category_id]
 
-        self.over_threshold = []
+        self.over_threshold = 0
         # to be filled with tuple (time_to_encounter, encounter_proximity) if both thresholds are reached at every frame
 
         self.dangerous = False
@@ -67,11 +67,16 @@ class KalmanPointObject:
             [0., 10]])
 
         # state covariance
+        x_v = KPO_X_VAR
+        xd_v = KPO_X_DOT_VAR
+        y_v = KPO_Y_VAR
+        yd_v = KPO_Y_DOT_VAR
+
         self.kf.P = np.array([
-            [100.,0,0,0], # 500 is set high for initial x value
-            [0.,5,0,0], #9 is from (max x velocity/3)^2 in m/s.
-            [0.,0,10,0], # initial y value variance is a bit lower than that for x
-            [0.,0,0,0.1]]) # initial y velocity variance is also lower
+            [x_v, 0.,0,0], # Unknown initial x value -> large number (1000)
+            [0.,xd_v,0,0], #9 is from (max x velocity/3)^2 in m/s.
+            [0.,0, y_v,0], # initial y value variance is a bit lower than that for x
+            [0.,0,0,yd_v]]) # initial y velocity variance is also lower
 
         # state transition function: old state is multiplied by this array to get naive prediction of new state
         dt = 0.03 # time step is 30 frames/sec
@@ -92,6 +97,29 @@ class KalmanPointObject:
         self.kf.z = init_point
 
     def update(self, coordinates):
+        '''
+        encounter_proximity (EP) signs explained:
+        ┌────────────────────────────────┐
+        │             Front              │
+        │                                │
+        │               ┼                │
+        │  ◄──────────     ───────────►  │
+        │  positive EP  ┼  negative EP   │
+        │                                │
+        │               ┼                │
+        │                                │
+        ├────────────────────────────────┤
+        │             Rear               │
+        │               ┼                │
+        │                                │
+        │  ◄─────────── ┼  ───────────►  │
+        │  negative EP     positive EP   │
+        │               ┼                │
+        │                                │
+        │               │                │
+        └───────────────┴────────────────┘
+        '''
+
 
         self.kf.predict()
         self.kf.update(coordinates)
@@ -106,9 +134,7 @@ class KalmanPointObject:
         self.time_to_encounter = - x / dxdt
         self.encounter_proximity = dydt * self.time_to_encounter # assuming linear motion
 
-        # threshold constants are defined with respect to 'left/right' of frame
-        # a x,y coordinate system is used here.
-        # therefore some signs need flipping
+        # see above diagram for explanation of signs
         if self.camera_facing == CameraFacing.FRONT:
             upper_ep_bound = self.ep_thresh[0]
             lower_ep_bound = self.ep_thresh[1] * -1
@@ -117,16 +143,29 @@ class KalmanPointObject:
             upper_ep_bound = self.ep_thresh[1]
 
         ep_thresh_violated = (self.encounter_proximity > lower_ep_bound) and (self.encounter_proximity < upper_ep_bound)
+        tte_thresh_violated = (self.time_to_encounter < self.tte_thresh) and (self.time_to_encounter > 0)
 
-        if (self.time_to_encounter < self.tte_thresh) and self.time_to_encounter > 0 and ep_thresh_violated:
-            self.over_threshold.append((self.time_to_encounter, self.encounter_proximity))
+        if (tte_thresh_violated and ep_thresh_violated):
+            self.over_threshold += 1 * HIT_MULTIPLIER
+        else:
+            self.over_threshold -= 1 * MISS_MULTIPLIER
 
         if self.camera_facing == CameraFacing.FRONT:
-            if len(self.over_threshold) == FRONT_HIT_STREAK_THRESH:
+            if self.over_threshold > FRONT_HIT_STREAK_THRESH:
                 self.dangerous = True
+                self.over_threshold = min(self.over_threshold, FRONT_MAX_STREAK)
+            else:
+                self.dangerous = False
+                self.over_threshold = max(0, self.over_threshold) # no negative count of hits
         else:
-            if len(self.over_threshold) == REAR_HIT_STREAK_THRESH:
+            if self.over_threshold > REAR_HIT_STREAK_THRESH:
                 self.dangerous = True
+                self.over_threshold = min(self.over_threshold, REAR_MAX_STREAK)
+            else:
+                self.dangerous = False
+                self.over_threshold = max(0,self.over_threshold)
+        print(f"ID {self.track_id}: {self.over_threshold}")
+
 
 
 
@@ -192,13 +231,6 @@ class Intercept:
                         )
 
 
-        # TODO delete old kalman filter objects
-        for track_id in self.kf_points:
-            pass
-
-
-
-
         # check if any point objects are posing immediate threat
         front_dangers = {}
         rear_dangers = {}
@@ -210,6 +242,14 @@ class Intercept:
                     front_dangers.update({int(point.track_id) : (point.time_to_encounter, point.encounter_proximity)})
                 else:
                     rear_dangers.update({int(point.track_id) : (point.time_to_encounter, point.encounter_proximity)})
+            else: #point.dangerous == False
+                if point.camera_facing == CameraFacing.FRONT:
+                    if int(point.track_id) in front_dangers.keys():
+                        front_dangers.pop(point.track_id)
+                else:
+                    if int(point.track_id) in rear_dangers.keys():
+                        rear_dangers.pop(point.track_id)
+
         return front_dangers, rear_dangers
 
     def preprocess(self, inp):

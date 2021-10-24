@@ -2,15 +2,15 @@
     SORT: A Simple, Online and Realtime Tracker
     Copyright (C) 2016-2020 Alex Bewley alex@bewley.ai
 
-        Altered by Jason Sohn for hydo
+        Altered by Jason Sohn for hydo (project gimondi)
 
         -Class-aware tracking: The original implementation throws away the detected
-        class information (e.g. 0 for 'person', 1 for 'bicycle', etc). In this modification, 
+        class information (e.g. 0 for 'person', 1 for 'bicycle', etc). In this modification,
         the class is stored and updated every frame
 
         - update() returns tracked detections as:
         [x1,y1,x2,y2, category, d(x_center)/dt, d(y_center)/dt, d(area)/dt, object_id]
-        
+
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -42,6 +42,10 @@ import numpy as np
 #import argparse
 from filterpy.kalman import KalmanFilter
 
+import sys
+sys.path.append('../..')
+from PARAMETERS import SORT_R_MULT, SORT_P1_MULT, SORT_P2_MULT, SORT_Q_MULT
+
 np.random.seed(0)
 
 def linear_assignment(cost_matrix):
@@ -61,7 +65,7 @@ def iou_batch(bb_test, bb_gt):
   """
   bb_gt = np.expand_dims(bb_gt, 0)
   bb_test = np.expand_dims(bb_test, 1)
-  
+
   xx1 = np.maximum(bb_test[..., 0], bb_gt[..., 0])
   yy1 = np.maximum(bb_test[..., 1], bb_gt[..., 1])
   xx2 = np.minimum(bb_test[..., 2], bb_gt[..., 2])
@@ -69,9 +73,9 @@ def iou_batch(bb_test, bb_gt):
   w = np.maximum(0., xx2 - xx1)
   h = np.maximum(0., yy2 - yy1)
   wh = w * h
-  o = wh / ((bb_test[..., 2] - bb_test[..., 0]) * (bb_test[..., 3] - bb_test[..., 1])                                      
-    + (bb_gt[..., 2] - bb_gt[..., 0]) * (bb_gt[..., 3] - bb_gt[..., 1]) - wh)                                              
-  return(o)  
+  o = wh / ((bb_test[..., 2] - bb_test[..., 0]) * (bb_test[..., 3] - bb_test[..., 1])
+    + (bb_gt[..., 2] - bb_gt[..., 0]) * (bb_gt[..., 3] - bb_gt[..., 1]) - wh)
+  return(o)
 
 
 def convert_bbox_to_z(bbox):
@@ -112,18 +116,18 @@ class KalmanBoxTracker(object):
     Initialises a tracker using initial bounding box.
     """
     #define constant velocity model
-    self.kf = KalmanFilter(dim_x=7, dim_z=4) 
+    self.kf = KalmanFilter(dim_x=7, dim_z=4)
     self.kf.F = np.array([[1,0,0,0,1,0,0],[0,1,0,0,0,1,0],[0,0,1,0,0,0,1],[0,0,0,1,0,0,0],  [0,0,0,0,1,0,0],[0,0,0,0,0,1,0],[0,0,0,0,0,0,1]])
     self.kf.H = np.array([[1,0,0,0,0,0,0],[0,1,0,0,0,0,0],[0,0,1,0,0,0,0],[0,0,0,1,0,0,0]])
 
-    self.kf.R[2:,2:] *= 10.
-    self.kf.P[4:,4:] *= 1000. #give high uncertainty to the unobservable initial velocities
-    self.kf.P *= 10.
-    self.kf.Q[-1,-1] *= 0.01
-    self.kf.Q[4:,4:] *= 0.01
+    self.kf.R[2:,2:] *= SORT_R_MULT
+    self.kf.P[4:,4:] *= SORT_P1_MULT #give high uncertainty to the unobservable initial velocities
+    self.kf.P *= SORT_P2_MULT
+    self.kf.Q[-1,-1] *= SORT_Q_MULT
+    self.kf.Q[4:,4:] *= SORT_Q_MULT
 
     self.kf.x[:4] = convert_bbox_to_z(bbox) # self.kf.x = [u,v,s,r,u_dot,v_dot,s_dot]
-    # where 
+    # where
     # u = horizontal pixel location of center of target
     # v = vertical pixel location of center of target
     # s = area of target box (scale)
@@ -285,11 +289,11 @@ def parse_args():
     parser.add_argument('--display', dest='display', help='Display online tracker output (slow) [False]',action='store_true')
     parser.add_argument("--seq_path", help="Path to detections.", type=str, default='data')
     parser.add_argument("--phase", help="Subdirectory in seq_path.", type=str, default='train')
-    parser.add_argument("--max_age", 
-                        help="Maximum number of frames to keep alive a track without associated detections.", 
+    parser.add_argument("--max_age",
+                        help="Maximum number of frames to keep alive a track without associated detections.",
                         type=int, default=1)
-    parser.add_argument("--min_hits", 
-                        help="Minimum number of associated detections before track is initialised.", 
+    parser.add_argument("--min_hits",
+                        help="Minimum number of associated detections before track is initialised.",
                         type=int, default=3)
     parser.add_argument("--iou_threshold", help="Minimum IOU for match.", type=float, default=0.3)
     args = parser.parse_args()
@@ -315,12 +319,12 @@ if __name__ == '__main__':
 #    os.makedirs('output')
 #  pattern = os.path.join(args.seq_path, phase, '*', 'det', 'det.txt')
 #  for seq_dets_fn in glob.glob(pattern):
-#    mot_tracker = Sort(max_age=args.max_age, 
+#    mot_tracker = Sort(max_age=args.max_age,
 #                       min_hits=args.min_hits,
 #                       iou_threshold=args.iou_threshold) #create instance of the SORT tracker
 #    seq_dets = np.loadtxt(seq_dets_fn, delimiter=',')
 #    seq = seq_dets_fn[pattern.find('*'):].split(os.path.sep)[0]
-#    
+#
 #    with open(os.path.join('output', '%s.txt'%(seq)),'w') as out_file:
 #      print("Processing %s."%(seq))
 #      for frame in range(int(seq_dets[:,0].max())):
