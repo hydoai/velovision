@@ -1,6 +1,6 @@
 # Read push button input
 # Send End of Stream message to recording streams
-# Shutdown 
+# Shutdown
 import os
 import time
 import RPi.GPIO as GPIO

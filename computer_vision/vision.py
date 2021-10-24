@@ -223,6 +223,7 @@ def main(exp, args):
 
                 if front_ring_now:
                     gi_speaker.play_left()
+                    # FEATURE REQUEST : change volume depending on distance
 
                 if rear_ring_now:
                     gi_speaker.play_right() # front speaker is connect to right channel
