@@ -164,10 +164,6 @@ class KalmanPointObject:
             else:
                 self.dangerous = False
                 self.over_threshold = max(0,self.over_threshold)
-        print(f"ID {self.track_id}: {self.over_threshold}")
-
-
-
 
 class Intercept:
     '''
@@ -181,10 +177,8 @@ class Intercept:
 
     '''
     def __init__(self,
-            max_age=2
             ):
         self.kf_points= {} # a dict, where key is track_id and value is a KalmanPointObject
-        self.max_age = 2
 
 
     def step(self, input):
@@ -229,6 +223,11 @@ class Intercept:
                 self.kf_points.update(
                         {track_id : KalmanPointObject(track_id, camera_facing, category_id, coordinates)}
                         )
+
+        # delete some old kfpoint objects in history
+        if len(self.kf_points) > 100:
+            for key_del in sorted(self.kf_points.keys())[:50]: #delete the 50 oldest ones
+                self.kf_points.pop(key_del)
 
 
         # check if any point objects are posing immediate threat

@@ -32,25 +32,27 @@ REAR_NUDGE_RIGHT = 0
 
 # Time-to-encounter and Encounter-proximity thresholds for each category
 
+
+# disable any category detection by setting value to negative value
 FRONT_TTE_THRESH = {
     # category id : time to encounter threshold (seconds)
-    0 : 10.,
-    1 : 10.,
-    2 : 10.,
-    3 : 10.,
-    4 : 10.,
-    5 : 10.,
-    6 : 10.,
+    0 : 10., # bicycle
+    1 : 10., # bus
+    2 : 10., # car
+    3 : 10., # cyclist
+    4 : 10., # motorcycle
+    5 : 10., # pedestrian
+    6 : 10., # truck
     }
 REAR_TTE_THRESH = {
     # category id : time to encounter threshold (seconds)
-    0 : 10.,
-    1 : 10.,
-    2 : 10.,
-    3 : 10.,
-    4 : 10.,
-    5 : 10.,
-    6 : 10.,
+    0 : 10., # bicycle
+    1 : 15., # bus
+    2 : 15., # car
+    3 : 10., # cyclist
+    4 : 10., # motorcycle
+    5 : 10., # pedestrian
+    6 : 15., # truck
     }
 FRONT_EP_THRESH= {
     # category_id : (left_proximity, right_proximity)
