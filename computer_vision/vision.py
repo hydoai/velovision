@@ -53,6 +53,7 @@ def make_parser():
     parser.add_argument("--trt", dest='trt', default=False, action="store_true", help="Use TensorRT for faster inference. Always use on Jetson")
     parser.add_argument("--save_result", action="store_true", help="whether to save inference result")
     parser.add_argument("--view_result", action="store_true", help="whether to view inference result live (slow)")
+    parser.add_argument("--window_size", type=int, default=1000, help="if --view_result is True, set this window size. Larger makes it much slower.")
     return parser
 
 def main(exp, args):
@@ -234,7 +235,7 @@ def main(exp, args):
                 vid_writer.write(result_frame)
             if args.view_result:
                 cv2.namedWindow('result', cv2.WINDOW_NORMAL)
-                cv2.resizeWindow('result', 1400,1400) # runtime speed depends heavily on size
+                cv2.resizeWindow('result', args.window_size,args.window_size) # runtime speed depends heavily on size
                 cv2.imshow("result", result_frame)
                 cv2.waitKey(1)
             ch = cv2.waitKey(1)
@@ -243,8 +244,8 @@ def main(exp, args):
 
 
             avgtimer.end('frame')
-           # logger.info('\n')
-           # logger.info(f"{1/(avgtimer.rolling_avg('frame'))} FPS")
+            logger.info('\n')
+            logger.info(f"{round(1/(avgtimer.rolling_avg('frame')),2)} FPS")
            # logger.info(f"SORT: {avgtimer.rolling_avg('sort')} seconds")
            # logger.info(f"Watchout: {avgtimer.rolling_avg('watchout')} seconds")
            # logger.info(f"{len(outputs[0]) if outputs[0] is not None else 0} objects detected")

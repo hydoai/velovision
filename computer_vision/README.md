@@ -38,3 +38,5 @@ python3 vision.py -vid0 ~/Videos/long-passing.mp4 -vid1 ~/Videos/long-being-over
 ```
 + the `-f` argument will retrieve neural network architecture information from `exps` file
 + and also automatically find the best checkpoint from `YOLOX_outputs`
+
+In order to use TensorRT (device-specific NVIDIA optimizations), use `tools/trt.py` in YOLOX_tt repository. If you get a `'NoneType' object has no attribute 'serialize` error, it's because the workspace size is too big and memory ran out.
