@@ -33,6 +33,8 @@ Download example / benchmark video from [Google Drive](https://drive.google.com/
 
 Run inference
 
+**DESKTOP**
+
 ```bash
 python3 vision.py -vid0 ~/Videos/long-passing.mp4 -vid1 ~/Videos/long-being-overtaken.mp4 -f yolox_exps/nano-alpha.py --view_result --save_result
 ```
@@ -40,3 +42,8 @@ python3 vision.py -vid0 ~/Videos/long-passing.mp4 -vid1 ~/Videos/long-being-over
 + and also automatically find the best checkpoint from `YOLOX_outputs`
 
 In order to use TensorRT (device-specific NVIDIA optimizations), use `tools/trt.py` in YOLOX_tt repository. If you get a `'NoneType' object has no attribute 'serialize` error, it's because the workspace size is too big and memory ran out.
+
+**JETSON** (with tensorRT)
+```bash
+python3 vision.py -vid0 ~/Videos/long-passing.mp4 -vid1 ~/Videos/long-being-overtaken.mp4 -f yolox_exps/nano-alpha.py --trt
+```
