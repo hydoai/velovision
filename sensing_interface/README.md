@@ -3,29 +3,29 @@
 ## Project Gimondi Specific Setup
 
 ```
-  ┌───────────────┐    ┌───────────────┐
-  │Raspberry Pi V2│    │ Arducam IMX291│
-  └───────┬───────┘    └──────┬────────┘
-          │                   │
-          │MIPI/CSI       USB ├───────────────┐
-          │                   │               │
-    ┌─────▼─────┐       ┌─────▼─────┐   ......▼......
-    │/dev/video0│       │/dev/video1│   ./dev/video2.
-    └─────┬─────┘       └─────┬─────┘   .............
-          │                   │             audio
-┌─────────┘                   └────────────────┐
-│                                              │
-│   ┌───────────┐  ┌────────┐  ┌───────────┐   │
-├──►│/dev/video3├─►│Computer│◄─┤/dev/video5│◄──┤
-│   └───────────┘  │Vision  │  └───────────┘   │
-│                  └────────┘                  │
-│   ┌───────────┐              ┌───────────┐   │
-└──►│/dev/video4│              │/dev/video6│◄──┘
-    └─────┬─────┘              └─────┬─────┘
-          │                          │
-          │                          │
-          ▼                          ▼
-      video file                 video file
+┌───────────────┐    ┌───────────────┐
+│Raspberry Pi V2│    │ Arducam IMX291│
+└───────┬───────┘    └──────┬────────┘
+        │                   │
+        │MIPI/CSI       USB ├───────────────┐
+        │                   │               │
+  ┌─────▼─────┐       ┌─────▼─────┐   ......▼......
+  │/dev/video0│       │/dev/video1│   ./dev/video2.
+  └─────┬─────┘       └──────────┬┘   .............
+        │                        │        audio
+        │                        │
+        │                        │
+  ┌─────▼─────┐  ┌────────┐  ┌───▼───────┐
+  │/dev/video3├─►│Computer│◄─┤/dev/video5│
+  └─────┬─────┘  │Vision  │  └─────┬─────┘
+        │        └────────┘        │
+  ┌─────▼─────┐              ┌─────▼─────┐
+  │/dev/video4│              │/dev/video6│
+  └─────┬─────┘              └─────┬─────┘
+        │                          │
+        │                          │
+        ▼                          ▼
+    video file                 video file
 ```
 
 
@@ -107,13 +107,6 @@ gst-launch-1.0 v4l2src device=/dev/video3 ! videoconvert ! x264enc ! mp4mux ! fi
 
 # Camera-Specific Settings & Examples
 
-+ `/dev/video0`: Raspberry Pi V2 CSI camera
-+ `/dev/video1`: USB camera
-+ (virtual) `/dev/video2`: USB camera saved to mp4 file
-+ (virtual) `/dev/video3`: USB camera into jetson inference
-+ (virtual) `/dev/video4`: CSI camera saved to mp4 file
-+ (virtual) `/dev/video5`: CSI camera into jetson inference
-
 ## USB Camera -> 1st Virtual Stream -> Hardware Accelerated Video Encode (saving)
 
 Assuming USB camera input is at `/dev/video1`.
@@ -174,7 +167,7 @@ while cap.isOpened():
 
 ### View camera
 ```bash
-gst-launch-1.0 nvarguscamerasrc ! 'video/x-raw(memory:NVMM), width=1280, height=720, framerate=60/1, format=NV12' ! nvvidconv flip-method=0 ! 'video/x-raw, width=960, height=616' ! nvvidconv ! nvegltransform ! nveglglessink -e
+gst-launch-1.0 nvarguscamerasrc ! 'video/x-raw(memory:NVMM), width=1280, height=720, framerate=60/1, format=NV12' ! nvvidconv flip-method=0 ! 'video/x-raw, width=960, height=616' ! xvimagesink -e
 ```
 ### Save video from camera (selected ones from NVIDIA Docs](https://docs.nvidia.com/jetson/l4t/index.html#page/Tegra%20Linux%20Driver%20Package%20Development%20Guide/accelerated_gstreamer.html#wwpID0E0R40HA))
 
