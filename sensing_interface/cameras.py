@@ -35,11 +35,14 @@ class CameraInterface:
         self.first_clone_csi(source=0, dest=3)
         self.first_clone_usb(source=1, dest=5)
 
-        sleep(3)
+        sleep(3) #IMPORTANT; pipelines need time to set up
 
         # second set of loopbacks (which are cloning loopback devices, so it can be accessed by any number of consumers)
         self.clone_loopback(source=3, dest=4) # both source and dest index devices are available for use, but stopping an access to source will kill the pipeline
         self.clone_loopback(source=5, dest=6)
+
+    def cap(self,index):
+        return cv2.VideoCapture(index)
 
     def clone_loopback(self, source, dest):
         def clone(source, dest):
@@ -61,28 +64,6 @@ class CameraInterface:
         proc = Process(target=usb_loopback, args=([source,dest]))
         proc.start()
 
-        
-
-
-
-        
-
-def create_cv_cap_piv2():
-    pass
-
-def create_cv_cap_imx291():
-    pass
-
-def clone_stream():
-    pass
-
-def record_stream_piv2():
-    pass
-
-def record_stream_imx291():
-    pass
-
-
 if __name__ == '__main__':
     # testing
     import argparse
@@ -99,3 +80,16 @@ if __name__ == '__main__':
     proc2 = Process(target=test_usb_stream, args=([6]))
     proc1.start()
     proc2.start()
+
+    cap3 = camint.cap(3)
+    cap5 = camint.cap(5)
+
+    while cap3.isOpened() and cap5.isOpened():
+        ret3, frame3 = cap3.read()
+        ret5, frame5 = cap5.read()
+
+        print(frame3.shape)
+        print(frame5.shape)
+
+
+
