@@ -61,9 +61,9 @@ class CameraInterface:
 
     def first_clone_csi(self, source, dest):
         def csi_loopback(source, dest):
-            width = 1920
-            height = 1080
-            fps = 30
+            width = 1280 
+            height = 720 
+            fps = 60
             os.system(f"gst-launch-1.0 nvarguscamerasrc sensor-id={source} ! 'video/x-raw(memory:NVMM), width={width}, height={height}, framerate={fps}/1' ! nvvidconv ! 'video/x-raw(memory:NVMM), width={width}, height={height}, framerate={fps}/1, format=I420' ! nvvidconv output-buffers=4 ! 'video/x-raw, width={width}, height={height}, framerate={fps}/1, format=UYVY' ! identity drop-allocation=true ! v4l2sink device=/dev/video{dest}")
             sleep(2)
 
@@ -78,14 +78,6 @@ class CameraInterface:
         proc = Process(target=usb_loopback, args=([source,dest]))
         proc.start()
 
-    def record_nvenc_h264(self,source, width, height, output_path=''):
-        output_path = f'/home/dwight/Videos/recording_{source}.mp4'
-        def record(source, width, height, output_path):
-            os.system(f"gst-launch-1.0 v4l2src device=/dev/video{source} ! 'video/x-raw,width={width}, height={height}, framerate=30/1' ! nvvidconv ! 'video/x-raw(memory:NVMM),format=I420' ! nvv4l2h264enc maxperf-enable=1 bitrate=8000000 ! h264parse ! qtmux ! filesink location={output_path} -e")
-        proc = Process(target=record, args=([source, width, height, output_path]))
-        proc.start()
-
-
     def record_nvenc_h264(self,source, width, height, output_path='', max_length=60, fps=30):
         '''
         Args:
@@ -96,12 +88,10 @@ class CameraInterface:
         os.makedirs(save_dir, exist_ok=True)
 
         def record(source, width, height, output_path, max_length, fps):
-            #os.system(f"gst-launch-1.0 v4l2src device=/dev/video{source} ! 'video/x-raw,width={width}, height={height}, framerate=30/1' ! nvvidconv ! 'video/x-raw(memory:NVMM),format=I420' ! nvv4l2h264enc maxperf-enable=1 bitrate=50000 ! h264parse ! qtmux ! filesink location={output_path} -e")
-
             while True:
                 output_path = os.path.join(save_dir,f"{round(time.time())}.mkv")
                 command = f"gst-launch-1.0 v4l2src device=/dev/video{source} ! 'video/x-raw,width={width}, height={height}, framerate={fps}/1' ! nvvidconv ! 'video/x-raw(memory:NVMM),format=I420' ! nvv4l2h264enc maxperf-enable=0 bitrate=500000 ! h264parse ! qtmux ! filesink location={output_path} -e"
-                command = f"gst-launch-1.0 v4l2src device=/dev/video{source} ! 'video/x-raw,width={width}, height={height}, framerate={fps}/1' ! nvvidconv ! 'video/x-raw(memory:NVMM),format=I420' ! nvv4l2h264enc maxperf-enable=0 bitrate=3000000 ! h264parse ! matroskamux ! filesink location={output_path}"
+                command = f"gst-launch-1.0 v4l2src device=/dev/video{source} ! 'video/x-raw,width={width}, height={height}, framerate={fps}/1' ! nvvidconv ! 'video/x-raw(memory:NVMM),format=I420' ! nvv4l2h265enc maxperf-enable=1 bitrate=1000000 ! h265parse ! matroskamux ! filesink location={output_path} -e"
                 process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True, bufsize=1, shell=True)
                 sleep(max_length)
                 process.send_signal(signal.SIGINT)
@@ -122,15 +112,14 @@ if __name__ == '__main__':
 
     #test_usb_stream(4)
     #test_usb_stream(6)
-    camint.record_nvenc_h264(4, 1920, 1080, fps=30, max_length=30) # video is saved to /home/dwight/Videos/recording_4.mp4
-    camint.record_nvenc_h264(6, 640, 480, fps=30, max_length=30)
+
+    camint.record_nvenc_h264(4, 1280, 720, fps=30, max_length=60) # video is saved to /home/dwight/Videos/recording_4.mp4
+    camint.record_nvenc_h264(6, 640, 480, fps=30, max_length=60)
     
-    sleep(3)
+    #cap3 = camint.create_cap(3)
+    #cap5 = camint.create_cap(5)
 
-    cap3 = camint.create_cap(3)
-    cap5 = camint.create_cap(5)
-
-    while True and cap3.isOpened() and cap5.isOpened():
+    while False and cap3.isOpened() and cap5.isOpened():
         ret3, frame3 = cap3.read()
         ret5, frame5 = cap5.read()
 
