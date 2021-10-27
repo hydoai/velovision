@@ -102,7 +102,8 @@ gst-launch-1.0 v4l2src device=/dev/video2 ! xvimagesink
 
 View MJPEG stream (instead of RAW; for higher resolution)
 ```bash
-gst-launch-1.0 -v v4l2src device=/dev/video1 ! image/jpeg, width=1280, height=720, framerate=30/1, format=MJPG ! jpegdec ! xvimagesink
+gst-launch-1.0 v4l2src io-mode=2 device=/dev/video1 ! "image/jpeg,framerate=30/1,width=1280,height=720" ! jpegdec ! video/x-raw ! xvimagesink
+
 ```
 Save video from second virtual stream: (note: very inefficient on Jetson Nano because no hardware acceleration)
 ```bash
