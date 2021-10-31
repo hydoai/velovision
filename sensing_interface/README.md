@@ -28,6 +28,21 @@
     video file                 video file
 ```
 
+# Python scripts for the below steps available:
+
+Pass in root password when running the script:
+```bash
+python3 cameras.py --password ROOT_PASSWORD
+```
+
+This create the above graph.
+
+The save directory is at `~/Videos/recording_4` and ~/Videos/recording_6`.
+
+TODO: incorporate into computer_vision/vision.py
+
+
+
 
 # How to set up duplicated video pipeline for saving & inference
 

@@ -1,14 +1,6 @@
 '''
 Interface for camera-specific, NVIDIA-hardware accelerated camera access and video recording.
 
-Use example:
-
-    cap = cameras.pi_v2_cam(width=1280, height=720) # cap is a cv2.VideoCapture object
-
-    while True:
-        ret_val, frame = cap.read()
-        if ret_val == True:
-            # do image processing
 '''
 import time
 from time import sleep
