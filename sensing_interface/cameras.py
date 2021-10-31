@@ -90,8 +90,7 @@ class CameraInterface:
         def record(source, width, height, output_path, max_length, fps):
             while True:
                 output_path = os.path.join(save_dir,f"{round(time.time())}.mkv")
-                command = f"gst-launch-1.0 v4l2src device=/dev/video{source} ! 'video/x-raw,width={width}, height={height}, framerate={fps}/1' ! nvvidconv ! 'video/x-raw(memory:NVMM),format=I420' ! nvv4l2h264enc maxperf-enable=0 bitrate=500000 ! h264parse ! qtmux ! filesink location={output_path} -e"
-                command = f"gst-launch-1.0 v4l2src device=/dev/video{source} ! 'video/x-raw,width={width}, height={height}, framerate={fps}/1' ! nvvidconv ! 'video/x-raw(memory:NVMM),format=I420' ! nvv4l2h265enc maxperf-enable=1 bitrate=1000000 ! h265parse ! matroskamux ! filesink location={output_path} -e"
+                command = f"gst-launch-1.0 v4l2src io-mode=2 device=/dev/video{source} ! 'video/x-raw,width={width}, height={height}, framerate={fps}/1' ! nvvidconv ! 'video/x-raw(memory:NVMM),format=I420' ! nvv4l2h265enc maxperf-enable=1 bitrate=1000000 ! h265parse ! matroskamux ! filesink append=true location={output_path} -e"
                 process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True, bufsize=1, shell=True)
                 sleep(max_length)
                 process.send_signal(signal.SIGINT)
