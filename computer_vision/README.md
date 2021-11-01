@@ -43,7 +43,15 @@ python3 vision.py -vid0 ~/Videos/long-passing.mp4 -vid1 ~/Videos/long-being-over
 
 In order to use TensorRT (device-specific NVIDIA optimizations), use `tools/trt.py` in YOLOX_tt repository. If you get a `'NoneType' object has no attribute 'serialize` error, it's because the workspace size is too big and memory ran out.
 
-**JETSON** (with tensorRT)
+NOTE: The TensorRT Engine file are different for Jetson Nano and Jetson NX.
+Therefore, it is best to use a differently named YOLOX exp file for the two devices.
+
+**JETSON Nano** (with tensorRT)
 ```bash
 python3 vision.py -vid0 ~/Videos/long-passing.mp4 -vid1 ~/Videos/long-being-overtaken.mp4 -f yolox_exps/nano-alpha.py --trt
+```
+
+**JETSON Xavier NX** (with tensorRT)
+```bash
+python3 vision.py -vid0 ~/Videos/long-passing.mp4 -vid1 ~/Videos/long-being-overtaken.mp4 -f yolox_exps/nx-alpha.py --trt
 ```
