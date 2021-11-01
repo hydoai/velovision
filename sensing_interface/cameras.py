@@ -76,7 +76,7 @@ class CameraInterface:
             max_length: save file and create new file after max_length seconds
         '''
 
-        save_dir = f'/home/dwight/Videos/recording_{source}' 
+        save_dir = f'/home/halpert/Videos/recording_{source}' 
         os.makedirs(save_dir, exist_ok=True)
 
         def record(source, width, height, output_path, max_length, fps):

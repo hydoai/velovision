@@ -1,5 +1,5 @@
 # Installation 
-See `codename-gimondi/gi-dev-setup` for Jetson Nano setup instructions.
+See `codename-gimondi/gi-dev-setup` for Jetson Xavier NX setup instructions.
 
 Clone this repository with submodules:
 ```bash

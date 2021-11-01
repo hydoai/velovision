@@ -54,9 +54,13 @@ def make_parser():
     parser.add_argument("--save_result", action="store_true", help="whether to save inference result")
     parser.add_argument("--view_result", action="store_true", help="whether to view inference result live (slow)")
     parser.add_argument("--window_size", type=int, default=1000, help="if --view_result is True, set this window size. Larger makes it much slower.")
+    parser.add_argument("--debug", action='store_true', help="Non-essential features for development. If --view_result or --save_result is set, then this will automatically be set true.")
     return parser
 
 def main(exp, args):
+    if args.save_result or args.view_result:
+        args.debug = True
+
     if not args.experiment_name:
         args.experiment_name = exp.exp_name
 
@@ -170,13 +174,19 @@ def main(exp, args):
         if not (ret_val0 and ret_val1):
             break
         else:
+            avgtimer.start('frame')
+            avgtimer.start('center_crop')
             frame0 = center_crop(frame0, args.crop0_width, args.crop0_height, nudge_down=FRONT_NUDGE_DOWN, nudge_right=FRONT_NUDGE_RIGHT)
             frame1 = center_crop(frame1, args.crop1_width, args.crop1_height, nudge_down=REAR_NUDGE_DOWN, nudge_right=REAR_NUDGE_RIGHT)
-            avgtimer.start('frame')
+            avgtimer.end('center_crop')
 
+            avgtimer.start('predictor')
             outputs, img_info = predictor.inference(frame0, frame1)
+            avgtimer.end('predictor')
 
+            avgtimer.start('expanded_outputs')
             expanded_outputs = predictor.expand_bboxes(outputs, img_info)
+            avgtimer.end('expanded_outputs')
 
             detections = expanded_outputs
 
@@ -188,15 +198,19 @@ def main(exp, args):
                 avgtimer.end('sort')
 
                 # split detections into front and rear, then run watchout separately
+                avgtimer.start('split_dets')
                 front_dets, rear_dets = split_dets(tracked_output, args.crop0_width, args.crop0_height)
                #
+                avgtimer.end('split_dets')
                 avgtimer.start('watchout')
                 front_watchout_output = watchout_f.step(front_dets)
                 rear_watchout_output = watchout_r.step(rear_dets)
                 avgtimer.end('watchout')
 
                 # then combine the split detections back into one array for visualization.
+                avgtimer.start('combine_dets')
                 combined_dets = combine_dets(front_watchout_output, rear_watchout_output, args.crop0_height)
+                avgtimer.end('combine_dets')
 
 
             img = img_info['raw_img']
@@ -214,13 +228,20 @@ def main(exp, args):
                 #result_frame = vis(img,bboxes,scores,cls,cls_conf, predictor.cls_names)
                 #result_frame = distance_custom_vis(img,bboxes,scores,cls, distance, track_id, cls_conf, predictor.cls_names)
 
+                avgtimer.start('perspective')
                 perspective_output = perspective.step(combined_dets)
+                avgtimer.end('perspective')
 
+                avgtimer.start('intercept')
                 front_dangers, rear_dangers = intercept.step(perspective_output)
+                avgtimer.end('intercept')
 
-                result_frame = TTE_EQ_custom_vis(img, bboxes, scores, cls, distance, front_dangers, rear_dangers, track_id, conf=0.5, class_names=HYDO_CLASSES)
+                if args.debug:
+                    result_frame = TTE_EQ_custom_vis(img, bboxes, scores, cls, distance, front_dangers, rear_dangers, track_id, conf=0.5, class_names=HYDO_CLASSES)
 
+                avgtimer.start('intercept_ring')
                 front_ring_now, rear_ring_now = intercept.should_ring_now()
+                avgtimer.end('intercept_ring')
 
                 if front_ring_now:
                     gi_speaker.play_left()
@@ -246,9 +267,16 @@ def main(exp, args):
             avgtimer.end('frame')
             logger.info('\n')
             logger.info(f"{round(1/(avgtimer.rolling_avg('frame')),2)} FPS")
-           # logger.info(f"SORT: {avgtimer.rolling_avg('sort')} seconds")
-           # logger.info(f"Watchout: {avgtimer.rolling_avg('watchout')} seconds")
-           # logger.info(f"{len(outputs[0]) if outputs[0] is not None else 0} objects detected")
+            logger.info(f"Center crop: {avgtimer.rolling_avg('center_crop')} seconds")
+            logger.info(f"Predictor: {avgtimer.rolling_avg('predictor')} seconds")
+            logger.info(f"SORT: {avgtimer.rolling_avg('sort')} seconds")
+            logger.info(f"Split dets: {avgtimer.rolling_avg('split_dets')} seconds")
+            logger.info(f"Watchout: {avgtimer.rolling_avg('watchout')} seconds")
+            logger.info(f"Combine dets: {avgtimer.rolling_avg('combine_dets')} seconds")
+            logger.info(f"Perspective: {avgtimer.rolling_avg('perspective')} seconds")
+            logger.info(f"Intercept: {avgtimer.rolling_avg('intercept')} seconds")
+            logger.info(f"Intercept Ring: {avgtimer.rolling_avg('intercept_ring')} seconds")
+            #logger.info(f"{len(outputs[0]) if outputs[0] is not None else 0} objects detected")
 
 if __name__ == "__main__":
     args = make_parser().parse_args()
