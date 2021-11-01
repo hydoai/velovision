@@ -141,8 +141,11 @@ class WatchedThing:
         height_fov = height_fov[0] * (math.pi / 180)  # deg to rad
         cam_installation_height = CAM_LENS_INFO['install_height']
 
-        d_pred_width = sizes_dict[cat_ind][0] / ( math.tan( width_fov * ( obj_width / frame_width ) ) )
-        d_pred_height = sizes_dict[cat_ind][1] / ( math.tan( height_fov * ( obj_height / frame_height ) ) )
+        d_pred_width = smart_divide(sizes_dict[cat_ind][0], math.tan(width_fov * (obj_width/frame_width)))
+        #d_pred_width = (sizes_dict[cat_ind][0])/(math.tan(width_fov * (obj_width/frame_width)))
+
+        d_pred_height = smart_divide(sizes_dict[cat_ind][1], math.tan(height_fov * (obj_height/frame_height)))
+        #d_pred_height = (sizes_dict[cat_ind][1])/(math.tan(height_fov * (obj_height/frame_height)))
 
         if self.y2 > frame_height/2:
             d_pred_bottom = cam_installation_height / ( math.tan( 0.5*height_fov * ( self.y2 - frame_height/2 ) / ( frame_height/2 )))
@@ -155,3 +158,5 @@ class WatchedThing:
 
         return avg_d_pred
 
+def smart_divide(a,b):
+    return a/b if b != 0 else a/(b+1)

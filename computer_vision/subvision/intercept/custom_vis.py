@@ -4,8 +4,7 @@ import cv2
 from yolox.utils.visualize import _COLORS
 
 def TTE_EQ_custom_vis(img, boxes, scores, cls_ids, distance, front_dangers, rear_dangers, track_id, conf=0.5, class_names=None):
-    for i in range(len(boxes)):
-        box = boxes[i]
+    for i,box in enumerate(boxes):
         cls_id = int(cls_ids[i])
         score = scores[i]
         if score < conf:

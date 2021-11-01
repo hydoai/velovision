@@ -15,6 +15,7 @@ from PARAMETERS import *
 
 from subvision.yolox_inference.predictor import Predictor
 from subvision.sort.sort_minimal import Sort
+from subvision.iou_tracker.iou_tracker import IOUTracker # faster but worse than SORT
 from subvision.watchout.watchout import Watchout
 from subvision.watchout.custom_vis import distance_custom_vis
 
@@ -55,6 +56,8 @@ def make_parser():
     parser.add_argument("--view_result", action="store_true", help="whether to view inference result live (slow)")
     parser.add_argument("--window_size", type=int, default=1000, help="if --view_result is True, set this window size. Larger makes it much slower.")
     parser.add_argument("--debug", action='store_true', help="Non-essential features for development. If --view_result or --save_result is set, then this will automatically be set true.")
+
+    parser.add_argument("--tracker_type", type=str, default='iou', help="Choose betwen 'iou' and 'sort' trackers. IOU Tracker is faster, SORT is smoother and better.")
     return parser
 
 def main(exp, args):
@@ -161,12 +164,15 @@ def main(exp, args):
 
     avgtimer = AvgTimer()
     sort_tracker = Sort(max_age = SORT_MAX_AGE, min_hits=SORT_MIN_HITS, iou_threshold=SORT_IOU_THRESH)
+    iou_tracker = IOUTracker()
     watchout_f = Watchout()
     watchout_r = Watchout()
     perspective = Perspective()
     intercept = Intercept()
 
     gi_speaker = GiSpeaker()
+
+
 
     while True:
         ret_val0, frame0 = cap0.read()
@@ -193,12 +199,33 @@ def main(exp, args):
             front_watchout_output = None
             rear_watchout_output = None
             if detections is not None:
-                avgtimer.start('sort')
-                tracked_output = sort_tracker.update(detections)
-                avgtimer.end('sort')
+                avgtimer.start('tracker')
+
+                # convert numpy array into list of dictionaries
+                if args.tracker_type == 'iou':
+                    det_list = []
+                    for det in detections:
+                        det_list.append({
+                            'bbox': (det[0], det[1], det[2], det[3]),
+                            'score': det[4],
+                            'class': det[5],})
+                    iou_output = iou_tracker.update(det_list)
+
+                    # convert list of dictionaries back into numpy array
+                    det_array = np.zeros((len(iou_output),9))
+                    for i,track in enumerate(iou_output):
+                        det_array[i][0:4] = iou_output[i]['bboxes']
+                        det_array[i][8] = iou_output[i]['tracking_id']
+                    tracked_output = det_array
+
+
+                if args.tracker_type == 'sort':
+                    tracked_output = sort_tracker.update(detections)
+                avgtimer.end('tracker')
 
                 # split detections into front and rear, then run watchout separately
                 avgtimer.start('split_dets')
+
                 front_dets, rear_dets = split_dets(tracked_output, args.crop0_width, args.crop0_height)
                #
                 avgtimer.end('split_dets')
@@ -217,6 +244,7 @@ def main(exp, args):
             if outputs[0] is None:
                 result_frame = img
             else:
+                #import IPython; IPython.embed()
                 output = outputs[0].cpu()
                 bboxes = combined_dets[:,0:4]
                 cls = combined_dets[:,4]
@@ -237,6 +265,23 @@ def main(exp, args):
                 avgtimer.end('intercept')
 
                 if args.debug:
+                    #print(bboxes)
+                    #print(type(bboxes))
+                    #assert type(bboxes) == np.ndarray
+                    #print(scores)
+                    #print(type(scores))
+                    #assert type(scores) == torch.Tensor
+                    #print(cls)
+                    #assert type(cls) == np.ndarray
+                    #print(distance)
+                    #assert type(distance) == np.ndarray
+                    #print(front_dangers)
+                    #assert type(front_dangers) == dict
+                    #print(rear_dangers)
+                    #assert type(rear_dangers) == dict
+                    #print(track_id)
+                    #print(type(track_id))
+                    #assert type(track_id) == np.ndarray
                     result_frame = TTE_EQ_custom_vis(img, bboxes, scores, cls, distance, front_dangers, rear_dangers, track_id, conf=0.5, class_names=HYDO_CLASSES)
 
                 avgtimer.start('intercept_ring')
@@ -269,7 +314,7 @@ def main(exp, args):
             logger.info(f"{round(1/(avgtimer.rolling_avg('frame')),2)} FPS")
             logger.info(f"Center crop: {avgtimer.rolling_avg('center_crop')} seconds")
             logger.info(f"Predictor: {avgtimer.rolling_avg('predictor')} seconds")
-            logger.info(f"SORT: {avgtimer.rolling_avg('sort')} seconds")
+            logger.info(f"Tracker: {avgtimer.rolling_avg('tracker')} seconds")
             logger.info(f"Split dets: {avgtimer.rolling_avg('split_dets')} seconds")
             logger.info(f"Watchout: {avgtimer.rolling_avg('watchout')} seconds")
             logger.info(f"Combine dets: {avgtimer.rolling_avg('combine_dets')} seconds")

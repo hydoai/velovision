@@ -5,6 +5,7 @@ import os
 import time
 import RPi.GPIO as GPIO
 
+
 in_pin = 15
 PRE_SHUTDOWN_CMDS = [
         "pkill -e --signal SIGINT gst-launch-1.0", # sending SIGINT will trigger End of Stream on currently recording videos
