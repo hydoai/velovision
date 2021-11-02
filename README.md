@@ -38,3 +38,10 @@ Created with [asciiflow](https://asciiflow.com)
 
 + [Jetson Installation](jetson_installation): Install required packages for running the live session code.
 + [Mock Resources](mock_resources): Mock test video files, etc. for desktop development and testing
+
+## Videos
+
+
+[Project Gimondi Work in Progress 02](https://youtu.be/eCJcu_2iLPg)
+[Project Gimondi Work in Progress 01](https://youtu.be/SEfXO2w2qVI)
+[Hydo first try](https://youtu.be/Jk-cQkcG4iY)
