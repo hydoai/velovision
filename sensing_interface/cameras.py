@@ -23,10 +23,12 @@ def test_csi_stream(index):
 class CameraInterface:
     def __init__(self, sudo_password):
         self.sudo_password = sudo_password
-        
-        # create loopback (virtual) /dev/video* devices
         self.num_virtual_devices = 4
         self.max_buffers = 2
+        
+
+    def start_pipelines(self):
+        # create loopback (virtual) /dev/video* devices
         modprobe_command = f'sudo modprobe v4l2loopback devices={self.num_virtual_devices} max_buffers={self.max_buffers}'
         os.system('echo %s|sudo -S %s' % (self.sudo_password, modprobe_command))
 
@@ -100,12 +102,13 @@ if __name__ == '__main__':
         print("Please enter root password in '--password' argument")
     
     camint = CameraInterface(args.password)
+    camint.start_pipelines()
 
     #test_usb_stream(4)
     #test_usb_stream(6)
 
-    camint.record_nvenc_h264(4, 1280, 720, fps=30, max_length=60) # video is saved to /home/dwight/Videos/recording_4.mp4
-    camint.record_nvenc_h264(6, 640, 480, fps=30, max_length=60)
+    #camint.record_nvenc_h264(4, 1280, 720, fps=30, max_length=60) # video is saved to /home/dwight/Videos/recording_4.mp4
+    #camint.record_nvenc_h264(6, 640, 480, fps=30, max_length=60)
     
     #cap3 = camint.create_cap(3)
     #cap5 = camint.create_cap(5)

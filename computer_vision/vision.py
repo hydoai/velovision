@@ -1,5 +1,6 @@
 import argparse
 import sys
+sys.path.append('../')
 import os
 import time
 from loguru import logger
@@ -7,6 +8,7 @@ import copy
 import cv2
 import numpy as np
 import torch
+from multiprocessing import Process
 
 from yolox.exp import get_exp
 from yolox.utils import fuse_model, get_model_info
@@ -28,7 +30,8 @@ from subvision.utils import center_crop, combine_dets, split_dets
 
 from debug_utils.avgtimer import AvgTimer # timer with rolling averages
 
-sys.path.append('../')
+from sensing_interface.cameras import CameraInterface
+
 from feedback_interface.sounds import GiSpeaker
 
 def make_parser():
@@ -58,9 +61,21 @@ def make_parser():
     parser.add_argument("--debug", action='store_true', help="Non-essential features for development. If --view_result or --save_result is set, then this will automatically be set true.")
 
     parser.add_argument("--tracker_type", type=str, default='iou', help="Choose betwen 'iou' and 'sort' trackers. IOU Tracker is faster, SORT is smoother and better.")
+    parser.add_argument("--production_hardware", action="store_true", help="Production hardware specific camera setups and other settings")
     return parser
 
 def main(exp, args):
+    def start_camera_pipelines():
+        camera_interface = CameraInterface(sudo_password='eraser')
+        camera_interface.start_pipelines()
+        camera_interface.record_nvenc_h264(4, 1280, 720, fps=30, max_length=60)
+        camera_interface.record_nvenc_h264(6, 640, 480, fps=30, max_length=60)
+
+    if args.production_hardware:
+        p = Process(target=start_camera_pipelines)
+        p.start()
+        time.sleep(10)
+
     if args.save_result or args.view_result:
         args.debug = True
 
@@ -124,6 +139,11 @@ def main(exp, args):
     predictor = Predictor(model, exp, HYDO_CLASSES, trt_file, decoder, args.device, args.fp16)
 
     # CAPTURE FRAMES FROM VIDEO STREAM
+    
+    if args.production_hardware:
+        args.cam0_index = 3
+        args.cam1_index = 5
+
     cap0 = cv2.VideoCapture(args.vid0_file if args.cam0_index is None else args.cam0_index)
     cap1 = cv2.VideoCapture(args.vid1_file if args.cam1_index is None else args.cam1_index)
 
@@ -131,18 +151,24 @@ def main(exp, args):
     width1 = cap1.get(cv2.CAP_PROP_FRAME_WIDTH)
     if width0 != width1:
         logger.warning("Widths do not match. Using larger of the two.")
+        logger.warning(f"Width of cap0: {width0}")
+        logger.warning(f"Width of cap1: {width1}")
     width = max(width0, width1)
 
     height0 = cap0.get(cv2.CAP_PROP_FRAME_HEIGHT)
     height1 = cap1.get(cv2.CAP_PROP_FRAME_HEIGHT)
     if height0 != height1:
         logger.warning("Heights do not match.")
+        logger.warning(f"Height of cap0: {height0}")
+        logger.warning(f"Height of cap1: {height1}")
     height = height0 + height1
 
     fps0 = cap0.get(cv2.CAP_PROP_FPS)
     fps1 = cap1.get(cv2.CAP_PROP_FPS)
     if fps0 != fps1:
         logger.warning("FPS does not match. Using lower of the two FPSs")
+        logger.warning(f"FPS of cap0: {fps0}")
+        logger.warning(f"FPS of cap1: {fps1}")
     fps = min(fps0, fps1)
 
 
@@ -169,14 +195,17 @@ def main(exp, args):
     watchout_r = Watchout()
     perspective = Perspective()
     intercept = Intercept()
-
     gi_speaker = GiSpeaker()
 
 
 
-    while True:
+    while cap0.isOpened() and cap1.isOpened():
         ret_val0, frame0 = cap0.read()
         ret_val1, frame1 = cap1.read()
+        if args.production_hardware:
+            resize_width = 1280 
+            resize_height = 720
+            frame1 = cv2.resize(frame1, (resize_width, resize_height), interpolation=cv2.INTER_LINEAR)
         if not (ret_val0 and ret_val1):
             break
         else:
@@ -265,23 +294,6 @@ def main(exp, args):
                 avgtimer.end('intercept')
 
                 if args.debug:
-                    #print(bboxes)
-                    #print(type(bboxes))
-                    #assert type(bboxes) == np.ndarray
-                    #print(scores)
-                    #print(type(scores))
-                    #assert type(scores) == torch.Tensor
-                    #print(cls)
-                    #assert type(cls) == np.ndarray
-                    #print(distance)
-                    #assert type(distance) == np.ndarray
-                    #print(front_dangers)
-                    #assert type(front_dangers) == dict
-                    #print(rear_dangers)
-                    #assert type(rear_dangers) == dict
-                    #print(track_id)
-                    #print(type(track_id))
-                    #assert type(track_id) == np.ndarray
                     result_frame = TTE_EQ_custom_vis(img, bboxes, scores, cls, distance, front_dangers, rear_dangers, track_id, conf=0.5, class_names=HYDO_CLASSES)
 
                 avgtimer.start('intercept_ring')
