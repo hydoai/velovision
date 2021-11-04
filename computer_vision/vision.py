@@ -62,9 +62,15 @@ def make_parser():
 
     parser.add_argument("--tracker_type", type=str, default='iou', help="Choose betwen 'iou' and 'sort' trackers. IOU Tracker is faster, SORT is smoother and better.")
     parser.add_argument("--production_hardware", action="store_true", help="Production hardware specific camera setups and other settings")
+    parser.add_argument("--physical_switches", action="store_true", help="GPIO hardware controls")
     return parser
 
 def main(exp, args):
+    if args.physical_switches:
+        from ..ui_input.physical_input import Pins, safe_shutdown
+        pins.setup_function('shutdown', safe_shutdown)
+        
+    
     def start_camera_pipelines():
         camera_interface = CameraInterface(sudo_password='eraser')
         camera_interface.start_pipelines()
@@ -301,11 +307,19 @@ def main(exp, args):
                 avgtimer.end('intercept_ring')
 
                 if front_ring_now:
-                    gi_speaker.play_left()
+                    if args.physical_switches:
+                        if pins.bool('front_toggle'):
+                            gi_speaker.play_left()
+                    else:
+                        gi_speaker.play_left()
                     # FEATURE REQUEST : change volume depending on distance
 
                 if rear_ring_now:
-                    gi_speaker.play_right() # front speaker is connect to right channel
+                    if args.physical_switches:
+                        if pins.bool('rear_toggle'):
+                            gi_speaker.play_right()
+                    else:
+                        gi_speaker.play_right() # front speaker is connect to right channel
 
 
 

@@ -1,26 +1,14 @@
-from threading import Thread
-import os
-import time
+from multiprocessing import Process
 from time import sleep
 import RPi.GPIO as GPIO
 GPIO.setmode(GPIO.BOARD) # use board pin number (consecutive) instead of GPIO numbers.
 
-def safe_shutdown():
-    PRE_SHUTDOWN_CMDS= [
-            "pkill -e --signal SIGINT gst-launch-1.0", # send SIGINT will trigger End of Stream on currently recording videos.
-            "echo GST streams ended"
-            ]
-    for CMD in PRE_SHUTDOWN_CMDS:
-        os.system(CMD)
-        print("Pre-shutdown commands have run. Shutting down in 3 seconds.")
-        time.sleep(3)
-        os.system("shutdown -h  now")
 class Pins:
     '''
     Interface for watching GPIO binary inputs within another script.
 
     Usage: Create a Pins object, then write a function that will run whenver a button is pressed (True). Then call start().
-    Choose among: 'shutdown', 'front_toggle', 'rear_toggle'
+    Choose among: 'power_on', 'shutdown', 'front_toggle', 'rear_toggle'
 
     def safe_shutdown():
         ...
@@ -29,8 +17,6 @@ class Pins:
     pins = Pins()
     pins.setup_function('shutdown', safe_shutdown)
     pins.start()
-
-    If there are any arguments to the functions, pass them as a tuple as a third argument to setup_function()
 
     If the script is looped, and you want to access the boolean values at each loop, it can be accessed with:
 
@@ -44,31 +30,37 @@ class Pins:
 
     '''
     def __init__(self, 
+            power_on_pin = 7,
             shutdown_pin = 15,
             front_toggle_pin = 29,
             rear_toggle_pin = 31,
             ):
         self.pins = {
+                'power_on' : power_on_pin,
                 'shutdown' : shutdown_pin,
                 'front_toggle' : front_toggle_pin,
                 'rear_toggle' : rear_toggle_pin,
                 }
         self.bool = {
+                'power_on' : False,
                 'shutdown' : False,
                 'front_toggle' : False,
                 'rear_toggle' : False,
                 }
         self.fns = {
+                'power_on' : None,
                 'shutdown' : None,
                 'front_toggle' : None,
                 'rear_toggle' : None,
                 }
         self.fn_args = {
+                'power_on' : None,
                 'shutdown' : None,
                 'front_toggle' : None,
                 'rear_toggle' : None,
                 }
         self.flip_true= {
+                'power_on' : False,
                 'shutdown' : False,
                 'front_toggle' : False,
                 'rear_toggle' : False,
@@ -83,7 +75,7 @@ class Pins:
         Set up function to run when pin is ever true
 
         Args:
-            pin desc (string): pin description (see self.pins dictionary keys) ('shutdown', 'front_toggle', 'rear_toggle')
+            pin desc (string): pin description (see self.pins dictionary keys) ('power_on', 'shutdown', 'front_toggle', 'rear_toggle')
             function (function): python function
             function_args (list): list of function arguments
             flip_true (boolean): in case switch has been installed the wrong way, flip the booleans so that 'function' runs on 'False' input.
@@ -106,14 +98,19 @@ class Pins:
                         function_args = self.fn_args[key]
                         function = self.fns[key]
                         flip_true = self.flip_true[key]
-                        activation = GPIO.input(self.pins[key])
+                        #activation = GPIO.input(self.pins[key])
+                        self.bool[key] = GPIO.input(self.pins[key])
 
-                        # genuine boolean is XOR of flip_true and activation 
-                        self.bool[key] = bool(activation) != bool(flip_true)
-                        if bool(self.bool[key]):
+                        # flip_true and activation are XOR 
+                        print(key, bool(self.bool[key]))
+                        print(bool(self.bool[key]) != bool(flip_true))
+                        if bool(self.bool[key]) != bool(flip_true):
                             if function is not None:
+                                print('function:')
+                                print(function)
+                                print(type(function))
                                 if function_args is not None:
-                                    function(*function_args)
+                                    function(**function_args)
                                 else: 
                                     function()
 
@@ -121,20 +118,23 @@ class Pins:
                     for source in self.bool[key]:
                         pin = self.pins[source]
                         GPIO.cleanup(pin)
-        p = Thread(target=pin_loop, args=([]))
+        p = Process(target=pin_loop, args=([]))
         p.start()
 
 if __name__ == "__main__":
-    def demo_print(text, text2):
-        print(f"WOAHH this is something you wrote: {text}. Also, {text2}")
-
+    def safe_shutdown():
+        PRE_SHUTDOWN_CMDS: [
+                "pkill -e --signal SIGINT gst-launch-1.0", # send SIGINT will trigger End of Stream on currently recording videos.
+                "echo GST streams ended"
+                ]
+        for CMD in PRE_SHUTDOWN_CMDS:
+            os.system(CMD)
+            pre("Pre-shutdown commands have run. Shutting down in 3 seconds.")
+            time.sleep(3)
+            #os.system("shutdown -h  now")
+    def fancy_print(text):
+        print(f"WOAHH this is something you wrote: {text}")
     pins = Pins()
-
-    pins.setup_function('shutdown', demo_print, ('Mr. and Mrs. Bob Vance', 'I send it back'))
-
+    pins.setup_function('shutdown', safe_shutdown)
+    pins.setup_function('power_on', fancy_print, ['Mr. and Mrs. Bob Vance'])
     pins.start()
-    while True:
-        sleep(0.1)
-        for button in pins.bool:
-            print(button, ': ', pins.bool[button])
-
