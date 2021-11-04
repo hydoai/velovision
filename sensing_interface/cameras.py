@@ -21,8 +21,7 @@ def test_usb_stream(index):
 def test_csi_stream(index):
     os.system(f"gst-launch-1.0 nvarguscamerasrc sensor-id={index} ! 'video/x-raw(memory:NVMM), width=1280, height=720, framerate=60/1, format=NV12' ! nvvidconv flip-method=0 ! 'video/x-raw, width=960, height=616' ! xvimagesink  -e")
 class CameraInterface:
-    def __init__(self, sudo_password):
-        self.sudo_password = sudo_password
+    def __init__(self):
         self.num_virtual_devices = 4
         self.max_buffers = 2
         
@@ -30,7 +29,7 @@ class CameraInterface:
     def start_pipelines(self):
         # create loopback (virtual) /dev/video* devices
         modprobe_command = f'sudo modprobe v4l2loopback devices={self.num_virtual_devices} max_buffers={self.max_buffers}'
-        os.system('echo %s|sudo -S %s' % (self.sudo_password, modprobe_command))
+        os.system(modprobe_command)
 
         # create first set of loopbacks (access to /dev/video0 and /dev/video1 is exclusive, but loopback devices can be multiple acceessed)
         # also, the incantation is specific to camera type
@@ -72,7 +71,7 @@ class CameraInterface:
         proc = Process(target=usb_loopback, args=([source,dest]))
         proc.start()
 
-    def record_nvenc_h264(self,source, width, height, output_path='', max_length=60, fps=30):
+    def record_nvenc_h265(self,source, width, height, output_path='', max_length=60, fps=30):
         '''
         Args:
             max_length: save file and create new file after max_length seconds
@@ -85,7 +84,7 @@ class CameraInterface:
             while True:
                 output_path = os.path.join(save_dir,f"{round(time.time())}.mkv")
                 command = f"gst-launch-1.0 v4l2src io-mode=2 device=/dev/video{source} ! 'video/x-raw,width={width}, height={height}, framerate={fps}/1' ! nvvidconv ! 'video/x-raw(memory:NVMM),format=I420' ! nvv4l2h265enc maxperf-enable=1 bitrate=1000000 ! h265parse ! matroskamux ! filesink append=true location={output_path} -e"
-                process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True, bufsize=1, shell=True)
+                process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True, bufsize=10, shell=True)
                 sleep(max_length)
                 process.send_signal(signal.SIGINT)
         proc = Process(target=record, args=([source, width, height, output_path, max_length, fps]))
@@ -96,19 +95,16 @@ if __name__ == '__main__':
     import argparse
     import time
     parser = argparse.ArgumentParser()
-    parser.add_argument('--password', type=str, help='Root password')
     args = parser.parse_args()
-    if not args.password: 
-        print("Please enter root password in '--password' argument")
     
-    camint = CameraInterface(args.password)
+    camint = CameraInterface()
     camint.start_pipelines()
 
-    #test_usb_stream(4)
-    #test_usb_stream(6)
+    test_usb_stream(4)
+    test_usb_stream(6)
 
-    #camint.record_nvenc_h264(4, 1280, 720, fps=30, max_length=60) # video is saved to /home/dwight/Videos/recording_4.mp4
-    #camint.record_nvenc_h264(6, 640, 480, fps=30, max_length=60)
+    #camint.record_nvenc_h265(4, 1280, 720, fps=30, max_length=60) # video is saved to /home/dwight/Videos/recording_4.mp4
+    #camint.record_nvenc_h265(6, 640, 480, fps=30, max_length=60)
     
     #cap3 = camint.create_cap(3)
     #cap5 = camint.create_cap(5)

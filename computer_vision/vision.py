@@ -66,15 +66,16 @@ def make_parser():
 
 def main(exp, args):
     if args.physical_switches:
-        from ..ui_input.physical_input import Pins, safe_shutdown
+        from ui_input.physical_input import Pins, safe_shutdown
+        pins = Pins()
         pins.setup_function('shutdown', safe_shutdown)
 
 
     def start_camera_pipelines():
-        camera_interface = CameraInterface(sudo_password='eraser')
+        camera_interface = CameraInterface()
         camera_interface.start_pipelines()
-        camera_interface.record_nvenc_h264(4, 1280, 720, fps=30, max_length=60)
-        camera_interface.record_nvenc_h264(6, 640, 480, fps=30, max_length=60)
+        camera_interface.record_nvenc_h265(4, 1280, 720, fps=30, max_length=300)
+        camera_interface.record_nvenc_h265(6, 640, 480, fps=30, max_length=300)
 
     if args.production_hardware:
         p = Process(target=start_camera_pipelines)
@@ -309,7 +310,7 @@ def main(exp, args):
 
                 if front_ring_now:
                     if args.physical_switches:
-                        if pins.bool('front_toggle'):
+                        if pins.bool['front_toggle']:
                             logger.warning("Front warning triggered")
                             gi_speaker.play_left()
                     else:
@@ -319,7 +320,7 @@ def main(exp, args):
 
                 if rear_ring_now:
                     if args.physical_switches:
-                        if pins.bool('rear_toggle'):
+                        if pins.bool['rear_toggle']:
                             logger.warning("Rear warning triggered")
                             gi_speaker.play_right()
                     else:
