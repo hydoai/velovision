@@ -20,12 +20,9 @@ from subvision.sort.sort_minimal import Sort
 from subvision.iou_tracker.iou_tracker import IOUTracker # faster but worse than SORT
 from subvision.watchout.watchout import Watchout
 from subvision.watchout.custom_vis import distance_custom_vis
-
 from subvision.perspective.perspective import Perspective
-
 from subvision.intercept.intercept import Intercept
 from subvision.intercept.custom_vis import TTE_EQ_custom_vis
-
 from subvision.utils import center_crop, combine_dets, split_dets
 
 from debug_utils.avgtimer import AvgTimer # timer with rolling averages
@@ -61,6 +58,8 @@ def make_parser():
     parser.add_argument("--debug", action='store_true', help="Non-essential features for development. If --view_result or --save_result is set, then this will automatically be set true.")
 
     parser.add_argument("--tracker_type", type=str, default='iou', help="Choose betwen 'iou' and 'sort' trackers. IOU Tracker is faster, SORT is smoother and better.")
+
+    # JETSON PROTOTYPE HARDWARE SPECIFIC SETTINGS
     parser.add_argument("--production_hardware", action="store_true", help="Production hardware specific camera setups and other settings")
     parser.add_argument("--physical_switches", action="store_true", help="GPIO hardware controls")
     return parser
@@ -69,8 +68,8 @@ def main(exp, args):
     if args.physical_switches:
         from ..ui_input.physical_input import Pins, safe_shutdown
         pins.setup_function('shutdown', safe_shutdown)
-        
-    
+
+
     def start_camera_pipelines():
         camera_interface = CameraInterface(sudo_password='eraser')
         camera_interface.start_pipelines()
@@ -145,7 +144,7 @@ def main(exp, args):
     predictor = Predictor(model, exp, HYDO_CLASSES, trt_file, decoder, args.device, args.fp16)
 
     # CAPTURE FRAMES FROM VIDEO STREAM
-    
+
     if args.production_hardware:
         args.cam0_index = 3
         args.cam1_index = 5
@@ -209,7 +208,7 @@ def main(exp, args):
         ret_val0, frame0 = cap0.read()
         ret_val1, frame1 = cap1.read()
         if args.production_hardware:
-            resize_width = 1280 
+            resize_width = 1280
             resize_height = 720
             frame1 = cv2.resize(frame1, (resize_width, resize_height), interpolation=cv2.INTER_LINEAR)
         if not (ret_val0 and ret_val1):
@@ -248,8 +247,10 @@ def main(exp, args):
 
                     # convert list of dictionaries back into numpy array
                     det_array = np.zeros((len(iou_output),9))
+
                     for i,track in enumerate(iou_output):
                         det_array[i][0:4] = iou_output[i]['bboxes']
+                        det_array[i][4] = iou_output[i]['classes']
                         det_array[i][8] = iou_output[i]['tracking_id']
                     tracked_output = det_array
 
@@ -303,22 +304,26 @@ def main(exp, args):
                     result_frame = TTE_EQ_custom_vis(img, bboxes, scores, cls, distance, front_dangers, rear_dangers, track_id, conf=0.5, class_names=HYDO_CLASSES)
 
                 avgtimer.start('intercept_ring')
-                front_ring_now, rear_ring_now = intercept.should_ring_now()
+                front_ring_now, rear_ring_now = intercept.should_ring_now() # ring once when danger starts
                 avgtimer.end('intercept_ring')
 
                 if front_ring_now:
                     if args.physical_switches:
                         if pins.bool('front_toggle'):
+                            logger.warning("Front warning triggered")
                             gi_speaker.play_left()
                     else:
+                        logger.warning("Front warning triggered")
                         gi_speaker.play_left()
                     # FEATURE REQUEST : change volume depending on distance
 
                 if rear_ring_now:
                     if args.physical_switches:
                         if pins.bool('rear_toggle'):
+                            logger.warning("Rear warning triggered")
                             gi_speaker.play_right()
                     else:
+                        logger.warning("Rear warning triggered")
                         gi_speaker.play_right() # front speaker is connect to right channel
 
 
