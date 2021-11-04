@@ -56,7 +56,6 @@ python3 vision.py -vid0 ~/Videos/long-passing.mp4 -vid1 ~/Videos/long-being-over
 python3 vision.py -vid0 ~/Videos/long-passing.mp4 -vid1 ~/Videos/long-being-overtaken.mp4 -f yolox_exps/nx-alpha.py --trt
 ```
 
-Using the onboard cameras on prototype hardware (contains specific settings):
-```bash
-python3 vision.py --production_hardware -f yolox_exps/nx-alpha.py --trt
+Using all the prototype hardware specific configurations and video blackbox:
 ```
+python3 vision.py --production_hardware -f yolox_exps/nx-alpha.py --trt --physical_switches
