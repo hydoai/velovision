@@ -44,32 +44,38 @@ class Pins:
 
     '''
     def __init__(self, 
-            shutdown_pin = 15,
+            black_button_pin = 7,
+            red_button_pin = 15,
             front_toggle_pin = 29,
             rear_toggle_pin = 31,
             ):
         self.pins = {
-                'shutdown' : shutdown_pin,
+                'black_button': black_button_pin,
+                'red_button' : red_button_pin,
                 'front_toggle' : front_toggle_pin,
                 'rear_toggle' : rear_toggle_pin,
                 }
         self.bool = {
-                'shutdown' : False,
+                'black_button': False,
+                'red_button': False,
                 'front_toggle' : False,
                 'rear_toggle' : False,
                 }
         self.fns = {
-                'shutdown' : None,
+                'black_button' : None,
+                'red_button' : None,
                 'front_toggle' : None,
                 'rear_toggle' : None,
                 }
         self.fn_args = {
-                'shutdown' : None,
+                'black_button':None,
+                'red_button':None,
                 'front_toggle' : None,
                 'rear_toggle' : None,
                 }
         self.flip_true= {
-                'shutdown' : False,
+                'black_button':False,
+                'red_button':False,
                 'front_toggle' : False,
                 'rear_toggle' : False,
                 }
@@ -130,7 +136,7 @@ if __name__ == "__main__":
 
     pins = Pins()
 
-    pins.setup_function('shutdown', demo_print, ('Mr. and Mrs. Bob Vance', 'I send it back'))
+    pins.setup_function('red_button', demo_print, ('Mr. and Mrs. Bob Vance', 'I send it back'))
 
     pins.start()
     while True:

@@ -12,7 +12,7 @@ class GiSpeaker:
     IMPORTANT: Audio files themselves need to have right or left Pan.
     In Audacity, the L-R slider next to the waveforms does this.
     '''
-    def __init__(self, left_sound_filename='high-six-chirp-left.mp3', right_sound_filename='FYOONG-right.mp3'):
+    def __init__(self, left_sound_filename='FYOONG-left.mp3', right_sound_filename='high-six-chirp-right.mp3'):
         pygame.mixer.init()
 
         audio_files_path = os.path.join(os.path.dirname(inspect.getfile(GiSpeaker)), 'audio_files')

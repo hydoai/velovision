@@ -312,20 +312,20 @@ def main(exp, args):
                     if args.physical_switches:
                         if pins.bool['front_toggle']:
                             logger.warning("Front warning triggered")
-                            gi_speaker.play_left()
+                            gi_speaker.play_right() # front speaker is connected to right channel
                     else:
                         logger.warning("Front warning triggered")
-                        gi_speaker.play_left()
+                        gi_speaker.play_right()
                     # FEATURE REQUEST : change volume depending on distance
 
                 if rear_ring_now:
                     if args.physical_switches:
                         if pins.bool['rear_toggle']:
                             logger.warning("Rear warning triggered")
-                            gi_speaker.play_right()
+                            gi_speaker.play_left()
                     else:
                         logger.warning("Rear warning triggered")
-                        gi_speaker.play_right() # front speaker is connect to right channel
+                        gi_speaker.play_left() 
 
 
 
@@ -359,3 +359,4 @@ if __name__ == "__main__":
     args = make_parser().parse_args()
     exp = get_exp(args.exp_file, args.name)
     main(exp, args)
+    print('end')
