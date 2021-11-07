@@ -12,10 +12,11 @@ class GiSpeaker:
     IMPORTANT: Audio files themselves need to have right or left Pan.
     In Audacity, the L-R slider next to the waveforms does this.
     '''
-    def __init__(self, left_sound_filename='FYOONG-left.mp3', right_sound_filename='high-six-chirp-right.mp3'):
+    def __init__(self, left_sound_filename='FYOONG-left.mp3', right_sound_filename='high-three-chirp-right.mp3'):
         pygame.mixer.init()
 
         audio_files_path = os.path.join(os.path.dirname(inspect.getfile(GiSpeaker)), 'audio_files')
+       # audio_files_path = '/home/halpert/Gimondi/gi-edge/feedback_interface/audio_files'
 
         self.right_sound_path = os.path.join(audio_files_path, right_sound_filename)
         self.left_sound_path = os.path.join(audio_files_path, left_sound_filename)

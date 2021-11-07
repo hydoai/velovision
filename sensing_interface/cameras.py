@@ -26,6 +26,7 @@ class CameraInterface:
         self.num_virtual_devices = 4
         self.max_buffers = 2
         self.video_save_path = '/home/halpert/Videos/'
+        self.sudo_password='eraser'
 
         sources = (4,6) # which dev/video numbers will be used for black box
         for source in sources:
@@ -36,8 +37,8 @@ class CameraInterface:
     def start_pipelines(self):
         # create loopback (virtual) /dev/video* devices
         modprobe_command = f'sudo modprobe v4l2loopback devices={self.num_virtual_devices} max_buffers={self.max_buffers}'
-        os.system(modprobe_command)
-
+        #os.system(modprobe_command)
+        os.system('echo %s|sudo -S %s' % (self.sudo_password, modprobe_command))
         # create first set of loopbacks (access to /dev/video0 and /dev/video1 is exclusive, but loopback devices can be multiple acceessed)
         # also, the incantation is specific to camera type
         self.first_clone_csi(source=0, dest=3)
@@ -92,7 +93,7 @@ class CameraInterface:
         def record(source, width, height, output_path, max_length, fps):
             #while True:
             output_path = os.path.join(output_path,f"{datetime.datetime.now().replace(microsecond=0).isoformat()}.mkv")
-            command = f"gst-launch-1.0 v4l2src io-mode=2 device=/dev/video{source} ! 'video/x-raw,width={width}, height={height}, framerate={fps}/1' ! nvvidconv ! 'video/x-raw(memory:NVMM),format=I420' ! nvv4l2h265enc maxperf-enable=1 bitrate=750000 ! h265parse ! matroskamux ! filesink append=false location={output_path} -e"
+            command = f"gst-launch-1.0 v4l2src io-mode=2 device=/dev/video{source} ! 'video/x-raw,width={width}, height={height}, framerate={fps}/1' ! nvvidconv ! 'video/x-raw(memory:NVMM),format=I420' ! nvv4l2h265enc maxperf-enable=1 bitrate=2000000 ! h265parse ! matroskamux ! filesink append=false location={output_path} -e"
             process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True, bufsize=-1, shell=True)
             # hack to fix bug where sometimes it writes empty files
             sleep(1)

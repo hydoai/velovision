@@ -5,6 +5,7 @@ import os
 import sys
 sys.path.append("../..")
 from PARAMETERS import KNOWN_CLASS_SIZES, CAM_LENS_INFO
+from subvision.utils import CameraFacing
 
 class Watchout:
     '''
@@ -88,7 +89,7 @@ class Watchout:
                     earliest_indexes = [x for x in sorted(self.memory.keys())][:25]
                     for ind in earliest_indexes:
                         del self.memory[ind]
-                obj = np.hstack((obj, 1e10))
+                obj = np.hstack((obj, 100))
             watchout_output_dets = np.vstack((obj, watchout_output_dets))
         return watchout_output_dets
 

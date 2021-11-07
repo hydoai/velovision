@@ -15,7 +15,7 @@ KNOWN_CLASS_SIZES = { # as seen from front or back
         }
 
 # GUESSTIMATIONS
-CAM_LENS_INFO = {
+CAM_LENS_INFO= {
         'h_fov' : 60, # horizontal field of view
         'v_fov' : 33.75, # vertical field of view
         'h_pixels' : 960,
@@ -36,13 +36,13 @@ REAR_NUDGE_RIGHT = 0
 # disable any category detection by setting value to negative value
 FRONT_TTE_THRESH = {
     # category id : time to encounter threshold (seconds)
-    0 : 10., # bicycle
-    1 : 10., # bus
-    2 : 10., # car
-    3 : 10., # cyclist
-    4 : 10., # motorcycle
-    5 : 10., # pedestrian
-    6 : 10., # truck
+    0 : 15., # bicycle
+    1 : 15., # bus
+    2 : 15., # car
+    3 : 15., # cyclist
+    4 : 15., # motorcycle
+    5 : 15., # pedestrian
+    6 : 15., # truck
     }
 REAR_TTE_THRESH = {
     # category id : time to encounter threshold (seconds)
@@ -57,13 +57,13 @@ REAR_TTE_THRESH = {
 FRONT_EP_THRESH= {
     # category_id : (left_proximity, right_proximity)
     # in meters
-    0 : ( 1., 3.),
-    1 : ( 1., 3.),
-    2 : ( 1., 3.),
-    3 : ( 1., 3.),
-    4 : ( 1., 3.),
-    5 : ( 1., 3.),
-    6 : ( 1., 3.),
+    0 : ( 1., 5.),
+    1 : ( 1., 5.),
+    2 : ( 1., 5.),
+    3 : ( 1., 5.),
+    4 : ( 1., 5.),
+    5 : ( 1., 5.),
+    6 : ( 1., 5.),
     }
 REAR_EP_THRESH= {
     # category_id : (left_proximity, right_proximity)

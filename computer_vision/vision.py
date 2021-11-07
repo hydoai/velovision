@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import argparse
 import sys
 sys.path.append('../')
@@ -43,7 +44,7 @@ def make_parser():
     parser.add_argument("--crop0_height", type=int, default=540, help="Height of center-cropped video 0")
     parser.add_argument("--crop1_width", type=int, default=960, help="Width of center-cropped video 1")
     parser.add_argument("--crop1_height", type=int, default=540, help="height of center-cropped video 1")
-    parser.add_argument("-f", "--exp_file", type=str, default=None, help="Please input your experiment description python file (in 'exps' folder)")
+    parser.add_argument("-f", "--exp_file", type=str, default='yolox_exps/nx-alpha.py', help="Please input your experiment description python file (in 'exps' folder)")
     parser.add_argument("-c", "--ckpt", type=str, default=None, help="Specify specific ckpt for evaluation. Otherwise, best_ckpt of exp_file will be used")
     parser.add_argument("--device", type=str, default='gpu', help="Specify device to run model. 'cpu' or 'gpu'")
     parser.add_argument("--conf", type=float, default=0.3, help="Test object confidence threshold")
@@ -51,7 +52,7 @@ def make_parser():
     parser.add_argument("--tsize", type=int, default=None, help="Test image size")
     parser.add_argument("--fp16", dest="fp16", default=False, action="store_true", help="Adopt mixed precision evaluation")
     parser.add_argument("--fuse", dest="fuse", default=False, action="store_true", help="Fuse conv and bn for testing.")
-    parser.add_argument("--trt", dest='trt', default=False, action="store_true", help="Use TensorRT for faster inference. Always use on Jetson")
+    parser.add_argument("--trt", dest='trt', default=True, action="store_true", help="Use TensorRT for faster inference. Always use on Jetson")
     parser.add_argument("--save_result", action="store_true", help="whether to save inference result")
     parser.add_argument("--view_result", action="store_true", help="whether to view inference result live (slow)")
     parser.add_argument("--window_size", type=int, default=1000, help="if --view_result is True, set this window size. Larger makes it much slower.")
@@ -60,8 +61,8 @@ def make_parser():
     parser.add_argument("--tracker_type", type=str, default='iou', help="Choose betwen 'iou' and 'sort' trackers. IOU Tracker is faster, SORT is smoother and better.")
 
     # JETSON PROTOTYPE HARDWARE SPECIFIC SETTINGS
-    parser.add_argument("--production_hardware", action="store_true", help="Production hardware specific camera setups and other settings")
-    parser.add_argument("--physical_switches", action="store_true", help="GPIO hardware controls")
+    parser.add_argument("--production_hardware", default=False, action="store_true", help="Production hardware specific camera setups and other settings")
+    parser.add_argument("--physical_switches", default=False, action="store_true", help="GPIO hardware controls")
     return parser
 
 def main(exp, args):
@@ -69,6 +70,7 @@ def main(exp, args):
         from ui_input.physical_input import Pins, safe_shutdown
         pins = Pins()
         pins.setup_function('shutdown', safe_shutdown)
+        pins.start()
 
 
     def start_camera_pipelines():
@@ -217,8 +219,9 @@ def main(exp, args):
         else:
             avgtimer.start('frame')
             avgtimer.start('center_crop')
-            frame0 = center_crop(frame0, args.crop0_width, args.crop0_height, nudge_down=FRONT_NUDGE_DOWN, nudge_right=FRONT_NUDGE_RIGHT)
-            frame1 = center_crop(frame1, args.crop1_width, args.crop1_height, nudge_down=REAR_NUDGE_DOWN, nudge_right=REAR_NUDGE_RIGHT)
+            #frame0 = center_crop(frame0, args.crop0_width, args.crop0_height, nudge_down=FRONT_NUDGE_DOWN, nudge_right=FRONT_NUDGE_RIGHT)
+            #frame1 = center_crop(frame1, args.crop1_width, args.crop1_height, nudge_down=REAR_NUDGE_DOWN, nudge_right=REAR_NUDGE_RIGHT)
+            #import IPython; IPython.embed()
             avgtimer.end('center_crop')
 
             avgtimer.start('predictor')
