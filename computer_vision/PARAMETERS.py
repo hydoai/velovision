@@ -36,40 +36,40 @@ REAR_NUDGE_RIGHT = 0
 # disable any category detection by setting value to negative value
 FRONT_TTE_THRESH = {
     # category id : time to encounter threshold (seconds)
-    0 : 15., # bicycle
-    1 : 15., # bus
-    2 : 15., # car
-    3 : 15., # cyclist
-    4 : 15., # motorcycle
-    5 : 15., # pedestrian
-    6 : 15., # truck
+    0 : 20., # bicycle
+    1 : 20., # bus
+    2 : 20., # car
+    3 : 20., # cyclist
+    4 : 20., # motorcycle
+    5 : 20., # pedestrian
+    6 : 20., # truck
     }
 REAR_TTE_THRESH = {
     # category id : time to encounter threshold (seconds)
-    0 : 10., # bicycle
-    1 : 15., # bus
-    2 : 15., # car
-    3 : 10., # cyclist
-    4 : 10., # motorcycle
-    5 : 10., # pedestrian
-    6 : 15., # truck
+    0 : 20., # bicycle
+    1 : 20., # bus
+    2 : 20., # car
+    3 : 20., # cyclist
+    4 : 20., # motorcycle
+    5 : 20., # pedestrian
+    6 : 20., # truck
     }
 FRONT_EP_THRESH= {
     # category_id : (left_proximity, right_proximity)
     # in meters
-    0 : ( 1., 5.),
-    1 : ( 1., 5.),
-    2 : ( 1., 5.),
-    3 : ( 1., 5.),
-    4 : ( 1., 5.),
-    5 : ( 1., 5.),
-    6 : ( 1., 5.),
+    0 : ( 0.5, 7.),
+    1 : ( 0.5, 7.),
+    2 : ( 0.5, 7.),
+    3 : ( 0.5, 7.),
+    4 : ( 0.5, 7.),
+    5 : ( 0.5, 7.),
+    6 : ( 0.5, 7.),
     }
 REAR_EP_THRESH= {
     # category_id : (left_proximity, right_proximity)
     # in meters
-    0 : ( 5., 5.),
     1 : ( 5., 5.),
+    0 : ( 5., 5.),
     2 : ( 5., 5.),
     3 : ( 5., 5.),
     4 : ( 5., 5.),
@@ -79,8 +79,8 @@ REAR_EP_THRESH= {
 
 # Hit streak threshold (TTE and EQ are both true)
 
-FRONT_HIT_STREAK_THRESH = 50
-REAR_HIT_STREAK_THRESH = 5
+FRONT_HIT_STREAK_THRESH = 30
+REAR_HIT_STREAK_THRESH =15
 
 FRONT_MAX_STREAK = 80 # If object is not a threat for consecutive frames, object will still stay in danger status for (FRONT_MAX_STREAK - FRONT_HIT_STREAK_THRESH) / (MISS_MULTIPLIER) frames
 REAR_MAX_STREAK = 80
@@ -93,10 +93,10 @@ MISS_MULTIPLIER = 1 # number of consecutive misses to downgrade danger status = 
 
 # KalmanPointObject (KPO) Parameters
 
-KPO_X_VAR = 1000
-KPO_X_DOT_VAR = 1
-KPO_Y_VAR = 1000
-KPO_Y_DOT_VAR = 0.1
+KPO_X_VAR = 1e2
+KPO_X_DOT_VAR = 5e-1
+KPO_Y_VAR = 1e2
+KPO_Y_DOT_VAR = 1e2
 
 # Simple Online Realtime Tracker (SORT) parameters
 
@@ -114,5 +114,5 @@ SORT_MIN_HITS = 2
 SORT_IOU_THRESH = 0.2
 
 # Audio parameters
-FRONT_MIN_RING_GAP = 3 # avoid overlapping audio alarm
-REAR_MIN_RING_GAP = 3
+FRONT_MIN_RING_GAP = 1 # avoid overlapping audio alarm
+REAR_MIN_RING_GAP = 1
