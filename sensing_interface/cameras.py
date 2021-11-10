@@ -25,7 +25,7 @@ class CameraInterface:
     def __init__(self):
         self.num_virtual_devices = 4
         self.max_buffers = 2
-        self.video_save_path = '/home/halpert/Videos/'
+        self.video_save_path = '/media/halpert/microsdcard' #'/home/halpert/Videos/'
         self.sudo_password='eraser'
 
         sources = (4,6) # which dev/video numbers will be used for black box
@@ -92,7 +92,7 @@ class CameraInterface:
 
         def record(source, width, height, output_path, max_length, fps):
             #while True:
-            output_path = os.path.join(output_path,f"{datetime.datetime.now().replace(microsecond=0).isoformat()}.mkv")
+            output_path = os.path.join(output_path,f"{time.strftime('%Y-%m-%d--%H-%M-%S')}.mkv")
             command = f"gst-launch-1.0 v4l2src io-mode=2 device=/dev/video{source} ! 'video/x-raw,width={width}, height={height}, framerate={fps}/1' ! nvvidconv ! 'video/x-raw(memory:NVMM),format=I420' ! nvv4l2h265enc maxperf-enable=1 bitrate=2000000 ! h265parse ! matroskamux ! filesink append=false location={output_path} -e"
             process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True, bufsize=-1, shell=True)
             # hack to fix bug where sometimes it writes empty files
