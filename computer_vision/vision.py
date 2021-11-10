@@ -61,7 +61,7 @@ def make_parser():
     parser.add_argument("--debug", action='store_true', help="Non-essential features for development. If --view_result or --save_result is set, then this will automatically be set true.")
 
     parser.add_argument("--tracker_type", type=str, default='iou', help="Choose betwen 'iou' and 'sort' trackers. IOU Tracker is faster, SORT is smoother and better.")
-    parser.add_argument("--view_intercept", action='store_true', help="View live matplotlib visualization of birds-eye view. This automatically eables '--view_result' option") 
+    parser.add_argument("--view_intercept", action='store_true', help="View live matplotlib visualization of birds-eye view. This automatically eables '--view_result' option")
     parser.add_argument("--save_intercept", action='store_true', help="Save every frame of matplotlib visualization to 'subvision/intercept/saved_figs'")
 
     # JETSON PROTOTYPE HARDWARE SPECIFIC SETTINGS
@@ -70,7 +70,7 @@ def make_parser():
     return parser
 
 def main(exp, args):
-        
+
     if args.physical_switches:
         from ui_input.physical_input import Pins, safe_shutdown
         pins = Pins()
@@ -94,7 +94,7 @@ def main(exp, args):
     if args.view_intercept:
         args.view_result = True
     if args.view_intercept and args.save_result:
-        logger.error("Saving the concatenated two vides + intercept plot is not implemented, because VideoWriter needs to know the final output shape. It's possible, but I haven't bothered yet.\n In the meantime, use '--view_result' instead of '--save_result'") 
+        logger.error("Saving the concatenated two vides + intercept plot is not implemented, because VideoWriter needs to know the final output shape. It's possible, but I haven't bothered yet.\n In the meantime, use '--view_result' instead of '--save_result'")
         raise NotImplementedError
 
     if not args.experiment_name:
@@ -311,6 +311,10 @@ def main(exp, args):
 
                 avgtimer.start('intercept')
                 front_dangers, rear_dangers, plot_image = intercept.step(perspective_output)
+
+                # optional filtering by y center
+                front_dangers, rear_dangers = intercept.curtain_filter(front_dangers, rear_dangers)
+
                 avgtimer.end('intercept')
 
                 if args.debug:
@@ -318,7 +322,7 @@ def main(exp, args):
                     if args.view_intercept:
                         assert plot_image is not None, "Expected intercept.step() to return a matplotlib image as a numpy array"
                         result_frame = concat_plot_to_frame(result_frame, plot_image) # puts 'plot_image' plot underneath the 'result_frame' picture.
-                        
+
                 avgtimer.start('intercept_ring')
                 front_ring_now, rear_ring_now = intercept.should_ring_now() # ring once when danger starts
                 avgtimer.end('intercept_ring')

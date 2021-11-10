@@ -6,20 +6,20 @@ from yolox.utils.visualize import _COLORS
 def concat_plot_to_frame(img, plot):
     # plot is numpy RGB, opnecv expects BGR
     plot = cv2.cvtColor(plot, cv2.COLOR_RGB2BGR)
-    
+
     img_height = img.shape[0]
     img_width = img.shape[1]
     plot_height = plot.shape[0]
     plot_width = plot.shape[1]
-    
+
     plot_resize_width = img_width
     ratio = img_width / plot_width
     plot_resize_height = int(plot_height * ratio)
-    
+
     resized_plot = cv2.resize(plot,(plot_resize_width, plot_resize_height), interpolation=cv2.INTER_AREA)
-    
+
     return cv2.vconcat([img, resized_plot])
-    
+
 
 def TTE_EP_custom_vis(img, boxes, scores, cls_ids, distance, front_dangers, rear_dangers, track_id, conf=0.5, class_names=None):
     '''
@@ -42,14 +42,14 @@ def TTE_EP_custom_vis(img, boxes, scores, cls_ids, distance, front_dangers, rear
         track_value = int(track_id[i])
 
         if track_value in front_dangers:
-            tte = round(front_dangers[track_value][0].item(), 2)
-            eq = round(front_dangers[track_value][1].item(), 2)
+            tte = round(front_dangers[track_value]['tte'][0], 2)
+            eq = round(front_dangers[track_value]['ep'][0], 2)
             text = f"{class_names[cls_id]} {track_value} : {round(distance_value,1)} m."
             text2 =f"Overtake in {tte}, {eq} away."
             color = [0,100,255]
         elif track_value in rear_dangers:
-            tte = round(rear_dangers[track_value][0].item(), 2)
-            eq = round(rear_dangers[track_value][1].item(), 2)
+            tte = round(rear_dangers[track_value]['tte'][0], 2)
+            eq = round(rear_dangers[track_value]['ep'][0], 2)
             text = f"{class_names[cls_id]} {track_value} : {round(distance_value,1)} m."
             text2 =f"Overtake in {tte}, {eq} away."
             color = [0,100,255]

@@ -16,8 +16,8 @@ KNOWN_CLASS_SIZES = { # as seen from front or back
 
 # GUESSTIMATIONS
 CAM_LENS_INFO= {
-        'h_fov' : 60, # horizontal field of view
-        'v_fov' : 33.75, # vertical field of view
+        'h_fov' : 45, # horizontal field of view
+        'v_fov' : 25, # vertical field of view
         'h_pixels' : 960,
         'v_pixels' : 540,
         'install_height': 0.8 # (meters)
@@ -36,13 +36,13 @@ REAR_NUDGE_RIGHT = 0
 # disable any category detection by setting value to negative value
 FRONT_TTE_THRESH = {
     # category id : time to encounter threshold (seconds)
-    0 : 20., # bicycle
-    1 : 20., # bus
-    2 : 20., # car
-    3 : 20., # cyclist
-    4 : 20., # motorcycle
-    5 : 20., # pedestrian
-    6 : 20., # truck
+    0 : 25., # bicycle
+    1 : 25., # bus
+    2 : 25., # car
+    3 : 25., # cyclist
+    4 : 25., # motorcycle
+    5 : 25., # pedestrian
+    6 : 25., # truck
     }
 REAR_TTE_THRESH = {
     # category id : time to encounter threshold (seconds)
@@ -57,13 +57,13 @@ REAR_TTE_THRESH = {
 FRONT_EP_THRESH= {
     # category_id : (left_proximity, right_proximity)
     # in meters
-    0 : ( 0.5, 7.),
-    1 : ( 0.5, 7.),
-    2 : ( 0.5, 7.),
-    3 : ( 0.5, 7.),
-    4 : ( 0.5, 7.),
-    5 : ( 0.5, 7.),
-    6 : ( 0.5, 7.),
+    0 : ( -1., 5.),
+    2 : ( -1., 5.),
+    1 : ( -1., 5.),
+    3 : ( -1., 5.),
+    5 : ( -1., 5.),
+    6 : ( -1., 5.),
+    4 : ( -1., 5.),
     }
 REAR_EP_THRESH= {
     # category_id : (left_proximity, right_proximity)
@@ -80,7 +80,7 @@ REAR_EP_THRESH= {
 # Hit streak threshold (TTE and EQ are both true)
 
 FRONT_HIT_STREAK_THRESH = 30
-REAR_HIT_STREAK_THRESH =15
+REAR_HIT_STREAK_THRESH =30
 
 FRONT_MAX_STREAK = 80 # If object is not a threat for consecutive frames, object will still stay in danger status for (FRONT_MAX_STREAK - FRONT_HIT_STREAK_THRESH) / (MISS_MULTIPLIER) frames
 REAR_MAX_STREAK = 80
@@ -94,17 +94,17 @@ MISS_MULTIPLIER = 1 # number of consecutive misses to downgrade danger status = 
 # KalmanPointObject (KPO) Parameters
 
 KPO_X_VAR = 1e2
-KPO_X_DOT_VAR = 5e-1
+KPO_X_DOT_VAR = 1e1
 KPO_Y_VAR = 1e2
-KPO_Y_DOT_VAR = 1e2
+KPO_Y_DOT_VAR = 1e1
 
 # Simple Online Realtime Tracker (SORT) parameters
 
 ## Kalman filter initialization parameters
 
-SORT_R_MULT = 10. # variance of measurement error (set to high if object detector isn't good)
-SORT_P1_MULT = 1000. # variance of state. Is set to high for unknown initial velocities
-SORT_P2_MULT = 10. # variance of state (besides initial velocites)
+SORT_R_MULT = 1e2 # variance of measurement error (set to high if object detector isn't good)
+SORT_P1_MULT = 1e2 # variance of state. Is set to high for unknown initial velocities
+SORT_P2_MULT = 1e2 # variance of state (besides initial velocites)
 SORT_Q_MULT = 0.1 # process noise
 
 ## Tracker parameters

@@ -18,12 +18,16 @@ class KalmanPointObject:
 
     '''
 
-    def __init__(self, track_id, camera_facing, category_id, init_point=np.array([40,1])):
+    def __init__(self, track_id, camera_facing, category_id, init_point, x_center, y_center):
         # init point should be [x_position, y_position ]
         self.track_id = track_id
         self.category_id = category_id
         self.camera_facing = camera_facing
         self.birth_location = init_point # used to avoid warning in group riding / paceline situations; only warn about people approach from a distance
+
+        # not used in this class, but later for curtain filter
+        self.x_center = x_center
+        self.y_center = y_center
 
         self.history = []
         self.hits = 0
@@ -35,7 +39,7 @@ class KalmanPointObject:
         self.filter_pred_dxdt = 0
         self.filter_pred_y = 0
         self.filter_pred_dydt = 0
-        
+
         # important calculated features
         self.time_to_encounter = None# time_to_encounter(tte)
         self.encounter_proximity = None# encounter_proximity (ep)
@@ -99,7 +103,7 @@ class KalmanPointObject:
             [0.,0, 0, 1]])
 
         # Process noise: external factors that alter kinematics of object out of the expected Newtonian mechanics
-        self.kf.Q = Q_discrete_white_noise(dim=4, dt=0.03, var=10)
+        self.kf.Q = Q_discrete_white_noise(dim=4, dt=0.03, var=100)
         # dt is 30 fps
         # var is a guess
 
@@ -108,7 +112,7 @@ class KalmanPointObject:
 
         self.kf.z = init_point
 
-    def update(self, coordinates):
+    def update(self, coordinates, x_center, y_center):
         '''
         encounter_proximity (EP) signs explained:
         ┌────────────────────────────────┐
@@ -131,6 +135,8 @@ class KalmanPointObject:
         │               │                │
         └───────────────┴────────────────┘
         '''
+        self.x_center = x_center
+        self.y_center = y_center
 
 
         self.kf.predict()
@@ -195,10 +201,11 @@ class Intercept:
     KalmanPointObjects whose above values are within a threshold are considered 'dangerous'.
 
     '''
-    def __init__(self, save_vis=False, view_vis=False
+    def __init__(self, save_vis=False, view_vis=False, frame_width=960
             ):
         self.save_vis = save_vis
         self.view_vis = view_vis
+        self.frame_width = frame_width
         self.kf_points= {} # a dict, where key is track_id and value is a KalmanPointObject
 
         # objects that are about to overtake me; live updated
@@ -209,11 +216,65 @@ class Intercept:
         self.rear_last_ring_time = 0
 
         self.already_warned_ids = [] # do not emit multiple rings for the same object
-        
-    def threaded_plot_birds_eye(self,data):
-        t = Thread(target=plot_birds_eye, args=([data]))
-        t.start()
-        t.join()
+
+        # 'Curtain': an extremely simple, "don't ring if bbox is not within a certain horizontal range".
+
+        self.front_curtain_limits = (0.4, 1.0) # (left limit, right limit) where 0 is the left edge and 1 is the right edge.
+        self.rear_curtain_limits = (0.0, 1.0)
+
+
+
+
+    def curtain_filter(self, front_dangers, rear_dangers):
+        '''
+        Ignore 'dangerous' bounding boxes if they are out of the pre-defined horizontal range.
+        This is optional. It reduces false positives (when people are coming at me from the other side of the road, instead of me passing them.)
+        Args:
+            camera_facing: choose between CameraFacing.FRONT or CameraFacing.REAR enum objects.
+
+        Illustration:
+
+            Two objects are approaching me, but only the right one triggers alert.
+            In this example, the curtain limits are (0.4, 1.0)
+
+                        0.4
+        0.0              │                      1.0
+         ┌───────────────┼───────────────────────┐
+         │...............│                       │
+         │...............│                       │
+         │...............│                       │
+         │...............│                       │
+         │...............│                       │
+         │...┌───────┐...│  x|x   ┌──────┐       │
+         │...│.......│...│xxx|xxx │      │       │
+         │...│.......│. x│xxx|xxxx│warned│       │
+         │...│.......│xxx│xxx|xxxx│      │       │
+         │...│ignored│xxx│xxx|xxxx│      │       │
+         │...│.......│xxx│xxx|xxxx└──────┘x      │
+         │...└───────┘xxx│xxx|xxxxxxxxxxxxxxxx   │
+         │ xxxxxxxxxxxxxx│xxx|xxxxxxxxxxxxxxxxxxx│
+         └───────────────┼───────────────────────┘
+                         │
+        '''
+
+        filtered_front_dangers = {}
+        filtered_rear_dangers = {}
+
+        for key in front_dangers:
+            x_center = front_dangers[key]['xc']
+            normalized_x_center = x_center / self.frame_width
+            if not ((normalized_x_center <= self.front_curtain_limits[0]) or (normalized_x_center >= self.front_curtain_limits[1])):
+                filtered_front_dangers.update({key:front_dangers[key]})
+        for key in rear_dangers:
+            x_center = rear_dangers[key]['xc']
+            normalized_x_center = x_center / self.frame_width
+            if not ((normalized_x_center <= self.rear_curtain_limits[0]) or (normalized_x_center >= self.rear_curtain_limits[1])):
+                filtered_rear_dangers.update({key:rear_dangers[key]})
+
+        return filtered_front_dangers, filtered_rear_dangers
+
+
+
 
     def step(self, input):
         '''
@@ -236,12 +297,28 @@ class Intercept:
         '''
 
         clean_input = self.preprocess(input)
+        '''
+        clean_input format:
+
+        an np.array of shape(n,9) where
+            0 : track id
+            1 : x coordinate
+            2 : y coordinate
+            3 : class index
+            4 : assigned to front (0) or rear (1)
+        NEW 5 : empty (time to encounter)
+        NEW 6 : empty (encounter y-intercept)
+            7 : x_center
+            8 : y_center
+        '''
 
         # update or create new kalman filter object
         for det in clean_input:
             track_id = det[0]
             x_coord = det[1]
             y_coord = det[2]
+            x_center = det[7]
+            y_center = det[8]
             coordinates = np.array([x_coord, y_coord]) # np.array([x_pos, x_velo, y_pos, y_velo])
             category_id = det[3]
             if det[4] == 0:
@@ -251,16 +328,16 @@ class Intercept:
 
             if track_id in self.kf_points:
                 kf_point = self.kf_points[track_id]
-                kf_point_state = kf_point.update(coordinates)
+                kf_point_state = kf_point.update(coordinates, x_center, y_center)
             else:
                 #
                 self.kf_points.update(
-                        {track_id : KalmanPointObject(track_id, camera_facing, category_id, coordinates)}
+                        {track_id : KalmanPointObject(track_id, camera_facing, category_id, coordinates, x_center, y_center)}
                         )
 
         # delete some old kfpoint objects in history
         # as long as not saving visualizations (longer history required for visualization)
-        if not (self.save_vis or self.view_vis) and len(self.kf_points) > 100: 
+        if not (self.save_vis or self.view_vis) and len(self.kf_points) > 100:
             for key_del in sorted(self.kf_points.keys())[:50]: #delete the 50 oldest ones
                 self.kf_points.pop(key_del)
 
@@ -270,10 +347,19 @@ class Intercept:
             point = self.kf_points[point_key]
 
             if point.dangerous == True:
+                new_entry = {int(point.track_id) :
+                        {
+                            'tte':point.time_to_encounter,
+                            'ep': point.encounter_proximity,
+                            'xc': point.x_center,
+                            'yc': point.y_center,
+                        }
+                    }
                 if point.camera_facing == CameraFacing.FRONT:
-                    self.front_dangers.update({int(point.track_id) : (point.time_to_encounter, point.encounter_proximity)})
+                    self.front_dangers.update(new_entry)
                 else:
-                    self.rear_dangers.update({int(point.track_id) : (point.time_to_encounter, point.encounter_proximity)})
+                    self.rear_dangers.update(new_entry)
+
             else: #point.dangerous == False
                 if point.camera_facing == CameraFacing.FRONT:
                     if int(point.track_id) in self.front_dangers.keys():
@@ -319,17 +405,18 @@ class Intercept:
                     })
 
 
-            #self.threaded_plot_birds_eye(birds_eye_vis_data)
             #plot_birds_eye(birds_eye_vis_data)
             plot_image = plot_birds_eye(birds_eye_vis_data, save_every_plot=self.save_vis)
         # end VISUALIZATION ======================================================================================
+
 
 
         return self.front_dangers, self.rear_dangers, plot_image
 
     def should_ring_now(self):
         '''
-        Output: Whether to send front and/or rear alarm at this time step
+        Ring only if we haven't already alerted this person,
+        and only ring every MIN_RING_GAP seconds.
         '''
         front_ring_now = False
         rear_ring_now = False
@@ -375,7 +462,7 @@ class Intercept:
 
         sanitized output:
 
-        an np.array of shape(n,7) where
+        an np.array of shape(n,9) where
             0 : track id
             1 : x coordinate
             2 : y coordinate
@@ -383,9 +470,11 @@ class Intercept:
             4 : assigned to front (0) or rear (1)
         NEW 5 : empty (time to encounter)
         NEW 6 : empty (encounter y-intercept)
+            7 : x_center
+            8 : y_center
         '''
-        clean_inp = np.zeros((inp.shape[0], 7))
-        clean_inp[:,(0,1,2,3,4)] = inp[:,(8,10,11,4,7)]
+        clean_inp = np.zeros((inp.shape[0], 9))
+        clean_inp[:,(0,1,2,3,4,7,8)] = inp[:,(8,10,11,4,7,5,6)]
 
         return clean_inp
 
