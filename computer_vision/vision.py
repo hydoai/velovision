@@ -219,8 +219,10 @@ def main(exp, args):
         ret_val0, frame0 = cap0.read()
         ret_val1, frame1 = cap1.read()
         if args.production_hardware:
-            resize_width = 1280
-            resize_height = 720
+            resize_width = 640
+            resize_height = 480
+            frame0 = center_crop(frame0, 960, 720)
+            frame0 = cv2.resize(frame0, (resize_width, resize_height), interpolation=cv2.INTER_LINEAR)
             frame1 = cv2.resize(frame1, (resize_width, resize_height), interpolation=cv2.INTER_LINEAR)
         if not (ret_val0 and ret_val1):
             break
@@ -228,8 +230,12 @@ def main(exp, args):
             avgtimer.start('frame')
             avgtimer.start('center_crop')
 
-            frame0 = center_crop(frame0, args.crop0_width, args.crop0_height, nudge_down=FRONT_NUDGE_DOWN, nudge_right=FRONT_NUDGE_RIGHT)
-            frame1 = center_crop(frame1, args.crop1_width, args.crop1_height, nudge_down=REAR_NUDGE_DOWN, nudge_right=REAR_NUDGE_RIGHT)
+            if args.production_hardware:
+                pass
+            else:
+
+                frame0 = center_crop(frame0, args.crop0_width, args.crop0_height, nudge_down=FRONT_NUDGE_DOWN, nudge_right=FRONT_NUDGE_RIGHT)
+                frame1 = center_crop(frame1, args.crop1_width, args.crop1_height, nudge_down=REAR_NUDGE_DOWN, nudge_right=REAR_NUDGE_RIGHT)
             #import IPython; IPython.embed()
             avgtimer.end('center_crop')
 
