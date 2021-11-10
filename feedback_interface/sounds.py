@@ -12,7 +12,7 @@ class GiSpeaker:
     IMPORTANT: Audio files themselves need to have right or left Pan.
     In Audacity, the L-R slider next to the waveforms does this.
     '''
-    def __init__(self, left_sound_filename='FYOONG-left.mp3', right_sound_filename='high-three-chirp-right.mp3'):
+    def __init__(self, left_sound_filename='FYOONG-left.mp3', right_sound_filename='high-three-chirp-right.mp3', startup_sound_filename='pinball.mp3'):
         pygame.mixer.init()
 
         audio_files_path = os.path.join(os.path.dirname(inspect.getfile(GiSpeaker)), 'audio_files')
@@ -20,9 +20,11 @@ class GiSpeaker:
 
         self.right_sound_path = os.path.join(audio_files_path, right_sound_filename)
         self.left_sound_path = os.path.join(audio_files_path, left_sound_filename)
+        self.startup_sound_path = os.path.join(audio_files_path, startup_sound_filename)
 
         self.right_sound = pygame.mixer.Sound(self.right_sound_path)
         self.left_sound = pygame.mixer.Sound(self.left_sound_path)
+        self.startup_sound = pygame.mixer.Sound(self.startup_sound_path)
 
         self.left_channel = pygame.mixer.Channel(1)
         self.right_channel = pygame.mixer.Channel(2)
@@ -36,6 +38,8 @@ class GiSpeaker:
         if self.right_channel.get_busy():
             self.right_channel.stop()
         self.right_channel.play(self.right_sound)
+    def play_startup(self):
+        self.right_channel.play(self.startup_sound)
 
 if __name__ == "__main__":
     import time
@@ -47,6 +51,9 @@ if __name__ == "__main__":
         time.sleep(2)
         print('play right')
         gi_speaker.play_right()
+        time.sleep(2)
+        print('play startup')
+        gi_speaker.play_startup()
         time.sleep(2)
 
 

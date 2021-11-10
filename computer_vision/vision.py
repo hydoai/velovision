@@ -207,47 +207,52 @@ def main(exp, args):
 
 
     avgtimer = AvgTimer()
-    sort_tracker = Sort(max_age = SORT_MAX_AGE, min_hits=SORT_MIN_HITS, iou_threshold=SORT_IOU_THRESH)
-    iou_tracker = IOUTracker()
+
+    if args.tracker_type == 'sort':
+        sort_tracker = Sort(max_age = SORT_MAX_AGE, min_hits=SORT_MIN_HITS, iou_threshold=SORT_IOU_THRESH)
+    elif args.tracker_type == 'iou':
+        iou_tracker = IOUTracker()
+    else:
+        logging.error("Please choose valid tracker type among 'sort', 'iou'")
+        raise NotImplementedError
+
     watchout_f = Watchout()
     watchout_r = Watchout()
     perspective = Perspective()
     intercept = Intercept(view_vis=args.view_intercept, save_vis=args.save_intercept) # matplotlib visualizations saved to subvison/intercept/saved_figs
     gi_speaker = GiSpeaker()
 
+    gi_speaker.play_startup()
+
     while cap0.isOpened() and cap1.isOpened():
         ret_val0, frame0 = cap0.read()
         ret_val1, frame1 = cap1.read()
-        if args.production_hardware:
-            resize_width = 640
-            resize_height = 480
-            frame0 = center_crop(frame0, 960, 720)
-            frame0 = cv2.resize(frame0, (resize_width, resize_height), interpolation=cv2.INTER_LINEAR)
-            frame1 = cv2.resize(frame1, (resize_width, resize_height), interpolation=cv2.INTER_LINEAR)
         if not (ret_val0 and ret_val1):
             break
         else:
             avgtimer.start('frame')
-            avgtimer.start('center_crop')
 
+            avgtimer.start('pre_crop')
             if args.production_hardware:
-                pass
+                resize_width = 640
+                resize_height = 480
+                frame0 = center_crop(frame0, 960, 720)
+                frame0 = cv2.resize(frame0, (resize_width, resize_height), interpolation=cv2.INTER_LINEAR)
+                frame1 = cv2.resize(frame1, (resize_width, resize_height), interpolation=cv2.INTER_LINEAR)
             else:
-
+                # desktop development using video files
                 frame0 = center_crop(frame0, args.crop0_width, args.crop0_height, nudge_down=FRONT_NUDGE_DOWN, nudge_right=FRONT_NUDGE_RIGHT)
                 frame1 = center_crop(frame1, args.crop1_width, args.crop1_height, nudge_down=REAR_NUDGE_DOWN, nudge_right=REAR_NUDGE_RIGHT)
-            #import IPython; IPython.embed()
-            avgtimer.end('center_crop')
+
+            avgtimer.end('pre_crop')
 
             avgtimer.start('predictor')
             outputs, img_info = predictor.inference(frame0, frame1)
             avgtimer.end('predictor')
 
             avgtimer.start('expanded_outputs')
-            expanded_outputs = predictor.expand_bboxes(outputs, img_info)
+            detections = predictor.expand_bboxes(outputs, img_info)
             avgtimer.end('expanded_outputs')
-
-            detections = expanded_outputs
 
             front_watchout_output = None
             rear_watchout_output = None
@@ -282,8 +287,8 @@ def main(exp, args):
                 avgtimer.start('split_dets')
 
                 front_dets, rear_dets = split_dets(tracked_output, args.crop0_width, args.crop0_height)
-               #
                 avgtimer.end('split_dets')
+
                 avgtimer.start('watchout')
                 front_watchout_output = watchout_f.step(front_dets)
                 rear_watchout_output = watchout_r.step(rear_dets)
@@ -369,7 +374,7 @@ def main(exp, args):
             avgtimer.end('frame')
             logger.info('\n')
             logger.info(f"{round(1/(avgtimer.rolling_avg('frame')),2)} FPS")
-            logger.info(f"Center crop: {avgtimer.rolling_avg('center_crop')} seconds")
+            logger.info(f"Center crop: {avgtimer.rolling_avg('pre_crop')} seconds")
             logger.info(f"Predictor: {avgtimer.rolling_avg('predictor')} seconds")
             logger.info(f"Tracker: {avgtimer.rolling_avg('tracker')} seconds")
             logger.info(f"Split dets: {avgtimer.rolling_avg('split_dets')} seconds")
