@@ -30,6 +30,8 @@ Download example / benchmark video from [Google Drive](https://drive.google.com/
 3. (desktop) The results of training are saved to `YOLOX/YOLOX_outputs/`.
 4. (jetson) Copy python files from desktop `YOLOX/exps` to `gi-edge/computer_vision/hydo_exps`.
 5. (jetson) Copy training results (weights) from desktop `YOLOX/YOLOX_outputs` to `gi-edge/computer_vision/YOLOX/YOLOX_outputs`.
+6. (jetson) Go to `gi_YOLOX` repository, and run `tools/trt.py` and supply the `-f`(experiment file) and `-c`(checkpoint) arguments with the copied training weights experiment python files (from above). This will generate a TensorRT weight/engine in `YOLOX_outputs` directory.
+7. Move the new TensorRT engine/weights to  `gi-edge/computer_vision/YOLOX_outputs/(name_of_exp)`.
 
 Run inference
 
