@@ -50,7 +50,7 @@ Therefore, it is best to use a differently named YOLOX exp file for the two devi
 
 **JETSON Nano** (with tensorRT)
 ```bash
-python3 vision.py -vid0 ~/Videos/long-passing.mp4 -vid1 ~/Videos/long-being-overtaken.mp4 -f yolox_exps/nano-alpha.py --trt
+python3 vision.py -vid0 ~/Videos/long-passing.mp4 -vid1 ~/Videos/long-being-overtaken.mp4 -f yolox_exps/nano-juliet.py --trt
 ```
 
 **JETSON Xavier NX** (with tensorRT)
