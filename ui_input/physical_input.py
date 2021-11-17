@@ -45,37 +45,37 @@ class Pins:
     '''
     def __init__(self, 
             black_button_pin = 7,
-            red_button_pin = 15,
+            hind_switch_pin = 15,
             front_toggle_pin = 29,
             rear_toggle_pin = 31,
             ):
         self.pins = {
                 'black_button': black_button_pin,
-                'red_button' : red_button_pin,
+                'hind_switch' : hind_switch_pin,
                 'front_toggle' : front_toggle_pin,
                 'rear_toggle' : rear_toggle_pin,
                 }
         self.bool = {
                 'black_button': False,
-                'red_button': False,
+                'hind_switch': False,
                 'front_toggle' : False,
                 'rear_toggle' : False,
                 }
         self.fns = {
                 'black_button' : None,
-                'red_button' : None,
+                'hind_switch' : None,
                 'front_toggle' : None,
                 'rear_toggle' : None,
                 }
         self.fn_args = {
                 'black_button':None,
-                'red_button':None,
+                'hind_switch':None,
                 'front_toggle' : None,
                 'rear_toggle' : None,
                 }
         self.flip_true= {
                 'black_button':False,
-                'red_button':False,
+                'hind_switch':False,
                 'front_toggle' : False,
                 'rear_toggle' : False,
                 }
