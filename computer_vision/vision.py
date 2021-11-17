@@ -34,6 +34,11 @@ from sensing_interface.cameras import CameraInterface
 
 from feedback_interface.sounds import GiSpeaker
 
+from sdcard_management.free_space import threaded_free_space
+from sdcard_management.remount_sd_card import remount_sd_card, get_username, device_path, mount_path
+
+# LeetopA203 specific: microSD card slot is at /dev/mmcblk1p1; modify this at remound_sdcard.py
+
 def make_parser():
     parser = argparse.ArgumentParser("YOLOX for Hydo")
     parser.add_argument("-expn", "--experiment-name", type=str, default=None)
@@ -70,6 +75,11 @@ def make_parser():
     return parser
 
 def main(exp, args):
+    if args.production_hardware:
+        remount_sd_card(device_path, mount_path) # ensuring that the inserted microSD card is at /media/[username]/microsdcard
+        time.sleep(2)
+        threaded_free_space(mount_path, min_space_remaining=10) # run thread to occasionally delete old videos on microsdcard
+
 
     if args.physical_switches:
         from ui_input.physical_input import Pins, safe_shutdown
