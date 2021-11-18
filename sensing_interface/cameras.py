@@ -9,6 +9,7 @@ import os
 from multiprocessing import Process
 import subprocess
 import cv2
+import getpass
 
 # try
 import subprocess
@@ -25,8 +26,8 @@ class CameraInterface:
     def __init__(self):
         self.num_virtual_devices = 4
         self.max_buffers = 2
-        self.video_save_path = '/media/halpert/microsdcard' #'/home/halpert/Videos/'
-        self.sudo_password='eraser'
+        username = getpass.getuser()
+        self.video_save_path = f'/media/{username}/microsdcard' #'/home/halpert/Videos/'
 
         sources = (4,6) # which dev/video numbers will be used for black box
         for source in sources:
@@ -37,8 +38,8 @@ class CameraInterface:
     def start_pipelines(self):
         # create loopback (virtual) /dev/video* devices
         modprobe_command = f'sudo modprobe v4l2loopback devices={self.num_virtual_devices} max_buffers={self.max_buffers}'
-        #os.system(modprobe_command)
-        os.system('echo %s|sudo -S %s' % (self.sudo_password, modprobe_command))
+        os.system(modprobe_command) # PLEASE NOTE: sudoers file must be edited to allow user to run sudo commands. Please see gi-dev-setup for more info
+
         # create first set of loopbacks (access to /dev/video0 and /dev/video1 is exclusive, but loopback devices can be multiple acceessed)
         # also, the incantation is specific to camera type
         self.first_clone_csi(source=0, dest=3)
