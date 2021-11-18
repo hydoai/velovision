@@ -6,7 +6,7 @@ import time
 from time import sleep
 from threading import Thread
 
-from remount_sd_card import get_username, device_path, mount_path
+from .remount_sd_card import get_username, device_path, mount_path
 
 video_suffix = ['.mp4', '.mkv', '.avi', '.m4v']
 
