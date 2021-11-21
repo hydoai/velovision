@@ -1,6 +1,12 @@
 # gi-edge
 Top level repo for all Hydo functionality on Jetson Xavier NX device operating on the edge (on bike).
 
+## Quick start on Desktop
+
+## Getting Started on NVIDIA Jetson
+
+Please see [hydoai/dk-1setup](https://github.com/hydoai/dk1-setup) for instructions on running on Jetson.
+
 ## Repository Schematic
 Created with [asciiflow](https://asciiflow.com)
 ```
