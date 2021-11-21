@@ -1,7 +1,19 @@
 # gi-edge
-Top level repo for all Hydo functionality on Jetson Xavier NX device operating on the edge (on bike).
+Computer vision-based overtake warning system for bicycles.
 
-## Quick start on Desktop
+## Quickstart on Desktop
+
+**Clone this repository**
+
+```bash
+git clone git@github.com:codename-gimondi/gi-edge.git
+```
+
+**Download example test videos**
+
++ [Forwards-looking footage](https://storage.hydo.ai/gi-edge-assets/example-footage/long-overtaking.mp4)
++ [Backwards-looking footage](https://storage.hydo.ai/gi-edge-assets/example-footage/long-being-overtaken.mp4)
+
 
 ## Getting Started on NVIDIA Jetson
 
