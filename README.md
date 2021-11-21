@@ -14,6 +14,12 @@ git clone git@github.com:codename-gimondi/gi-edge.git
 + [Click to download forward-looking bicycle path footage](https://storage.hydo.ai/gi-edge-assets/example-footage/long-overtaking.mp4)
 + [Click to download rearward-looking bicycle path footage](https://storage.hydo.ai/gi-edge-assets/example-footage/long-being-overtaken.mp4)
 
+**View real-time inference output**
+
+```
+cd gi-edge/computer_vision
+python3 vision.py 
+```
 
 ## Getting Started on NVIDIA Jetson
 
