@@ -11,8 +11,8 @@ git clone git@github.com:codename-gimondi/gi-edge.git
 
 **Download example test videos**
 
-+ [Forwards-looking footage](https://storage.hydo.ai/gi-edge-assets/example-footage/long-overtaking.mp4)
-+ [Backwards-looking footage](https://storage.hydo.ai/gi-edge-assets/example-footage/long-being-overtaken.mp4)
++ [Forwards-looking bicycle path footage](https://storage.hydo.ai/gi-edge-assets/example-footage/long-overtaking.mp4)
++ [Backwards-looking bicycle path footage](https://storage.hydo.ai/gi-edge-assets/example-footage/long-being-overtaken.mp4)
 
 
 ## Getting Started on NVIDIA Jetson
