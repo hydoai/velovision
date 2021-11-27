@@ -30,7 +30,13 @@ python3 vision.py
 
 ## Getting Started on NVIDIA Jetson
 
-Get the Jetson ready for deep learning inference in generalby following [hydoai/dk-1setup](https://github.com/hydoai/dk1-setup).
+Get the Jetson ready for deep learning inference in general by following [hydoai/dk-1setup](https://github.com/hydoai/dk1-setup).
+
+While the repositories are private, execute `generate-github-ssh-key.sh`
+```bash
+chmod 777 generate-github-ssh-key.sh
+./generate-github-ssh-key.sh
+```
 
 Install [gi-YOLOX](https://github.com/codename-gimondi/gi-YOLOX)
 ```bash
