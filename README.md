@@ -6,7 +6,7 @@ Computer vision-based overtake warning system for bicycles.
 **Clone this repository**
 
 ```bash
-git clone git@github.com:codename-gimondi/gi-edge.git
+git clone --recurse-submodules git@github.com:codename-gimondi/gi-edge.git
 ```
 
 **Download example test videos**
