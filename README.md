@@ -53,7 +53,7 @@ wget -O ~/Videos/long-being-overtaken.mp4 https://storage.hydo.ai/gi-edge-assets
 Run example
 ```bash
 cd computer_vision
-python3 vision.py -vid0 ~/Videos/long-passing.mp4 -vid1 ~/Videos/long-being-overtaken.mp4 -f yolox_exps/nx-foxtrot.py --trt
+python3 vision.py -vid0 ~/Videos/long-overtaking.mp4 -vid1 ~/Videos/long-being-overtaken.mp4 -f yolox_exps/nx-foxtrot.py --trt
 ```
 
 ## Repository Schematic
