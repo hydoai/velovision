@@ -46,8 +46,8 @@ Basically, this allows import of `yolox` as a user package.
 
 Download the demo front and rear videos:
 ```bash
-wget -O ~/Videos https://storage.hydo.ai/gi-edge-assets/example-footage/long-overtaking.mp4
-wget -O ~/Videos https://storage.hydo.ai/gi-edge-assets/example-footage/long-being-overtaken.mp4
+wget -O ~/Videos/long-overtaking.mp4 https://storage.hydo.ai/gi-edge-assets/example-footage/long-overtaking.mp4
+wget -O ~/Videos/long-being-overtaken.mp4 https://storage.hydo.ai/gi-edge-assets/example-footage/long-being-overtaken.mp4
 ```
 
 Run example
