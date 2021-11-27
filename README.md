@@ -63,9 +63,17 @@ git clone --recurse-submodules git@github.com:codename-gimondi/gi-edge.git
 ```
 
 Run example
+
+For Jetson NX:
 ```bash
 cd gi-edge/computer_vision
 python3 vision.py -vid0 ~/Videos/long-overtaking.mp4 -vid1 ~/Videos/long-being-overtaken.mp4 -f yolox_exps/nx-foxtrot.py --trt
+```
+
+For Jetson Nano:
+```bash
+cd gi-edge/computer_vision
+python3 vision.py -vid0 ~/Videos/long-overtaking.mp4 -vid1 ~/Videos/long-being-overtaken.mp4 -f yolox_exps/nano_juliet.py --trt
 ```
 
 ## Repository Schematic
