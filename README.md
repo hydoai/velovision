@@ -56,6 +56,10 @@ wget -O ~/Videos/long-overtaking.mp4 https://storage.hydo.ai/gi-edge-assets/exam
 wget -O ~/Videos/long-being-overtaken.mp4 https://storage.hydo.ai/gi-edge-assets/example-footage/long-being-overtaken.mp4
 ```
 
+Clone this repository with submodules
+```bash
+git clone 
+
 Run example
 ```bash
 cd computer_vision
