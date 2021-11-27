@@ -30,7 +30,30 @@ python3 vision.py
 
 ## Getting Started on NVIDIA Jetson
 
-Please see [hydoai/dk-1setup](https://github.com/hydoai/dk1-setup) for instructions on running on Jetson.
+Get the Jetson ready for deep learning inference in generalby following [hydoai/dk-1setup](https://github.com/hydoai/dk1-setup).
+
+Install [gi-YOLOX](https://github.com/codename-gimondi/gi-YOLOX)
+```bash
+git clone git@github.com:Megvii-BaseDetection/YOLOX.git
+cd YOLOX
+pip3 install -U pip && pip3 install -r requirements.txt
+pip3 install -v -e .  # or  python3 setup.py develop
+pip3 install cython; pip3 install 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI'
+
+```
+
+Basically, this allows import of `yolox` as a user package.
+
+Download the demo front and rear videos:
+```bash
+wget -O ~/Videos https://storage.hydo.ai/gi-edge-assets/example-footage/long-overtaking.mp4
+wget -O ~/Videos https://storage.hydo.ai/gi-edge-assets/example-footage/long-being-overtaken.mp4
+```
+
+Run example
+```bash
+python3 vision.py -vid0 ~/Videos/long-passing.mp4 -vid1 ~/Videos/long-being-overtaken.mp4 -f yolox_exps/nx-foxtrot.py --trt
+```
 
 ## Repository Schematic
 Created with [asciiflow](https://asciiflow.com)
