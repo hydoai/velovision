@@ -57,8 +57,10 @@ wget -O ~/Videos/long-being-overtaken.mp4 https://storage.hydo.ai/gi-edge-assets
 ```
 
 Clone this repository with submodules
+
 ```bash
-git clone 
+git clone --recurse-submodules git@github.com:codename-gimondi/gi-edge.git
+```
 
 Run example
 ```bash
