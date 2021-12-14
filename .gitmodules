@@ -1,6 +1,0 @@
-[submodule "gi_watchout"]
-	path = gi_watchout
-	url = git@github.com:codename-gimondi/gi_watchout.git
-[submodule "gi_sort"]
-	path = gi_sort
-	url = git@github.com:codename-gimondi/gi_sort.git
