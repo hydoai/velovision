@@ -71,8 +71,9 @@ pip3 install -v -e .  # or  python3 setup.py develop
 
 **Download example test videos**
 
-GoPro (1920x1080, 30fps)
-Devkit-One Cameras (front: 1280x720 30fps, rear: 640x480 30fps)
+Two sets of videos are used as examples.
+1. GoPro (1920x1080, 30fps)
+2. Devkit-One Cameras (front: 1280x720 30fps, rear: 640x480 30fps)
 
 + [GoPro front](https://storage.hydo.ai/gi-edge-assets/example-footage/long-overtaking.mp4)
 + [GoPro rear](https://storage.hydo.ai/gi-edge-assets/example-footage/long-being-overtaken.mp4)
