@@ -149,18 +149,10 @@ class WatchedThing:
         #d_pred_width = (sizes_dict[cat_ind][0])/(math.tan(width_fov * (obj_width/frame_width)))
 
         d_pred_height = smart_divide(sizes_dict[cat_ind][1], math.tan(height_fov * (obj_height/frame_height)))
-        #d_pred_height = (sizes_dict[cat_ind][1])/(math.tan(height_fov * (obj_height/frame_height)))
 
-        # === calculating distance based on y2 is not useful
-        #if self.y2 > frame_height/2:
-        #    d_pred_bottom = cam_installation_height / ( math.tan( 0.5*height_fov * ( self.y2 - frame_height/2 ) / ( frame_height/2 )))
-        #else: # above horizon
-        #    d_pred_bottom = None
-        d_pred_bottom = None
+        # calculating distance based on y2 was found not useful
 
-        distance_predictions = [d_pred_width, d_pred_height, d_pred_bottom]
-        enabled_preds = [x for x in distance_predictions if x is not None]
-        avg_d_pred = sum(enabled_preds)/len(enabled_preds)
+        avg_d_pred = (d_pred_width + d_pred_height)/2
 
         return avg_d_pred
 

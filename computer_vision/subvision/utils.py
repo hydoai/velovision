@@ -57,30 +57,28 @@ def combine_dets(front_dets, rear_dets, height):
     rear_dets[:,(1,3,6)] = rear_dets[:,(1,3,6)] + height
     return np.vstack((front_dets, rear_dets))
 
-def split_dets(dets, width, height):
+def split_dets(dets, height):
     '''
     Summary: (extend screen width to see correctly)
-    ┌─────────────────────────────────┐
-    │                                 │
-    │                                 │
-    │    ┌────────┐                   │
-    │    │        │                   │       ┌────────────────────────────────┐     ┌────────────────────┬────────┬──┐
-    │    │        │                   │       │                                │     │                    │        │  │
-    │    │        │                   │       │                                │     │                    │  rear  │  │
-    │    │        │                   │       │    ┌─────────┐                 │     │     ┌─────────┐    │        │  │
-    │    │        │     ┌────────┐    │       │    │         │                 │     │     │         │    │        │  │
-    │    │        │     │        │    │       │    │         │                 │     │     │  rear   │    └────────┘  │
-    │ ── └────────┴─ ── │        ├── ─┤  ──►  │    │         │                 │     │     │         │                │
-    │                   │        │    │       │    │  front  │                 │     │     └─────────┘                │
-    │                   │        │    │       │    │         │                 │     │                                │
-    │     ┌─────────┐   │        │    │       │    │         │                 │     │                                │
-    │     │         │   │        │    │       └────┴─────────┴─────────────────┘     └────────────────────────────────┘
-    │     │         │   └────────┘    │
-    │     │         │                 │
-    │     └─────────┘                 │
-    │                                 │
-    │                                 │
-    └─────────────────────────────────┘
+    ┌──────────────────────────────┐
+    │                              │
+    │   ┌────────┐                 │
+    │   │        │                 │      ┌────────────────────────────┐ ┌──────────────────┬────────┬──┐
+    │   │        │                 │      │                            │ │                  │        │  │
+    │   │        │                 │      │                            │ │                  │  rear  │  │
+    │   │        │                 │      │   ┌─────────┐              │ │   ┌─────────┐    │        │  │
+    │   │        │    ┌────────┐   │      │   │         │              │ │   │         │    │        │  │
+    │   │        │    │        │   │      │   │         │              │ │   │  rear   │    └────────┘  │
+    │── └────────┴─ ─ │        ├── ┤ ──►  │   │         │              │ │   │         │                │
+    │                 │        │   │      │   │  front  │              │ │   └─────────┘                │
+    │                 │        │   │      │   │         │              │ │                              │
+    │    ┌─────────┐  │        │   │      │   │         │              │ │                              │
+    │    │         │  │        │   │      └───┴─────────┴──────────────┘ └──────────────────────────────┘
+    │    │         │  └────────┘   │
+    │    │         │               │
+    │    └─────────┘               │
+    │                              │
+    └──────────────────────────────┘
     Input:
         dets are vertically stacked (front video on top, rear video at the bottom)
         width and height of video (assumed to be the same for front and rear)
@@ -117,16 +115,14 @@ def split_dets(dets, width, height):
 
     '''
 
-    # development
     dets = np.round(dets)
-    input_dets = dets
 
     # calculate x and y centers
     dets[:,5] = (dets[:,2] + dets[:,0])/2
     dets[:,6] = (dets[:,3] + dets[:,1])/2
 
     # assign box to front(0) or rear(1)-facing camera
-    dets[:,7] = dets[:,6] > (height)
+    dets[:,7] = dets[:,6] > height
 
     front_dets = dets[np.where(dets[:,7] == 0)]
     rear_dets = dets[np.where(dets[:,7] == 1)]

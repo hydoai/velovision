@@ -2,8 +2,6 @@ import time
 
 import numpy as np
 
-from threading import Thread
-
 from ..utils import CameraFacing
 from PARAMETERS import *
 
@@ -201,7 +199,7 @@ class Intercept:
     KalmanPointObjects whose above values are within a threshold are considered 'dangerous'.
 
     '''
-    def __init__(self, save_vis=False, view_vis=False, frame_width=960
+    def __init__(self, save_vis=False, view_vis=False, frame_width=640
             ):
         self.save_vis = save_vis
         self.view_vis = view_vis
@@ -260,16 +258,16 @@ class Intercept:
         filtered_front_dangers = {}
         filtered_rear_dangers = {}
 
-        for key in front_dangers:
-            x_center = front_dangers[key]['xc']
+        for key,value in front_dangers.items():
+            x_center = value['xc']
             normalized_x_center = x_center / self.frame_width
             if not ((normalized_x_center <= self.front_curtain_limits[0]) or (normalized_x_center >= self.front_curtain_limits[1])):
-                filtered_front_dangers.update({key:front_dangers[key]})
-        for key in rear_dangers:
-            x_center = rear_dangers[key]['xc']
+                filtered_front_dangers.update({key:value})
+        for key,value in rear_dangers.items():
+            x_center = value['xc']
             normalized_x_center = x_center / self.frame_width
             if not ((normalized_x_center <= self.rear_curtain_limits[0]) or (normalized_x_center >= self.rear_curtain_limits[1])):
-                filtered_rear_dangers.update({key:rear_dangers[key]})
+                filtered_rear_dangers.update({key:value})
 
         return filtered_front_dangers, filtered_rear_dangers
 

@@ -16,15 +16,6 @@ KNOWN_CLASS_SIZES = {  # as seen from front or back
     6: (3.5, 4),  # truck
 }
 
-# GUESSTIMATIONS
-GENERAL_CAM_LENS_INFO = {
-    'h_fov': 45,  # horizontal field of view
-    'v_fov': 25,  # vertical field of view
-    'h_pixels': 960,
-    'v_pixels': 540,
-    'install_height': 0.8  # (meters)
-}
-
 UNIFIED_HEIGHT = 360
 UNIFIED_WIDTH = 640
 
@@ -58,7 +49,7 @@ DK1_frontcam = CameraInfo(
     height_fov=45,
     fps=30,
     install_height=0.8,
-    inference_crop_ratio = 1.5
+    inference_crop_ratio = 2
 )
 
 DK1_rearcam = CameraInfo(
@@ -68,7 +59,7 @@ DK1_rearcam = CameraInfo(
     height_fov=45,
     fps=30,
     install_height=0.8,
-    inference_crop_ratio = 1.5
+    inference_crop_ratio = 2
 )
 
 GoProHD_front = CameraInfo(
@@ -97,22 +88,22 @@ GoProHD_rear = CameraInfo(
 # disable any category detection by setting value to negative value
 FRONT_TTE_THRESH = {
     # category id : time to encounter threshold (seconds)
-    0: 25.,  # bicycle
+    0: -1.,  # bicycle
     1: 25.,  # bus
     2: 25.,  # car
     3: 25.,  # cyclist
     4: 25.,  # motorcycle
-    5: 25.,  # pedestrian
+    5: -1,  # pedestrian
     6: 25.,  # truck
 }
 REAR_TTE_THRESH = {
     # category id : time to encounter threshold (seconds)
-    0: 20.,  # bicycle
+    0: -1.,  # bicycle
     1: 20.,  # bus
     2: 20.,  # car
     3: 20.,  # cyclist
     4: 20.,  # motorcycle
-    5: 20.,  # pedestrian
+    5: -1.,  # pedestrian
     6: 20.,  # truck
 }
 FRONT_EP_THRESH = {
@@ -140,8 +131,8 @@ REAR_EP_THRESH = {
 
 # Hit streak threshold (TTE and EQ are both true)
 
-FRONT_HIT_STREAK_THRESH = 30
-REAR_HIT_STREAK_THRESH = 30
+FRONT_HIT_STREAK_THRESH = 50
+REAR_HIT_STREAK_THRESH = 50
 
 # If object is not a threat for consecutive frames, object will still stay in danger status for (FRONT_MAX_STREAK - FRONT_HIT_STREAK_THRESH) / (MISS_MULTIPLIER) frames
 FRONT_MAX_STREAK = 80

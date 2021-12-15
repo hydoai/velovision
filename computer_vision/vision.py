@@ -28,9 +28,10 @@ from feedback_interface.sounds import GiSpeaker
 from sdcard_management.free_space import threaded_free_space
 from sdcard_management.remount_sd_card import remount_sd_card, get_username, device_path, mount_path
 
-
 # LeetopA203 specific: microSD card slot is at /dev/mmcblk1p1; modify this at remound_sdcard.py
 
+logger.remove()
+logger.add(sys.stderr, level="WARNING")
 
 def make_parser():
     parser = argparse.ArgumentParser("YOLOX for Hydo")
@@ -46,19 +47,9 @@ def make_parser():
     parser.add_argument("-vid1", "--vid1_file", type=str,
                         default=None, help="Video 1 file path.")
 
-    parser.add_argument("--camtype0", type=str, default=GoProHD_front,
-                        help="Front camera information as CameraInfo object. See PARAMETERS.py.")
-    parser.add_argument("--camtype1", type=str, default=GoProHD_rear,
-                        help="Rear camera information as CameraInfo object. See PARAMETERS.py.")
+    parser.add_argument("--cam_type", type=str, default="GoProHD", 
+                        help="Camera type. Choose among 'GoProHD' and 'DK1'. See PARAMETERS.py for details. This sets the 'caminfo0' and 'caminfo1' internal variables.")
 
-    parser.add_argument("--crop0_width", type=int, default=960,
-                        help="Width of center-cropped video 0 ")
-    parser.add_argument("--crop0_height", type=int, default=540,
-                        help="Height of center-cropped video 0")
-    parser.add_argument("--crop1_width", type=int, default=960,
-                        help="Width of center-cropped video 1")
-    parser.add_argument("--crop1_height", type=int, default=540,
-                        help="height of center-cropped video 1")
     parser.add_argument("-f", "--exp_file", type=str, default='yolox_exps/nx-alpha.py',
                         help="Please input your experiment description python file (in 'exps' folder)")
     parser.add_argument("-c", "--ckpt", type=str, default=None,
@@ -84,7 +75,7 @@ def make_parser():
     parser.add_argument("--window_size", type=int, default=1000,
                         help="if --view_result is True, set this window size. Larger makes it much slower.")
 
-    parser.add_argument("--tracker_type", type=str, default='iou',
+    parser.add_argument("--tracker_type", type=str, default='sort',
                         help="Choose betwen 'iou' and 'sort' trackers. IOU Tracker is faster, SORT is smoother and better.")
     parser.add_argument("--view_intercept_result", action='store_true',
                         help="View live matplotlib visualization of birds-eye view. This automatically eables '--view_result' option")
@@ -93,13 +84,20 @@ def make_parser():
 
     # JETSON PROTOTYPE HARDWARE SPECIFIC SETTINGS
     parser.add_argument("--production_hardware", default=False, action="store_true",
-                        help="Shortcut to override some arguments with HYDO DevKit-One specific camera setups and other configurations")
+                        help="Shortcut to override some arguments with HYDO DevKit-One specific camera, storage, and other configurations")
     parser.add_argument("--physical_switches", default=False,
                         action="store_true", help="GPIO hardware controls")
     return parser
 
 
 def main(exp, args):
+    if args.cam_type == "GoProHD":
+        caminfo0 = GoProHD_front
+        caminfo1 = GoProHD_rear
+    elif args.cam_type == "DK1":
+        caminfo0 = DK1_frontcam
+        caminfo1 = DK1_rearcam
+
     if args.production_hardware:
         # ensuring that the inserted microSD card is at /media/[username]/microsdcard
         remount_sd_card(device_path, mount_path)
@@ -196,8 +194,8 @@ def main(exp, args):
     if args.production_hardware:
         args.cam0_index = 3
         args.cam1_index = 5
-        args.camtype0 = DK1_frontcam
-        args.camtype1 = DK1_rearcam
+        caminfo0 = DK1_frontcam
+        caminfo1= DK1_rearcam
 
     cap0 = cv2.VideoCapture(
         args.vid0_file if args.cam0_index is None else args.cam0_index)
@@ -211,10 +209,12 @@ def main(exp, args):
 
     # sanity check: CameraInfo width & height should be same as the cap width & height.
     # if fail, check CameraInfo setup in PARAMETERS.py
-    assert args.camtype0.width_res == cap0_width
-    assert args.camtype0.height_res == cap0_height
-    assert args.camtype1.width_res == cap1_width
-    assert args.camtype1.height_res == cap1_height
+    assert caminfo0.width_res == cap0_width
+    assert caminfo0.height_res == cap0_height
+    assert caminfo1.width_res == cap1_width
+    assert caminfo1.height_res == cap1_height
+
+    fps = max(caminfo0.fps, caminfo1.fps)
 
     # In inference loop,
     # crop input frame to CameraInfo.inference_crop_ratio
@@ -243,33 +243,35 @@ def main(exp, args):
         logging.error("Please choose valid tracker type among 'sort', 'iou'")
         raise NotImplementedError
 
-    watchout_f = Watchout(camera_info=args.camtype0)
-    watchout_r = Watchout(camera_info=args.camtype1)
+    watchout_f = Watchout(camera_info=caminfo0)
+    watchout_r = Watchout(camera_info=caminfo1)
     perspective = Perspective()
     # matplotlib visualizations saved to subvison/intercept/saved_figs
     intercept = Intercept(view_vis=args.view_intercept_result,
-                          save_vis=args.save_intercept_result)
+                          save_vis=args.save_intercept_result,
+                          frame_width=UNIFIED_WIDTH)
     gi_speaker = GiSpeaker()
 
-    gi_speaker.play_startup()
+    if cap0.isOpened() and cap1.isOpened():
+        gi_speaker.play_startup
 
     while cap0.isOpened() and cap1.isOpened():
         ret_val0, frame0 = cap0.read()
         ret_val1, frame1 = cap1.read()
         if not (ret_val0 and ret_val1):
-            continue
+            break 
         else:
             avgtimer.start('frame')
 
             avgtimer.start('pre_crop')
             frame0 = fixed_aspect_ratio_crop(
                 frame0,
-                args.camtype0,
+                caminfo0,
                 to_width=UNIFIED_WIDTH,
                 to_height=UNIFIED_HEIGHT)
             frame1 = fixed_aspect_ratio_crop(
                 frame1,
-                args.camtype1,
+                caminfo1,
                 to_width=UNIFIED_WIDTH,
                 to_height=UNIFIED_HEIGHT)
             avgtimer.end('pre_crop')
@@ -312,9 +314,8 @@ def main(exp, args):
 
                 # split detections into front and rear, then run watchout separately
                 avgtimer.start('split_dets')
-
                 front_dets, rear_dets = split_dets(
-                    tracked_output, args.crop0_width, args.crop0_height)
+                    tracked_output, UNIFIED_HEIGHT)
                 avgtimer.end('split_dets')
 
                 avgtimer.start('watchout')
@@ -325,7 +326,7 @@ def main(exp, args):
                 # then combine the split detections back into one array for visualization.
                 avgtimer.start('combine_dets')
                 combined_dets = combine_dets(
-                    front_watchout_output, rear_watchout_output, args.crop0_height)
+                    front_watchout_output, rear_watchout_output, UNIFIED_HEIGHT)
                 avgtimer.end('combine_dets')
             else:
                 pass  # no detections
@@ -354,7 +355,7 @@ def main(exp, args):
                 front_dangers, rear_dangers, plot_image = intercept.step(
                     perspective_output)
 
-                # optional filtering by y center
+                # optional simple filtering by y center
                 front_dangers, rear_dangers = intercept.curtain_filter(
                     front_dangers, rear_dangers)
 
