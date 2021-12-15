@@ -30,11 +30,6 @@ What is Hypercycle?
 
 [Hypercycle](https://github.com/hydoai/hypercycle) is the world's first computer vision-based active cycling assistance system. Currently, hypercycle performs Automatic Overtake Warning (AOW) for  pedestrians, cyclists, and vehicles. See more about [its capabilities](https://hydo.ai) and [limitations](https://hydo.ai).
 
-## Tips on understanding this code
-
-+ The main script is `computer_vision/vision.py`. All submodules are called from there.
-+ In many cases, modules are self-testable. So if you want to understand what a module like `from subvision.intercept import intercept` does in isolation, just run that module from your terminal like `python3 intercept.py` and read the code following `if __name__ == "__main__":`. This should give you a good idea of what it does, and also be a 'playground' for you to make temporary experiments.
-+ Installing on desktop simply install YOLOX, then installing `hydo-dev` conda environment. However, installing on NVIDIA Jetson platform is more involved and takes much longer. Many usually pip installable packages must be installed from apt and requires other dependencies.
 
 ## Running on your bike
 
@@ -104,6 +99,12 @@ wget -O ~/Downloads https://storage.hydo.ai/gi-edge-assets/first-blackbox-record
 cd gi-edge/computer_vision
 python3 vision.py -vid0 ~/Downloads/long-overtaking -vid1 ~/Downloads/long-being-overtaken.mp4 -f yolox_exps/nano-foxtrot.py --view_result
 ```
+
+### Tips on understanding this code
+
++ The main script is `computer_vision/vision.py`. All submodules are called from there.
++ In many cases, modules are self-testable. So if you want to understand what a module like `from subvision.intercept import intercept` does in isolation, just run that module from your terminal like `python3 intercept.py` and read the code following `if __name__ == "__main__":`. This should give you a good idea of what it does, and also be a 'playground' for you to make temporary experiments.
++ Installing on desktop simply install YOLOX, then installing `hydo-dev` conda environment. However, installing on NVIDIA Jetson platform is more involved and takes much longer. Many usually pip installable packages must be installed from apt and requires other dependencies.
 
 ### Run automated tests
 
