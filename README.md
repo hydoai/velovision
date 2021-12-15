@@ -12,7 +12,8 @@ git clone git@github.com:codename-gimondi/gi-edge.git
 **Create conda environment**
 
 ```bash
-conda create env -f environment.yaml
+conda env remove hydo-dev # in case there is a previous environment named hydo-dev
+conda env create -f environment.yaml
 ```
 
 This creates a conda environment called 'hydo-dev'. Activate it:
