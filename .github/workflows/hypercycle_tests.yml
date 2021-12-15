@@ -1,6 +1,11 @@
 # followed directions from https://autobencoder.com/2020-08-24-conda-actions/
 name: hypercycle tests
-on: [push]
+on:
+    push:
+        branches:
+            - master
+        paths-ignore:
+            - '**.md'
 jobs:
     build-test:
         name: linux-test
