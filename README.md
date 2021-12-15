@@ -22,6 +22,17 @@ This creates a conda environment called 'hydo-dev'. Activate it:
 conda activate hydo-dev
 ```
 
+**Install YOLOX**
+
+```bash
+cd gi-edge/temp
+
+git clone git@github.com:Megvii-BaseDetection/YOLOX.git
+cd YOLOX
+pip3 install -U pip && pip3 install -r requirements.txt
+pip3 install -v -e .  # or  python3 setup.py develop
+```
+
 **Download example test videos**
 
 GoPro (1920x1080, 30fps)
