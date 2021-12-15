@@ -7,6 +7,8 @@ TODO
 # gi-edge
 Computer vision-based overtake warning system for bicycles.
 
+# Table of Contents
+
 ## Tips on understanding this code
 
 + The main script is `computer_vision/vision.py`. All submodules are called from there.
