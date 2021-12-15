@@ -9,7 +9,7 @@ Computer vision-based overtake warning system for bicycles.
 git clone git@github.com:codename-gimondi/gi-edge.git
 ```
 
-**Create conda environment**
+**Create conda environment** ([How to install conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html))
 
 ```bash
 conda env remove hydo-dev # in case there is a previous environment named hydo-dev
