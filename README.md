@@ -7,6 +7,10 @@ TODO
 # gi-edge
 Computer vision-based overtake warning system for bicycles.
 
+## Notes on Coding Style
+
+In many cases, simple examples of module functionality is self-documented. So if you want to understand what a module does in isolation, just run that module from your terminal and read the code following `if __name__ == "__main__":`.
+
 ## Quickstart on Desktop
 
 **Clone this repository**
