@@ -40,7 +40,7 @@ What is Hypercycle?
 
 Hypercycle comes pre-installed on [HYDO Devkit-One](https://hydo.ai), so there's nothing to do besides attaching it to your bike and turning it on.
 
-## Quickstart on Linux Desktop
+## Developing on a Linux Computer
 
 **Clone this repository**
 
