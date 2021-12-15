@@ -1,2 +1,0 @@
-lapsolver
-torch2trt

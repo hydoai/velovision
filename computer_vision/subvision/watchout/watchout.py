@@ -4,7 +4,7 @@ import os
 
 import sys
 sys.path.append("../..")
-from PARAMETERS import KNOWN_CLASS_SIZES, CAM_LENS_INFO
+from PARAMETERS import *
 from subvision.utils import CameraFacing
 
 class Watchout:
@@ -35,6 +35,7 @@ class Watchout:
             area_min_delta = 40,
             area_max_delta = 4000,
             left_hand_drive = False,
+            camera_info = None,
             ):
         self.index_to_name_dict = index_to_name_dict
         self.cam0_width = cam0_width
@@ -46,6 +47,7 @@ class Watchout:
         self.area_min_delta = area_min_delta
         self.area_max_delta = area_max_delta
         self.left_hand_drive = left_hand_drive
+        self.camera_info = camera_info
 
         self.rolling_filter = [False for _ in range(buffer_len)] # queue filter to reduce false positives
 
@@ -82,7 +84,7 @@ class Watchout:
                 obj = np.hstack((obj, watchedthing.pred_distance))
 
             else:
-                self.memory.update({obj[8].item(): WatchedThing(obj)}) # create new Thing
+                self.memory.update({obj[8].item(): WatchedThing(obj, self.camera_info)}) # create new Thing
 
                 # if memory contains more than 100, delete 25 earliest entries
                 if len(self.memory) > 50:
@@ -95,7 +97,8 @@ class Watchout:
 
 
 class WatchedThing:
-    def __init__(self, obj):
+    def __init__(self, obj, camera_info):
+        self.camera_info = camera_info
         self.update_basic_properties(obj)
 
         # history dependent properties
@@ -134,13 +137,13 @@ class WatchedThing:
         sizes_dict = KNOWN_CLASS_SIZES
         obj_width = self.y2 - self.y1
         obj_height = self.x2 - self.x1
-        frame_width = CAM_LENS_INFO['h_pixels']
-        frame_height = CAM_LENS_INFO['v_pixels']
-        width_fov = CAM_LENS_INFO['h_fov'],
-        height_fov = CAM_LENS_INFO['v_fov'],
-        width_fov = width_fov[0] * (math.pi / 180) #deg to rad
-        height_fov = height_fov[0] * (math.pi / 180)  # deg to rad
-        cam_installation_height = CAM_LENS_INFO['install_height']
+        frame_width = UNIFIED_WIDTH
+        frame_height = UNIFIED_HEIGHT
+        width_fov = self.camera_info.width_fov
+        height_fov = self.camera_info.height_fov
+        width_fov = width_fov * (math.pi / 180) #deg to rad
+        height_fov = height_fov * (math.pi / 180)  # deg to rad
+        cam_installation_height = self.camera_info.install_height
 
         d_pred_width = smart_divide(sizes_dict[cat_ind][0], math.tan(width_fov * (obj_width/frame_width)))
         #d_pred_width = (sizes_dict[cat_ind][0])/(math.tan(width_fov * (obj_width/frame_width)))

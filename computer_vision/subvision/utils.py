@@ -1,5 +1,6 @@
 from enum import Enum
 import numpy as np
+import cv2
 
 class CameraFacing(Enum):
     FRONT = 0
@@ -14,6 +15,25 @@ def center_crop(image, width, height, nudge_down=0, nudge_right=0):
     y = image.shape[0]/2 - height/2
     return image[int(y+nudge_down):int(y+height+nudge_down) , int(x+nudge_right):int(x+width+nudge_right)]
 
+def fixed_aspect_ratio_crop(frame, camera_info, to_width, to_height):
+                '''
+                Crop and resize frame to width * height, zooming in by crop_ratio
+                If the aspect ratio of frame does not match to_width/to_height,
+                then we crop based on width only.
+                '''
+                crop_width = int(frame.shape[1] / camera_info.inference_crop_ratio)
+                crop_height = int(crop_width * (to_height/to_width))
+
+                cropped_frame = center_crop(image=frame,
+                                            width=crop_width,
+                                            height=crop_height,
+                                            nudge_down = camera_info.nudge_down,
+                                            nudge_right=camera_info.nudge_right)
+                resized_frame = cv2.resize(
+                    cropped_frame,
+                    (to_width, to_height),
+                    interpolation=cv2.INTER_LINEAR)
+                return resized_frame
 
 def combine_dets(front_dets, rear_dets, height):
     '''

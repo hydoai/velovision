@@ -22,9 +22,9 @@ class AvgTimer:
         self.elapsed_history = {}
         self.rolling_length = rolling_length
     def start(self, task_name):
-        self.in_progress.update({task_name: time.time()})
+        self.in_progress.update({task_name: time.perf_counter()})
     def end(self, task_name):
-        elapsed_time = time.time() - self.in_progress[task_name] 
+        elapsed_time = time.perf_counter() - self.in_progress[task_name] 
 
         if task_name in self.elapsed_history.keys():
             prev_times = self.elapsed_history[task_name]

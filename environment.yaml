@@ -1,0 +1,22 @@
+# requirements that are neither conda or pip installable:
+# yolox (see yolox repo)
+
+name: hydo-dev
+channels:
+  - conda-forge
+dependencies:
+  - python=3.6
+  - opencv
+  - numpy
+  - pip 
+  - pip:
+    - cmake
+    - lapsolver
+    - cython
+    - 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI'
+    - thop
+    - filterpy
+    - scikit-image
+    - lap 
+    - loguru
+    - pygame

@@ -6,10 +6,24 @@ Computer vision-based overtake warning system for bicycles.
 **Clone this repository**
 
 ```bash
-git clone --recurse-submodules git@github.com:codename-gimondi/gi-edge.git
+git clone git@github.com:codename-gimondi/gi-edge.git
+```
+
+**Create conda environment**
+
+```bash
+conda create env -f environment.yaml
+```
+
+This creates a conda environment called 'hydo-dev'. Activate it:
+
+```bash
+conda activate hydo-dev
 ```
 
 **Download example test videos**
+
+GoPro (1920x1080, 30fps)
 
 + [Click to download forward-looking bicycle path footage](https://storage.hydo.ai/gi-edge-assets/example-footage/long-overtaking.mp4)
 + [Click to download rearward-looking bicycle path footage](https://storage.hydo.ai/gi-edge-assets/example-footage/long-being-overtaken.mp4)
@@ -21,6 +35,18 @@ wget -O ~/Downloads https://storage.hydo.ai/gi-edge-assets/example-footage/long-
 wget -O ~/Downloads https://storage.hydo.ai/gi-edge-assets/example-footage/long-being-overtaken.mp4
 ```
 
+Devkit-One Cameras (front: 1280x720 30fps, rear: 640x480 30fps)
+
++ [Download front](https://storage.hydo.ai/gi-edge-assets/first-blackbox-recordings/front-2021-12-04.mkv)
++ [Download rear](https://storage.hydo.ai/gi-edge-assets/first-blackbox-recordings/rear-2021-12-04.mkv)
+
+Or, run command:
+
+```bash
+wget -O ~/Downloads https://storage.hydo.ai/gi-edge-assets/first-blackbox-recordings/front-2021-12-04.mkv
+wget -O ~/Downloads https://storage.hydo.ai/gi-edge-assets/first-blackbox-recordings/rear-2021-12-04.mkv
+```
+
 **View real-time inference output**
 
 ```
@@ -30,51 +56,7 @@ python3 vision.py
 
 ## Getting Started on NVIDIA Jetson
 
-Get the Jetson ready for deep learning inference in general by following [hydoai/dk-1setup](https://github.com/hydoai/dk1-setup).
-
-While the repositories are private, execute `generate-github-ssh-key.sh`
-```bash
-chmod 777 generate-github-ssh-key.sh
-./generate-github-ssh-key.sh
-```
-
-Install [gi-YOLOX](https://github.com/codename-gimondi/gi-YOLOX)
-```bash
-git clone git@github.com:codename-gimondi/gi-YOLOX.git
-cd gi-YOLOX
-pip3 install -U pip && pip3 install -r requirements.txt
-pip3 install -v -e .  # or  python3 setup.py develop
-pip3 install cython; pip3 install 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI'
-
-```
-
-Basically, this allows import of `yolox` as a user package.
-
-Download the demo front and rear videos:
-```bash
-wget -O ~/Videos/long-overtaking.mp4 https://storage.hydo.ai/gi-edge-assets/example-footage/long-overtaking.mp4
-wget -O ~/Videos/long-being-overtaken.mp4 https://storage.hydo.ai/gi-edge-assets/example-footage/long-being-overtaken.mp4
-```
-
-Clone this repository with submodules
-
-```bash
-git clone --recurse-submodules git@github.com:codename-gimondi/gi-edge.git
-```
-
-Run example
-
-For Jetson NX:
-```bash
-cd gi-edge/computer_vision
-python3 vision.py -vid0 ~/Videos/long-overtaking.mp4 -vid1 ~/Videos/long-being-overtaken.mp4 -f yolox_exps/nx-foxtrot.py --trt
-```
-
-For Jetson Nano:
-```bash
-cd gi-edge/computer_vision
-python3 vision.py -vid0 ~/Videos/long-overtaking.mp4 -vid1 ~/Videos/long-being-overtaken.mp4 -f yolox_exps/nano_juliet.py --trt
-```
+Please see [hydoai/dk-1setup](https://github.com/hydoai/dk1-setup) for instructions on running on Jetson.
 
 ## Repository Schematic
 Created with [asciiflow](https://asciiflow.com)
