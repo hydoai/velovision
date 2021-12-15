@@ -74,7 +74,7 @@ python3 vision.py -vid0 ~/Downloads/long-overtaking -vid1 ~/Downloads/long-being
 
 ### Run automated tests
 
-Ensure that you are in the `computer_vision` folder, and that you have `hydo-dev` conda environment activated. Then run:
+Ensure that you are in the `computer_vision` directory, and that you have `hydo-dev` conda environment activated. Then run:
 
 ```
 python3 -m pytest
