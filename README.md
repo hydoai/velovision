@@ -12,8 +12,6 @@ Computer vision-based overtake warning system for bicycles.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-- [Table of Contents](#table-of-contents)
-
 - [Tips on understanding this code](#tips-on-understanding-this-code)
 - [Quickstart on Desktop](#quickstart-on-desktop)
   - [Run automated tests](#run-automated-tests)
