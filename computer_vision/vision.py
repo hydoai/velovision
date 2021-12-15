@@ -31,7 +31,7 @@ from sdcard_management.remount_sd_card import remount_sd_card, get_username, dev
 # LeetopA203 specific: microSD card slot is at /dev/mmcblk1p1; modify this at remound_sdcard.py
 
 logger.remove()
-logger.add(sys.stderr, level="WARNING")
+logger.add(sys.stderr, level="INFO")
 
 def make_parser():
     parser = argparse.ArgumentParser("YOLOX for Hydo")
