@@ -2,6 +2,7 @@ TODO
 
 - [ ] Run on Jetson to validate camera input
 - [ ] Cover timing tightly on inference loop, optimize (for example, don't needlessly render visualizations)
+- [ ] Write unit tests for subvision parts
 
 # gi-edge
 Computer vision-based overtake warning system for bicycles.
