@@ -1,9 +1,13 @@
+# followed directions from https://autobencoder.com/2020-08-24-conda-actions/
 name: hypercycle tests
 on: [push]
 jobs:
-    build-linux:
-        runs-on: ubuntu-18.04
-
+    build-test:
+        name: linux-test
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                os: [ubuntu-latest, ubuntu-18.04]
         steps:
             - uses: actions/checkout@v2
             - name: Set up Python 3.6
