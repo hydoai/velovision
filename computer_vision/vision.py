@@ -31,7 +31,7 @@ from sdcard_management.remount_sd_card import remount_sd_card, get_username, dev
 # LeetopA203 specific: microSD card slot is at /dev/mmcblk1p1; modify this at remound_sdcard.py
 
 logger.remove()
-logger.add(sys.stderr, level="INFO")
+logger.add(sys.stderr, level="WARNING")
 # INFO for profiling
 # WARNING for warning alarm triggers
 
@@ -86,7 +86,13 @@ def make_parser():
     return parser
 
 
-def main(exp, args):
+def core(exp, args):
+    main_results = { # intended for testing
+        'num_front_warnings': 0,
+        'num_rear_warnings': 0,
+        'wall_time_elapsed': time.time(),
+    }
+
     if args.cam_type == "GoProHD":
         caminfo0 = GoProHD_front
         caminfo1 = GoProHD_rear
@@ -206,10 +212,16 @@ def main(exp, args):
 
     # sanity check: CameraInfo width & height should be same as the cap width & height.
     # if fail, check CameraInfo setup in PARAMETERS.py
-    assert caminfo0.width_res == cap0_width
-    assert caminfo0.height_res == cap0_height
-    assert caminfo1.width_res == cap1_width
-    assert caminfo1.height_res == cap1_height
+    try: 
+        assert caminfo0.width_res == cap0_width
+        assert caminfo0.height_res == cap0_height
+        assert caminfo1.width_res == cap1_width
+        assert caminfo1.height_res == cap1_height
+    except AssertionError:
+        print(cap0_height)
+        print(cap0_width)
+        print(caminfo0.height_res)
+        print(caminfo0.width_res)
 
     fps0 = cap0.get(cv2.CAP_PROP_FPS)
     fps1 = cap1.get(cv2.CAP_PROP_FPS)
@@ -428,9 +440,12 @@ def main(exp, args):
                 f"Intercept Ring: {avgtimer.rolling_avg('intercept_ring')} seconds")
             #logger.info(f"{len(outputs[0]) if outputs[0] is not None else 0} objects detected")
 
+    main_results['wall_time_elapsed'] = time.time() - main_results['wall_time_elapsed']
+    return main_results
+
 
 if __name__ == "__main__":
     args = make_parser().parse_args()
     exp = get_exp(args.exp_file, args.name)
-    main(exp, args)
-    print('finished')
+    main_results = core(exp, args)
+    print("finished")
