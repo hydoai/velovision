@@ -1,0 +1,25 @@
+name: hypercycle tests
+on: [push]
+jobs:
+    build-linux:
+        runs-on: ubuntu-18.04
+
+        steps:
+            - uses: actions/checkout@v2
+            - name: Set up Python 3.6
+              uses: actions/setup-python@v2
+              with:
+                  python-version: 3.6
+            - name: Install YOLOX
+              run: |
+                  git clone git@github.com:Megvii-BaseDetection/YOLOX.git
+                  cd YOLOX
+                  pip3 install -U pip && pip3 install -r requirements.txt
+                  pip3 install -v -e .  # or  python3 setup.py develop
+            - name: Install conda environment
+              run: |
+                  $CONDA/bin/conda env update --file environment.yaml --name base
+            - name: Run pytest
+              run: |
+                  conda install pytest
+                  $CONDA/bin/pytest
