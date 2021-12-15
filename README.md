@@ -72,30 +72,24 @@ pip3 install -v -e .  # or  python3 setup.py develop
 **Download example test videos**
 
 GoPro (1920x1080, 30fps)
+Devkit-One Cameras (front: 1280x720 30fps, rear: 640x480 30fps)
 
-+ [Click to download forward-looking bicycle path footage](https://storage.hydo.ai/gi-edge-assets/example-footage/long-overtaking.mp4)
-+ [Click to download rearward-looking bicycle path footage](https://storage.hydo.ai/gi-edge-assets/example-footage/long-being-overtaken.mp4)
++ [GoPro front](https://storage.hydo.ai/gi-edge-assets/example-footage/long-overtaking.mp4)
++ [GoPro rear](https://storage.hydo.ai/gi-edge-assets/example-footage/long-being-overtaken.mp4)
++ [DevKit-One front](https://storage.hydo.ai/gi-edge-assets/first-blackbox-recordings/front-2021-12-04.mkv)
++ [DevKit-One rear](https://storage.hydo.ai/gi-edge-assets/first-blackbox-recordings/rear-2021-12-04.mkv)
 
 Or, run on the command line:
 
 ```bash
 wget -O ~/Downloads https://storage.hydo.ai/gi-edge-assets/example-footage/long-overtaking.mp4
 wget -O ~/Downloads https://storage.hydo.ai/gi-edge-assets/example-footage/long-being-overtaken.mp4
-```
 
-Devkit-One Cameras (front: 1280x720 30fps, rear: 640x480 30fps)
-
-+ [Download front](https://storage.hydo.ai/gi-edge-assets/first-blackbox-recordings/front-2021-12-04.mkv)
-+ [Download rear](https://storage.hydo.ai/gi-edge-assets/first-blackbox-recordings/rear-2021-12-04.mkv)
-
-Or, run command:
-
-```bash
 wget -O ~/Downloads https://storage.hydo.ai/gi-edge-assets/first-blackbox-recordings/front-2021-12-04.mkv
 wget -O ~/Downloads https://storage.hydo.ai/gi-edge-assets/first-blackbox-recordings/rear-2021-12-04.mkv
 ```
 
-**View real-time inference output**
+**Run main script**
 
 ```
 cd gi-edge/computer_vision
