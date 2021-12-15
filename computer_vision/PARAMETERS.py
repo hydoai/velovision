@@ -69,7 +69,7 @@ GoProHD_front = CameraInfo(
     height_fov = 60,
     fps=30,
     install_height=0.8,
-    inference_crop_ratio = 1.5,
+    inference_crop_ratio = 1,
     nudge_down= -150
 )
 
@@ -80,7 +80,7 @@ GoProHD_rear = CameraInfo(
     height_fov = 60,
     fps=30,
     install_height=0.8,
-    inference_crop_ratio = 1.5
+    inference_crop_ratio = 1 
 )
 
 
@@ -89,33 +89,33 @@ GoProHD_rear = CameraInfo(
 FRONT_TTE_THRESH = {
     # category id : time to encounter threshold (seconds)
     0: -1.,  # bicycle
-    1: 25.,  # bus
-    2: 25.,  # car
-    3: 25.,  # cyclist
-    4: 25.,  # motorcycle
+    1: 10.,  # bus
+    2: 10.,  # car
+    3: 10.,  # cyclist
+    4: 10.,  # motorcycle
     5: -1,  # pedestrian
-    6: 25.,  # truck
+    6: 10.,  # truck
 }
 REAR_TTE_THRESH = {
     # category id : time to encounter threshold (seconds)
     0: -1.,  # bicycle
-    1: 20.,  # bus
-    2: 20.,  # car
-    3: 20.,  # cyclist
-    4: 20.,  # motorcycle
+    1: 10.,  # bus
+    2: 10.,  # car
+    3: 10.,  # cyclist
+    4: 10.,  # motorcycle
     5: -1.,  # pedestrian
-    6: 20.,  # truck
+    6: 10.,  # truck
 }
 FRONT_EP_THRESH = {
     # category_id : (left_proximity, right_proximity)
     # in meters
-    0: (-1., 5.),
-    2: (-1., 5.),
-    1: (-1., 5.),
-    3: (-1., 5.),
-    5: (-1., 5.),
-    6: (-1., 5.),
-    4: (-1., 5.),
+    0: (1., 5.),
+    2: (1., 5.),
+    1: (1., 5.),
+    3: (1., 5.),
+    5: (1., 5.),
+    6: (1., 5.),
+    4: (1., 5.),
 }
 REAR_EP_THRESH = {
     # category_id : (left_proximity, right_proximity)
@@ -131,7 +131,7 @@ REAR_EP_THRESH = {
 
 # Hit streak threshold (TTE and EQ are both true)
 
-FRONT_HIT_STREAK_THRESH = 50
+FRONT_HIT_STREAK_THRESH = 40
 REAR_HIT_STREAK_THRESH = 50
 
 # If object is not a threat for consecutive frames, object will still stay in danger status for (FRONT_MAX_STREAK - FRONT_HIT_STREAK_THRESH) / (MISS_MULTIPLIER) frames
@@ -171,3 +171,10 @@ SORT_IOU_THRESH = 0.2
 # Audio parameters
 FRONT_MIN_RING_GAP = 1  # avoid overlapping audio alarm
 REAR_MIN_RING_GAP = 1
+
+
+# YOLOX Inference Predictor Parameters
+
+YOLOX_CONF = 0.3
+YOLOX_NMS = 0.3
+YOLOX_TSIZE = None

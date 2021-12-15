@@ -8,9 +8,10 @@ import numpy as np
 from ..utils import CameraFacing, FrameHalf
 
 class Perspective:
-    def __init__(self, frame_width=960, cam_fov_deg=45):
-        self.frame_width = 960
-        self.cam_fov = cam_fov_deg * pi / 180
+    def __init__(self, frame_width, cam_fov_deg_f, cam_fov_deg_r):
+        self.frame_width = frame_width
+        self.cam_fov_f = cam_fov_deg_f * pi / 180
+        self.cam_fov_r = cam_fov_deg_r * pi / 180
 
     def step(self, input_bboxes):
         '''
@@ -51,7 +52,12 @@ class Perspective:
         clean_bboxes = self.preprocess(input_bboxes)
         for i,box in enumerate(clean_bboxes):
             # box = np.array([x1,x2,empty,empty])
-            x_coord, y_coord = convert_pov_to_cartesian(box[0], box[1], box[2], self.frame_width, self.cam_fov)
+            if box[2] == 0:
+                # front camera
+                x_coord, y_coord = convert_pov_to_cartesian(box[0], box[1], box[2], self.frame_width, self.cam_fov_f)
+            else: # rear camera
+                x_coord, y_coord = convert_pov_to_cartesian(box[0], box[1], box[2], self.frame_width, self.cam_fov_r)
+
             clean_bboxes[i][2] = x_coord
             clean_bboxes[i][3] = y_coord
 

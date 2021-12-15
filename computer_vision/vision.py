@@ -32,6 +32,8 @@ from sdcard_management.remount_sd_card import remount_sd_card, get_username, dev
 
 logger.remove()
 logger.add(sys.stderr, level="INFO")
+# INFO for profiling
+# WARNING for warning alarm triggers
 
 def make_parser():
     parser = argparse.ArgumentParser("YOLOX for Hydo")
@@ -56,13 +58,7 @@ def make_parser():
                         help="Specify specific ckpt for evaluation. Otherwise, best_ckpt of exp_file will be used")
     parser.add_argument("--device", type=str, default='gpu',
                         help="Specify device to run model. 'cpu' or 'gpu'")
-    parser.add_argument("--conf", type=float, default=0.3,
-                        help="Test object confidence threshold")
-    parser.add_argument("--nms", type=float, default=0.3,
-                        help="Test non max suppression threshold")
-    parser.add_argument("--tsize", type=int, default=None,
-                        help="Test image size")
-    parser.add_argument("--fp16", dest="fp16", default=False,
+    parser.add_argument("--fp16", dest="fp16", default=True,
                         action="store_true", help="Adopt mixed precision evaluation")
     parser.add_argument("--fuse", dest="fuse", default=False,
                         action="store_true", help="Fuse conv and bn for testing.")
@@ -75,7 +71,7 @@ def make_parser():
     parser.add_argument("--window_size", type=int, default=1000,
                         help="if --view_result is True, set this window size. Larger makes it much slower.")
 
-    parser.add_argument("--tracker_type", type=str, default='sort',
+    parser.add_argument("--tracker_type", type=str, default='iou',
                         help="Choose betwen 'iou' and 'sort' trackers. IOU Tracker is faster, SORT is smoother and better.")
     parser.add_argument("--view_intercept_result", action='store_true',
                         help="View live matplotlib visualization of birds-eye view. This automatically eables '--view_result' option")
@@ -99,6 +95,9 @@ def main(exp, args):
         caminfo1 = DK1_rearcam
 
     if args.production_hardware:
+        args.gpu = True
+        args.trt = True
+
         # ensuring that the inserted microSD card is at /media/[username]/microsdcard
         remount_sd_card(device_path, mount_path)
         time.sleep(2)
@@ -144,12 +143,12 @@ def main(exp, args):
 
     logger.info(f"Args: {args}")
 
-    if args.conf is not None:
-        exp.test_conf = args.conf
-    if args.nms is not None:
-        exp.nmsthre = args.nms
-    if args.tsize is not None:
-        exp.test_size = (args.tsize, args.tsize)
+    if YOLOX_CONF is not None:
+        exp.test_conf = YOLOX_CONF
+    if YOLOX_NMS is not None:
+        exp.nmsthre = YOLOX_NMS
+    if YOLOX_TSIZE is not None:
+        exp.test_size = (YOLOX_TSIZE, YOLOX_TSIZE)
 
     model = exp.get_model()
     logger.info(f"Model summary: {get_model_info(model, exp.test_size)}")
@@ -186,8 +185,6 @@ def main(exp, args):
         trt_file = None
         decoder = None
 
-    predictor = Predictor(model, exp, HYDO_CLASSES,
-                          trt_file, decoder, args.device, args.fp16)
 
     # CAPTURE FRAMES FROM VIDEO STREAM
 
@@ -214,8 +211,9 @@ def main(exp, args):
     assert caminfo1.width_res == cap1_width
     assert caminfo1.height_res == cap1_height
 
-    fps = max(caminfo0.fps, caminfo1.fps)
-
+    fps0 = cap0.get(cv2.CAP_PROP_FPS)
+    fps1 = cap1.get(cv2.CAP_PROP_FPS)
+    fps = max(fps0, fps1)
     # In inference loop,
     # crop input frame to CameraInfo.inference_crop_ratio
     # and resize to unified reasonable size
@@ -243,9 +241,12 @@ def main(exp, args):
         logging.error("Please choose valid tracker type among 'sort', 'iou'")
         raise NotImplementedError
 
+    predictor = Predictor(model, exp, HYDO_CLASSES,
+                          trt_file, decoder, args.device, args.fp16)
     watchout_f = Watchout(camera_info=caminfo0)
     watchout_r = Watchout(camera_info=caminfo1)
-    perspective = Perspective()
+    perspective = Perspective(frame_width= UNIFIED_WIDTH, cam_fov_deg_f=caminfo0.width_fov, cam_fov_deg_r=caminfo1.width_fov)
+
     # matplotlib visualizations saved to subvison/intercept/saved_figs
     intercept = Intercept(view_vis=args.view_intercept_result,
                           save_vis=args.save_intercept_result,
@@ -339,7 +340,6 @@ def main(exp, args):
                 bboxes = combined_dets[:, 0:4]
                 cls = combined_dets[:, 4]
                 scores = output[:, 4] * output[:, 5]
-                cls_conf = 0.35
                 distance = combined_dets[:, 9]
                 track_id = combined_dets[:, 8]
 
