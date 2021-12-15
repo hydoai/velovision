@@ -33,8 +33,6 @@ What is Hypercycle?
 
 ## Running on a bike
 
-![hypercycle tests](https://github.com/codename-gimondi/gi-edge/actions/workflows/hypercycle_tests.yml/badge.svg)
-
 Hypercycle comes pre-installed on [HYDO Devkit-One](https://hydo.ai), so there's nothing to do besides attaching it to your bike and turning it on.
 
 ## Running on a PC
@@ -164,3 +162,8 @@ Created with [asciiflow](https://asciiflow.com)
 [Project Gimondi Work in Progress 01](https://youtu.be/SEfXO2w2qVI)
 
 [Hydo first try](https://youtu.be/Jk-cQkcG4iY)
+
+---
+
+![hypercycle tests](https://github.com/codename-gimondi/gi-edge/actions/workflows/hypercycle_tests.yml/badge.svg)
+
