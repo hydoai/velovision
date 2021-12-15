@@ -8,8 +8,8 @@ TODO
 # gi-edge
 Computer vision-based overtake warning system for bicycles.
 
-# Table of Contents
-
+Table of Contents
+=================
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 - [Tips on understanding this code](#tips-on-understanding-this-code)
@@ -22,6 +22,10 @@ Computer vision-based overtake warning system for bicycles.
 - [Videos](#videos)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+---
+What is Hypercycle?
+Hypercycle is the world's first computer vision-based active cycling assistance system. Currently, hypercycle performs Automatic Overtake Warning (AOW) for  pedestrians, cyclists, and vehicles. See more about [its capabilities](https://hydo.ai) and [limitations](https://hydo.ai).
 
 ## Tips on understanding this code
 
