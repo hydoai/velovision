@@ -1,3 +1,4 @@
+
 TODO
 
 - [ ] Run on Jetson to validate camera input
@@ -8,6 +9,21 @@ TODO
 Computer vision-based overtake warning system for bicycles.
 
 # Table of Contents
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+- [Table of Contents](#table-of-contents)
+
+- [Tips on understanding this code](#tips-on-understanding-this-code)
+- [Quickstart on Desktop](#quickstart-on-desktop)
+  - [Run automated tests](#run-automated-tests)
+- [Getting Started on NVIDIA Jetson](#getting-started-on-nvidia-jetson)
+- [Repository Schematic](#repository-schematic)
+  - [Live Session Code: Code that runs when Hydo is on and active.](#live-session-code-code-that-runs-when-hydo-is-on-and-active)
+  - [Other Non-Live Code](#other-non-live-code)
+- [Videos](#videos)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Tips on understanding this code
 
