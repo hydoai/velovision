@@ -24,8 +24,11 @@ Table of Contents
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ---
+
 What is Hypercycle?
-Hypercycle is the world's first computer vision-based active cycling assistance system. Currently, hypercycle performs Automatic Overtake Warning (AOW) for  pedestrians, cyclists, and vehicles. See more about [its capabilities](https://hydo.ai) and [limitations](https://hydo.ai).
+-------------------
+
+[Hypercycle](https://github.com/hydoai/hypercycle) is the world's first computer vision-based active cycling assistance system. Currently, hypercycle performs Automatic Overtake Warning (AOW) for  pedestrians, cyclists, and vehicles. See more about [its capabilities](https://hydo.ai) and [limitations](https://hydo.ai).
 
 ## Tips on understanding this code
 
