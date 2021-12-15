@@ -9,7 +9,7 @@ Computer vision-based overtake warning system for bicycles.
 
 ## Notes on Coding Style
 
-In many cases, simple examples of module functionality is self-documented. So if you want to understand what a module does in isolation, just run that module from your terminal and read the code following `if __name__ == "__main__":`.
+In many cases, modules are self-documented. So if you want to understand what a module like `from subvision.intercept import intercept` does in isolation, just run that module from your terminal like `python3 intercept.py` and read the code following `if __name__ == "__main__":`. This should give you a good idea of what it does, and also be a 'playground' for you to make temporary experiments.
 
 ## Quickstart on Desktop
 
