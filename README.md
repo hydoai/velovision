@@ -50,7 +50,9 @@ conda env remove hydo-dev # in case there is a previous environment named hydo-d
 conda env create -f environment.yaml
 ```
 
-This creates a conda environment called 'hydo-dev'. Activate it:
+This creates a conda environment called 'hydo-dev'. 
+
+**Activate it**
 
 ```bash
 conda activate hydo-dev
