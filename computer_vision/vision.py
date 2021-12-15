@@ -387,24 +387,31 @@ def core(exp, args):
                 front_ring_now, rear_ring_now = intercept.should_ring_now()
                 avgtimer.end('intercept_ring')
 
+                play_front_sound = False
+                play_rear_sound = False
                 if front_ring_now:
                     if args.physical_switches:
                         if pins.bool['front_toggle']:
-                            logger.warning("Front warning triggered")
-                            gi_speaker.play_right()  # front speaker is connected to right channel
+                            play_front_sound = True
                     else:
-                        logger.warning("Front warning triggered")
-                        gi_speaker.play_right()
-                    # FEATURE REQUEST : change volume depending on distance
+                        play_front_sound = True
 
                 if rear_ring_now:
                     if args.physical_switches:
                         if pins.bool['rear_toggle']:
-                            logger.warning("Rear warning triggered")
-                            gi_speaker.play_left()
+                            play_rear_sound = True
                     else:
-                        logger.warning("Rear warning triggered")
-                        gi_speaker.play_left()
+                        play_rear_sound = True
+
+                if play_front_sound:
+                    logger.warning("Front warning triggered")
+                    gi_speaker.play_right()
+                    main_results['num_front_warnings'] += 1
+
+                if play_rear_sound:
+                    logger.warning("Rear warning triggered")
+                    gi_speaker.play_left()
+                    main_results['num_rear_warnings'] += 1
 
             if args.save_result:
                 vid_writer.write(result_frame)

@@ -36,14 +36,14 @@ def test_core():
     expected = {
         'num_front_warnings': 1,
         'num_rear_warnings': 1,
-        'wall_time_elapsed': 30,
+        'wall_time_elapsed': 10,
     }
     tolerance = {
-        'num_front_warnings': (0,1), # true value minus first value, true value minus second value are all allowed
-        'num_rear_warnings': (0,1),
-        'wall_time_elapsed': (29, 30)
+        'num_front_warnings': (0,0), # true value minus first value, true value minus second value are all allowed
+        'num_rear_warnings': (0,0),
+        'wall_time_elapsed': (5,10)
     }
     reality = core(exp,args)
     print(reality)
     
-    assert fuzzy_compare(reality, tolerance, expected)
+    assert fuzzy_compare(expected, tolerance, reality)
