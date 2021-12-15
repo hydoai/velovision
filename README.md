@@ -72,6 +72,14 @@ cd gi-edge/computer_vision
 python3 vision.py -vid0 ~/Downloads/long-overtaking -vid1 ~/Downloads/long-being-overtaken.mp4 -f yolox_exps/nano-foxtrot.py --view_result
 ```
 
+### Run automated tests
+
+Ensure that you are in the `computer_vision` folder, and that you have `hydo-dev` conda environment activated. Then run:
+
+```
+python3 -m pytest
+```
+
 ## Getting Started on NVIDIA Jetson
 
 Please see [hydoai/dk-1setup](https://github.com/hydoai/dk1-setup) for instructions on running on Jetson.
