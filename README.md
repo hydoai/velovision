@@ -36,6 +36,10 @@ What is Hypercycle?
 + In many cases, modules are self-testable. So if you want to understand what a module like `from subvision.intercept import intercept` does in isolation, just run that module from your terminal like `python3 intercept.py` and read the code following `if __name__ == "__main__":`. This should give you a good idea of what it does, and also be a 'playground' for you to make temporary experiments.
 + Installing on desktop simply install YOLOX, then installing `hydo-dev` conda environment. However, installing on NVIDIA Jetson platform is more involved and takes much longer. Many usually pip installable packages must be installed from apt and requires other dependencies.
 
+## Running on your bike
+
+Hypercycle comes pre-installed on [HYDO Devkit-One](https://hydo.ai), so there's nothing to do besides attaching it to your bike and turning it on.
+
 ## Quickstart on Linux Desktop
 
 **Clone this repository**
