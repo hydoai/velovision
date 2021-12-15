@@ -8,7 +8,6 @@ on:
             - '**.md'
 jobs:
     build-test:
-        name: linux-build
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:
@@ -19,17 +18,25 @@ jobs:
               uses: actions/setup-python@v2
               with:
                   python-version: 3.6
+            - name: set up conda
+              uses: s-weigand/setup-conda@v1
+              with:
+                  update-conda: true
+                  python-version: 3.6
+                  conda-channels: anaconda, conda-forge
+            - name: Install Conda Dependencies
+              run: |
+                  conda env update --file environment.yaml --name base
             - name: Install YOLOX
               run: |
                   git clone https://github.com/Megvii-BaseDetection/YOLOX.git
                   cd YOLOX
                   pip3 install -U pip && pip3 install -r requirements.txt
                   pip3 install -v -e .  # or  python3 setup.py develop
-            - name: Install conda environment
-              run: |
-                  $CONDA/bin/conda env update --file environment.yaml --name base
             - name: Run pytest
               run: |
-                  conda install pytest
+                  apt-get install python3-opencv
+                  pip install opencv-python
+                  pip install pytest
                   cd computer_vision
-                  $CONDA/bin/pytest
+                  pytest
