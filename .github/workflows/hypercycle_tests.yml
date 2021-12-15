@@ -31,4 +31,5 @@ jobs:
             - name: Run pytest
               run: |
                   conda install pytest
+                  cd computer_vision
                   $CONDA/bin/pytest
