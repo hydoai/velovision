@@ -1,3 +1,9 @@
+TODO
+
+- [ ] Run on Jetson to validate camera input
+- [ ] Cover timing tightly on inference loop, optimize (for example, don't needlessly render visualizations)
+- [ ] Write unit tests for subvision parts
+
 # gi-edge
 Computer vision-based overtake warning system for bicycles.
 
@@ -9,7 +15,7 @@ Computer vision-based overtake warning system for bicycles.
 git clone git@github.com:codename-gimondi/gi-edge.git
 ```
 
-**Create conda environment**
+**Create conda environment** ([How to install conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html))
 
 ```bash
 conda env remove hydo-dev # in case there is a previous environment named hydo-dev
@@ -20,6 +26,17 @@ This creates a conda environment called 'hydo-dev'. Activate it:
 
 ```bash
 conda activate hydo-dev
+```
+
+**Install YOLOX**
+
+```bash
+cd gi-edge/temp
+
+git clone git@github.com:Megvii-BaseDetection/YOLOX.git
+cd YOLOX
+pip3 install -U pip && pip3 install -r requirements.txt
+pip3 install -v -e .  # or  python3 setup.py develop
 ```
 
 **Download example test videos**
@@ -52,7 +69,7 @@ wget -O ~/Downloads https://storage.hydo.ai/gi-edge-assets/first-blackbox-record
 
 ```
 cd gi-edge/computer_vision
-python3 vision.py 
+python3 vision.py -vid0 ~/Downloads/long-overtaking -vid1 ~/Downloads/long-being-overtaken.mp4 -f yolox_exps/nano-foxtrot.py --view_result
 ```
 
 ## Getting Started on NVIDIA Jetson
