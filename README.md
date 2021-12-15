@@ -79,6 +79,7 @@ Ensure that you are in the `computer_vision` directory, and that you have `hydo-
 ```
 python3 -m pytest
 ```
+You will probably hear some sounds (front and rear warning sounds) while the test is running.
 
 ## Getting Started on NVIDIA Jetson
 
