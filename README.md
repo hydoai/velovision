@@ -1,3 +1,4 @@
+![velovision tests](https://github.com/codename-gimondi/gi-edge/actions/workflows/velovision_tests.yml/badge.svg)
 
 TODO
 
@@ -166,6 +167,3 @@ Created with [asciiflow](https://asciiflow.com)
 [Hydo first try](https://youtu.be/Jk-cQkcG4iY)
 
 ---
-
-![velovision tests](https://github.com/codename-gimondi/gi-edge/actions/workflows/velovision_tests.yml/badge.svg)
-
