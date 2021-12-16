@@ -25,7 +25,10 @@ jobs:
             - name: apt install opencv
               run: |
                 sudo apt update
-                sudo apt install -y python3-opencv libgl1-mesa-glx ffmpeg libsm6 libxext6
+                sudo apt install -y python3-opencv libgl1-mesa-glx 
+                
+               # ffmpeg libsm6 libxext6
+
             - name: Install cmake
               run: pip install cmake
             - name: Set up conda 
