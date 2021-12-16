@@ -6,9 +6,6 @@
 - [ ] Cover timing tightly on inference loop, optimize (for example, don't needlessly render visualizations)
 - [ ] Write unit tests for subvision parts
 
-# velovision
-Computer vision-based overtake warning system for bicycles.
-
 Table of Contents
 =================
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
