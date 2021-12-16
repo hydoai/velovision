@@ -22,6 +22,8 @@ jobs:
             #  uses: Dovyski/setup-opencv-action@v1
             #  with:
             #      opencv-version: '4.5.0'
+            - name: python is python3
+              run: apt install python-is-python3
             - name: Set up pip dependencies
               run: |
                   pip install -r requirements.txt
