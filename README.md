@@ -47,7 +47,7 @@ Just attach it, connect it, turn it on and you're ready to go.
 **Clone this repository**
 
 ```bash
-git clone git@github.com:codename-gimondi/gi-edge.git
+git clone git@github.com:hydoai/velovision.git
 ```
 
 **Create conda environment** ([How to install conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html))
