@@ -10,13 +10,4 @@ dependencies:
   - numpy
   - pip 
   - pip:
-    - cmake
-    - lapsolver
-    - cython
-    - thop
-    - filterpy
-    - scikit-image
-    - lap 
-    - loguru
-    - pygame
-    - pytest
+    - -r requirements.txt
