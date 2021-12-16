@@ -1,4 +1,4 @@
-![velovision tests](https://github.com/codename-gimondi/gi-edge/actions/workflows/velovision_tests.yaml/badge.svg)
+![velovision tests](https://github.com/codename-gimondi/gi-edge/actions/workflows/velovision_tests.yml/badge.svg)
 
 TODO
 
