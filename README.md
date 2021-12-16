@@ -5,7 +5,7 @@ TODO
 - [ ] Cover timing tightly on inference loop, optimize (for example, don't needlessly render visualizations)
 - [ ] Write unit tests for subvision parts
 
-# gi-edge
+# velovision
 Computer vision-based overtake warning system for bicycles.
 
 Table of Contents
@@ -33,7 +33,7 @@ What is velovision?
 
 ## Running on a bike
 
-Hypercycle comes pre-installed on [HYDO Devkit-One](https://hydo.ai), so there's nothing to do besides attaching it to your bike and turning it on.
+velovision comes pre-installed on [HYDO Devkit-One](https://hydo.ai), so there's nothing to do besides attaching it to your bike and turning it on.
 
 ## Running on a PC
 
