@@ -6,7 +6,7 @@ Table of Contents
 =================
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-- [Tips on understanding this code](#tips-on-understanding-this-code)
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 - [TODO](#todo)
 - [Running on a bike](#running-on-a-bike)
