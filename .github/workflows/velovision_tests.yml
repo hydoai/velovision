@@ -30,15 +30,15 @@ jobs:
                # ffmpeg libsm6 libxext6
 
             - name: Install cmake
-              run: pip install cmake
-            - name: Set up conda 
-              uses: conda-incubator/setup-miniconda@v2
-              with:
-                miniconda-version: "latest"
-                environment-file: environment.yaml
-            #- name: Set up pip dependencies
-            #  run: |
-            #      pip3 install -r requirements.txt
+              run: pip3 install cmake
+            #- name: Set up conda 
+            #  uses: conda-incubator/setup-miniconda@v2
+            #  with:
+            #    miniconda-version: "latest"
+            #    environment-file: environment.yaml
+            - name: Set up pip dependencies
+              run: |
+                  pip3 install -r requirements.txt
             - name: Install YOLOX
               run: |
                   pip3 install git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI
