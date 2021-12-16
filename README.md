@@ -2,10 +2,6 @@
 
 ![velovision tests](https://github.com/codename-gimondi/gi-edge/actions/workflows/velovision_tests.yml/badge.svg)
 
-- [ ] Run on Jetson to validate camera input
-- [ ] Cover timing tightly on inference loop, optimize (for example, don't needlessly render visualizations)
-- [ ] Write unit tests for subvision parts
-
 Table of Contents
 =================
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -28,6 +24,11 @@ What is velovision?
 
 [velovision](https://github.com/hydoai/velovision) is the world's first computer vision-based active cycling assistance system. Currently, velovision performs Automatic Overtake Warning (AOW) for  pedestrians, cyclists, and vehicles. See more about [its capabilities](https://hydo.ai) and [limitations](https://hydo.ai).
 
+## TODO
+
+- [ ] Run on Jetson to validate camera input
+- [ ] Cover timing tightly on inference loop, optimize (for example, don't needlessly render visualizations)
+- [ ] Write unit tests for subvision parts
 
 ## Running on a bike
 
