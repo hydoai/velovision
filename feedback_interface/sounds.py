@@ -12,7 +12,7 @@ class GiSpeaker:
     IMPORTANT: Audio files themselves need to have right or left Pan.
     In Audacity, the L-R slider next to the waveforms does this.
     '''
-    def __init__(self, left_sound_filename='FYOONG-left.mp3', right_sound_filename='high-three-chirp-right.mp3', startup_sound_filename='pinball.mp3', disabled=False):
+    def __init__(self, left_sound_filename='FYOONG-left.mp3', right_sound_filename='high-three-chirp-right.mp3', startup_sound_filename='pinball.mp3'):
         '''
         args:
             left_sound_filename: filename of left (rear) channel sound

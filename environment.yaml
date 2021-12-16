@@ -1,5 +1,5 @@
-# requirements that are neither conda or pip installable:
-# yolox (see yolox repo)
+# YOLOX installation is separate from this
+# Github Actions does not use Conda. It installs python version and opencv differently, and just uses pip requirements.txt
 
 name: hydo-dev
 channels:
