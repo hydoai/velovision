@@ -33,7 +33,9 @@ What is velovision?
 
 ## Running on a bike
 
-velovision comes pre-installed on [HYDO Devkit-One](https://hydo.ai), so there's nothing to do besides attaching it to your bike and turning it on.
+velovision comes pre-installed on [HYDO Devkit-One](https://hydo.ai)!
+
+Just attach it, connect it, turn it on and you're ready to go.
 
 ## Running on a PC
 
