@@ -1,3 +1,5 @@
+![banner](https://github.com/hydoai/brand-id/raw/main/velovision/velovision-banner.png)
+
 ![velovision tests](https://github.com/codename-gimondi/gi-edge/actions/workflows/velovision_tests.yml/badge.svg)
 
 - [ ] Run on Jetson to validate camera input
