@@ -35,6 +35,7 @@ VIDEOS GO HERE
 - [ ] Run on Jetson to validate camera input
 - [ ] Cover timing tightly on inference loop, optimize (for example, don't needlessly render visualizations)
 - [ ] Write unit tests for subvision parts
+- [ ] Create jetson-in-the-loop custom test infrastructure
 
 ## Running on a bike
 
