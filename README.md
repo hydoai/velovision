@@ -1,6 +1,5 @@
 ![velovision tests](https://github.com/codename-gimondi/gi-edge/actions/workflows/velovision_tests.yml/badge.svg)
 
-TODO
 
 - [ ] Run on Jetson to validate camera input
 - [ ] Cover timing tightly on inference loop, optimize (for example, don't needlessly render visualizations)
