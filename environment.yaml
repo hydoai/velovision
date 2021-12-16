@@ -13,7 +13,6 @@ dependencies:
     - cmake
     - lapsolver
     - cython
-    - 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI'
     - thop
     - filterpy
     - scikit-image
