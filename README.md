@@ -1,3 +1,4 @@
+![velovision tests](https://github.com/codename-gimondi/gi-edge/actions/workflows/velovision_tests.yml/badge.svg)
 
 - [ ] Run on Jetson to validate camera input
 - [ ] Cover timing tightly on inference loop, optimize (for example, don't needlessly render visualizations)
@@ -114,9 +115,7 @@ python3 -m pytest
 ```
 You might hear some sounds (front and rear warning sounds) while the test is running.
 
-The tests are run via Github Actions on every push to main branch:
-
-![velovision tests](https://github.com/codename-gimondi/gi-edge/actions/workflows/velovision_tests.yml/badge.svg)
+The tests are run via Github Actions on every push to main branch. See test badge at the top for status.
 
 To run these tests on your local system,
 
