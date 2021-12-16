@@ -1,6 +1,4 @@
 
-TODO
-
 - [ ] Run on Jetson to validate camera input
 - [ ] Cover timing tightly on inference loop, optimize (for example, don't needlessly render visualizations)
 - [ ] Write unit tests for subvision parts
@@ -112,7 +110,20 @@ Ensure that you are in the `computer_vision` directory, and that you have `hydo-
 ```
 python3 -m pytest
 ```
-You will probably hear some sounds (front and rear warning sounds) while the test is running.
+You might hear some sounds (front and rear warning sounds) while the test is running.
+
+The tests are run via Github Actions on every push to main branch:
+
+![velovision tests](https://github.com/codename-gimondi/gi-edge/actions/workflows/velovision_tests.yml/badge.svg)
+
+To run these tests on your local system,
+
+[Install nektos/act](https://github.com/nektos/act), then run
+
+```
+cd computer_vision
+act
+```
 
 ## Getting Started on NVIDIA Jetson
 
@@ -166,6 +177,3 @@ Created with [asciiflow](https://asciiflow.com)
 [Hydo first try](https://youtu.be/Jk-cQkcG4iY)
 
 ---
-
-![velovision tests](https://github.com/codename-gimondi/gi-edge/actions/workflows/velovision_tests.yml/badge.svg)
-
