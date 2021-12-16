@@ -105,14 +105,25 @@ python3 vision.py -vid0 ~/Downloads/long-overtaking -vid1 ~/Downloads/long-being
 
 ### Run automated tests
 
-![velovision tests](https://github.com/codename-gimondi/gi-edge/actions/workflows/velovision_tests.yml/badge.svg)
-
 Ensure that you are in the `computer_vision` directory, and that you have `hydo-dev` conda environment activated. Then run:
 
 ```
 python3 -m pytest
 ```
-You will probably hear some sounds (front and rear warning sounds) while the test is running.
+You might hear some sounds (front and rear warning sounds) while the test is running.
+
+The tests are run via Github Actions on every push to main branch:
+
+![velovision tests](https://github.com/codename-gimondi/gi-edge/actions/workflows/velovision_tests.yml/badge.svg)
+
+To run these tests on your local system,
+
+[Install nektos/act](https://github.com/nektos/act), then run
+
+```
+cd computer_vision
+act
+```
 
 ## Getting Started on NVIDIA Jetson
 
