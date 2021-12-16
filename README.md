@@ -1,5 +1,3 @@
-![velovision tests](https://github.com/codename-gimondi/gi-edge/actions/workflows/velovision_tests.yml/badge.svg)
-
 
 - [ ] Run on Jetson to validate camera input
 - [ ] Cover timing tightly on inference loop, optimize (for example, don't needlessly render visualizations)
@@ -106,6 +104,8 @@ python3 vision.py -vid0 ~/Downloads/long-overtaking -vid1 ~/Downloads/long-being
 + Installing on desktop simply install YOLOX, then installing `hydo-dev` conda environment. However, installing on NVIDIA Jetson platform is more involved and takes much longer. Many usually pip installable packages must be installed from apt and requires other dependencies.
 
 ### Run automated tests
+
+![velovision tests](https://github.com/codename-gimondi/gi-edge/actions/workflows/velovision_tests.yml/badge.svg)
 
 Ensure that you are in the `computer_vision` directory, and that you have `hydo-dev` conda environment activated. Then run:
 
