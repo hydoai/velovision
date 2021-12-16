@@ -25,10 +25,10 @@ Table of Contents
 
 ---
 
-What is Hypercycle?
+What is velovision?
 -------------------
 
-[Hypercycle](https://github.com/hydoai/hypercycle) is the world's first computer vision-based active cycling assistance system. Currently, hypercycle performs Automatic Overtake Warning (AOW) for  pedestrians, cyclists, and vehicles. See more about [its capabilities](https://hydo.ai) and [limitations](https://hydo.ai).
+[velovision](https://github.com/hydoai/velovision) is the world's first computer vision-based active cycling assistance system. Currently, hypercycle performs Automatic Overtake Warning (AOW) for  pedestrians, cyclists, and vehicles. See more about [its capabilities](https://hydo.ai) and [limitations](https://hydo.ai).
 
 
 ## Running on a bike
@@ -165,5 +165,5 @@ Created with [asciiflow](https://asciiflow.com)
 
 ---
 
-![hypercycle tests](https://github.com/codename-gimondi/gi-edge/actions/workflows/hypercycle_tests.yml/badge.svg)
+![velovision tests](https://github.com/codename-gimondi/gi-edge/actions/workflows/velovision_tests.yml/badge.svg)
 
