@@ -1,6 +1,6 @@
+cmake
 numpy
 opencv-python
-cmake
 lapsolver
 cython
 git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI

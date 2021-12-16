@@ -7,7 +7,7 @@ from argparse import Namespace
 from yolox.exp import get_exp
 
 
-def test_core():
+def test_core_cpu():
     args = Namespace(
         experiment_name = None,
         name = None,
@@ -18,7 +18,7 @@ def test_core():
         cam_type = "GoProHD",
         exp_file = "yolox_exps/nano-foxtrot.py",
         ckpt = None,
-        device = "gpu",
+        device = "cpu",
         fp16 = True,
         fuse = False,
         trt = False,
@@ -30,6 +30,7 @@ def test_core():
         save_intercept_result = False,
         production_hardware = False,
         physical_switches = False,
+        no_audio = True,
     )
     exp = get_exp(args.exp_file, exp_name=None)
 
@@ -47,3 +48,7 @@ def test_core():
     print(reality)
     
     assert fuzzy_compare(expected, tolerance, reality)
+
+def test_dummy():
+    print("Testing a dummy function")
+    assert True

@@ -83,6 +83,8 @@ def make_parser():
                         help="Shortcut to override some arguments with HYDO DevKit-One specific camera, storage, and other configurations")
     parser.add_argument("--physical_switches", default=False,
                         action="store_true", help="GPIO hardware controls")
+    parser.add_argument("--no_audio", default=False,
+                        action="store_true", help="Disable pygame ALSA audio output for Docker-based headless testing (github actions)")
     return parser
 
 
@@ -263,9 +265,12 @@ def core(exp, args):
     intercept = Intercept(view_vis=args.view_intercept_result,
                           save_vis=args.save_intercept_result,
                           frame_width=UNIFIED_WIDTH)
-    gi_speaker = GiSpeaker()
+    if not args.no_audio:
+        gi_speaker = GiSpeaker()
+    else:
+        gi_speaker = None
 
-    if cap0.isOpened() and cap1.isOpened():
+    if cap0.isOpened() and cap1.isOpened() and not args.no_audio:
         gi_speaker.play_startup
 
     while cap0.isOpened() and cap1.isOpened():
@@ -405,13 +410,15 @@ def core(exp, args):
 
                 if play_front_sound:
                     logger.warning("Front warning triggered")
-                    gi_speaker.play_right()
                     main_results['num_front_warnings'] += 1
+                    if not args.no_audio:
+                        gi_speaker.play_right()
 
                 if play_rear_sound:
                     logger.warning("Rear warning triggered")
-                    gi_speaker.play_left()
                     main_results['num_rear_warnings'] += 1
+                    if not args.no_audio:
+                        gi_speaker.play_left()
 
             if args.save_result:
                 vid_writer.write(result_frame)
