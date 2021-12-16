@@ -42,7 +42,7 @@ def test_core_cpu():
     tolerance = {
         'num_front_warnings': (0,0), # true value minus first value, true value minus second value are all allowed
         'num_rear_warnings': (0,0),
-        'wall_time_elapsed': (5,10)
+        'wall_time_elapsed': (5,60)
     }
     reality = core(exp,args)
     print(reality)
