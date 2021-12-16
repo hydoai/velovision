@@ -7,7 +7,11 @@ Table of Contents
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 - [Tips on understanding this code](#tips-on-understanding-this-code)
-- [Quickstart on Desktop](#quickstart-on-desktop)
+
+- [TODO](#todo)
+- [Running on a bike](#running-on-a-bike)
+- [Running on a PC](#running-on-a-pc)
+  - [Tips on working with this code](#tips-on-working-with-this-code)
   - [Run automated tests](#run-automated-tests)
 - [Getting Started on NVIDIA Jetson](#getting-started-on-nvidia-jetson)
 - [Repository Schematic](#repository-schematic)
