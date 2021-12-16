@@ -1,0 +1,50 @@
+# followed directions from https://autobencoder.com/2020-08-24-conda-actions/
+name: velovision tests
+on:
+    push:
+        branches:
+            - main
+        paths-ignore:
+            - '**.md'
+jobs:
+    build-test:
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                os: [ubuntu-latest, ubuntu-18.04]
+        steps:
+            - uses: actions/checkout@v2
+            - name: Set up Python
+              uses: actions/setup-python@v2
+              with:
+                  python-version: 3.6
+            #- name: Build and make OpenCV
+            #  uses: Dovyski/setup-opencv-action@v1
+            #  with:
+            #      opencv-version: '4.5.0'
+            - name: apt install opencv
+              run: |
+                sudo apt update
+                sudo apt install -y python3-opencv libgl1-mesa-glx ffmpeg libsm6 libxext6
+            - name: Install cmake
+              run: pip install cmake
+            - name: Set up conda 
+              uses: conda-incubator/setup-miniconda@v2
+              with:
+                miniconda-version: "latest"
+                environment-file: basic-environment.yaml
+            - name: install numpy before pycocotools
+              run: pip3 install numpy
+            - name: Set up pip dependencies
+              run: |
+                  pip3 install -r requirements.txt
+            - name: Install YOLOX
+              run: |
+                  git clone https://github.com/Megvii-BaseDetection/YOLOX.git
+                  cd YOLOX
+                  pip3 install -U pip && pip3 install -r requirements.txt
+                  pip3 install -v -e . 
+            - name: Run pytest
+              run: |
+                  cd computer_vision
+                  python3 -m pytest .
