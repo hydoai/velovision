@@ -1,3 +1,4 @@
+opencv-python
 cmake
 lapsolver
 cython
