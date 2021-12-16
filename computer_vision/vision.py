@@ -220,10 +220,16 @@ def core(exp, args):
         assert caminfo1.width_res == cap1_width
         assert caminfo1.height_res == cap1_height
     except AssertionError:
-        print(cap0_height)
-        print(cap0_width)
-        print(caminfo0.height_res)
-        print(caminfo0.width_res)
+        print("ERROR: Cameras not set up properly.")
+        print("cap0_height:", cap0_height)
+        print("cap0_width:", cap0_width)
+        print("caminfo0.height_res:", caminfo0.height_res)
+        print("caminfo0.width_res:", caminfo0.width_res)
+        print("cap1_height:", cap1_height)
+        print("cap1_width:", cap1_width)
+        print("caminfo1.height_res:", caminfo1.height_res)
+        print("caminfo1.width_res:", caminfo1.width_res)
+
 
     fps0 = cap0.get(cv2.CAP_PROP_FPS)
     fps1 = cap1.get(cv2.CAP_PROP_FPS)
