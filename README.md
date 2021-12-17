@@ -1,6 +1,6 @@
 ![banner](https://github.com/hydoai/brand-id/raw/main/velovision/velovision-banner.png)
 
-![velovision tests](https://github.com/codename-gimondi/gi-edge/actions/workflows/velovision_tests.yml/badge.svg)
+![velovision tests](https://github.com/hydoai/velovision/actions/workflows/velovision_tests.yml/badge.svg)
 
 Table of Contents
 =================
@@ -30,16 +30,10 @@ velovision is the world's first computer vision-based active cycling assistance 
 
 <table>
   <tr>
-    <td><a href="https://youtu.be/ND56-PTQYCA" title="chestcam1"><img src="https://i.imgur.com/1w8c6d2.jpg"></a></td>
-    <td><a href="https://youtu.be/VHKyqZ7t8Gw" title="Video By Logan LeGrand"><img src="https://i.imgur.com/LnBucik.jpg"></a></td>
-    <td><a href="https://youtu.be/VxiR4iyBruo" title="Video By Charlie Kim"><img src="https://i.imgur.com/4Qoy48c.jpg"></a></td>
-    <td><a href="https://youtu.be/-IkImTe1NYE" title="Video By Aragon"><img src="https://i.imgur.com/04VNzPf.jpg"></a></td>
-  </tr>
-  <tr>
-    <td><a href="https://youtu.be/iIUICQkdwFQ" title="Video By Logan LeGrand"><img src="https://i.imgur.com/b1LHQTy.jpg"></a></td>
-    <td><a href="https://youtu.be/XOsa0FsVIsg" title="Video By PinoyDrives"><img src="https://i.imgur.com/6FG0Bd8.jpg"></a></td>
-    <td><a href="https://youtu.be/bCwcJ98R_Xw" title="Video By JS"><img src="https://i.imgur.com/zO18CbW.jpg"></a></td>
-    <td><a href="https://youtu.be/BQ0tF3MTyyc" title="Video By Tsai-Fi"><img src="https://i.imgur.com/eZzelq3.jpg"></a></td>
+    <td><a href="https://youtu.be/ND56-PTQYCA" title="chestcam-1"><img src="readme-assets/chestcam-thumbnail-1.png"></a></td>
+    <td><a href="https://youtu.be/GUyWp-IDISc" title="chestcam-2"><img src="readme-assets/chestcam-thumbnail-2.png"></a></td>
+    <td><a href="https://youtu.be/BhYqEL78wPo" title="chestcam-3"><img src="readme-assets/chestcam-thumbnail-3.png"></a></td>
+    <td><a href="https://youtu.be/MSXN9TsbpYU" title="chestcam-4"><img src="readme-assets/chestman-thumbnail-4.png"></a></td>
   </tr>
 </table>
 
