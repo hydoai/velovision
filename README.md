@@ -52,6 +52,9 @@ velovision comes pre-installed on [HYDO Devkit-One](https://hydo.ai)!
 
 Just attach it, connect it, turn it on and you're ready to go.
 
+Development instructions at: [hydoai/dk-1setup](https://github.com/hydoai/dk1-setup) for instructions on running on Jetson.
+
+
 # Running on a PC
 
 **Clone this repository**
@@ -142,10 +145,6 @@ cd computer_vision
 act
 ```
 
-# Getting Started on NVIDIA Jetson
-
-Please see [hydoai/dk-1setup](https://github.com/hydoai/dk1-setup) for instructions on running on Jetson.
-
 # Repository Structure
 
 ```
@@ -167,7 +166,7 @@ Please see [hydoai/dk-1setup](https://github.com/hydoai/dk1-setup) for instructi
 ```
 *diagram using [asciiflow](https://asciiflow.com)*
 
-# Live Inference Code
+## Live Inference Code
 
 + [Sensing Interface](sensing_interface): Set up camera inputs. Hardware accelerated encoding full FOV front and rear cameras.
 + [UI Input](ui_input): Interface with buttons and switches on the case.
