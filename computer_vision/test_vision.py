@@ -1,7 +1,7 @@
 import sys
 sys.path.append('../')
 
-from testing_resources.testing_utils import fuzzy_compare
+from testing_utils import fuzzy_compare
 from vision import core
 from argparse import Namespace
 from yolox.exp import get_exp
