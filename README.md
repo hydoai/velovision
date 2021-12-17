@@ -102,11 +102,11 @@ Two sets of videos are used as examples. `Right click -> Save Link As...` to dow
   </summary>
 
 ```bash
-wget -O ~/Downloads https://storage.hydo.ai/gi-edge-assets/example-footage/long-overtaking.mp4
-wget -O ~/Downloads https://storage.hydo.ai/gi-edge-assets/example-footage/long-being-overtaken.mp4
+wget -O ~/Downloads/long-overtaking.mp4 https://storage.hydo.ai/gi-edge-assets/example-footage/long-overtaking.mp4
+wget -O ~/Downloads/long-being-overtaken.mp4 https://storage.hydo.ai/gi-edge-assets/example-footage/long-being-overtaken.mp4
 
-wget -O ~/Downloads https://storage.hydo.ai/gi-edge-assets/first-blackbox-recordings/front-2021-12-04.mkv
-wget -O ~/Downloads https://storage.hydo.ai/gi-edge-assets/first-blackbox-recordings/rear-2021-12-04.mkv
+wget -O ~/Downloads/front-2021-12-04.mkv https://storage.hydo.ai/gi-edge-assets/first-blackbox-recordings/front-2021-12-04.mkv
+wget -O ~/Downloads/rear-2021-12-04.mkv https://storage.hydo.ai/gi-edge-assets/first-blackbox-recordings/rear-2021-12-04.mkv
 ```
   
 </details>
