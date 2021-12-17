@@ -146,15 +146,11 @@ act
 
 Please see [hydoai/dk-1setup](https://github.com/hydoai/dk1-setup) for instructions on running on Jetson.
 
-## Repository Schematic
-Created with [asciiflow](https://asciiflow.com)
-```
-┌───────────────────┐      ┌──────────────┐
-│Jetson Installation│      │Mock Resources│
-└───────────────────┘      └──────────────┘
+## Repository Structure
 
+```
 ┌─────────────────────────────────────────────────────┐
-│Live Session Code                                    │
+│ Live Inference Code                                 │
 │ ┌─────────────────┐   ┌──────────────────────────┐  │
 │ │Sensing Interface│   │ User Interface (UI) Input│  │
 │ └───────────────┬─┘   └───┬──────────────────────┘  │
@@ -169,28 +165,23 @@ Created with [asciiflow](https://asciiflow.com)
 │                                                     │
 └─────────────────────────────────────────────────────┘
 ```
-
+*diagram using [asciiflow](https://asciiflow.com)*
 
 ### Live Session Code: Code that runs when Hydo is on and active.
 
-+ [Sensing Interface](sensing_interface): Set up NVIDIA hardware accelerated camera video input stream. Implement always-on hardware accelerated video saving.
++ [Sensing Interface](sensing_interface): Set up camera inputs. Hardware accelerated encoding full FOV front and rear cameras.
 + [UI Input](ui_input): Interface with buttons and switches on the case.
 + [Computer Vision](computer_vision): Object detection neural network, tracking, and warning algorithms. 
 + [Feedback Interface](feedback_interface): Interface with warning sound speaker.
 + [UI Output](ui_output): Interface with OLED display
 
-### Other Non-Live Code
+# Licensing
 
-+ [Jetson Installation](jetson_installation): Install required packages for running the live session code.
-+ [Mock Resources](mock_resources): Mock test video files, etc. for desktop development and testing
+velovision is released under the Apache-2.0 license, largely because many of the open source libraries used are Apache-2.0. Some parts of the software are released under other licenses as specified.
 
-## Videos
+Any user of this software shall indemnify and hold harmless HYDO, Inc. and its directors, officers, employees, agents, stockholders, affiliates, subcontractors and customers from and against all allegations, claims, actions, suits, demands, damages, liabilities, obligations, losses, settlements, judgments, costs and expenses (including without limitation attorneys’ fees and costs) which arise out of, relate to or result from any use of this software by user.
 
-
-[Project Gimondi Work in Progress 02](https://youtu.be/eCJcu_2iLPg)
-
-[Project Gimondi Work in Progress 01](https://youtu.be/SEfXO2w2qVI)
-
-[Hydo first try](https://youtu.be/Jk-cQkcG4iY)
+**THIS IS ALPHA QUALITY SOFTWARE FOR RESEARCH PURPOSES ONLY.
+NO WARRANTY EXPRESSED OR IMPLIED.**
 
 ---
