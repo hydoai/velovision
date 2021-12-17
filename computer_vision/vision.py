@@ -36,10 +36,10 @@ logger.add(sys.stderr, level="WARNING")
 # WARNING for warning alarm triggers
 
 def start_camera_pipelines():
-        camera_interface = CameraInterface()
-        camera_interface.start_pipelines()
-        camera_interface.record_nvenc_h265(4, 1280, 720, fps=30, max_length=20)
-        camera_interface.record_nvenc_h265(6, 640, 480, fps=30, max_length=20)
+    camera_interface = CameraInterface()
+    camera_interface.start_pipelines()
+    camera_interface.record_nvenc_h265(4, 1280, 720, fps=30, max_length=20)
+    camera_interface.record_nvenc_h265(6, 640, 480, fps=30, max_length=20)
 
 def make_parser():
     parser = argparse.ArgumentParser("YOLOX for Hydo")

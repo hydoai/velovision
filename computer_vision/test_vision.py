@@ -1,7 +1,7 @@
 import sys
 sys.path.append("../")
 
-from testing_utils import fuzzy_compare
+from testing.testing_utils import fuzzy_compare
 from vision import core
 from argparse import Namespace
 from yolox.exp import get_exp
@@ -13,8 +13,8 @@ def test_core_cpu():
         name = None,
         cam0_index = None,
         cam1_index = None,
-        vid0_file = "testing_resources/single_overtake.mp4",
-        vid1_file = "testing_resources/single_overtaken.mp4",
+        vid0_file = "../testing/example_videos/single_overtake.mp4",
+        vid1_file = "../testing/example_videos/single_overtaken.mp4",
         cam_type = "GoProHD",
         exp_file = "yolox_exps/nano-foxtrot.py",
         ckpt = None,
