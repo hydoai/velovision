@@ -10,13 +10,6 @@ jobs:
     inference-loop:
         runs-on: self-hosted
         steps:
-            - name: apt install OpenCV
-              run: |
-                sudo apt update
-                sudo apt install -y python3-opencv libgl1-mesa-glx 
-
-            - name: Install cmake
-              run: pip3 install cmake
             - name: Set up pip dependencies
               run: |
                   pip3 install -r requirements.txt
