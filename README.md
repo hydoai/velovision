@@ -113,7 +113,7 @@ wget -O ~/Downloads https://storage.hydo.ai/gi-edge-assets/first-blackbox-record
 **Run main script**
 
 ```
-cd gi-edge/computer_vision
+cd velovision/computer_vision
 python3 vision.py -vid0 ~/Downloads/long-overtaking -vid1 ~/Downloads/long-being-overtaken.mp4 -f yolox_exps/nano-foxtrot.py --view_result
 ```
 
