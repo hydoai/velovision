@@ -110,12 +110,6 @@ cd velovision/computer_vision
 python3 vision.py -vid0 ~/Downloads/long-overtaking -vid1 ~/Downloads/long-being-overtaken.mp4 -f yolox_exps/nano-foxtrot.py --view_result
 ```
 
-## Tips on working with this code
-
-+ The main script is `computer_vision/vision.py`. All submodules are called from there.
-+ In many cases, modules are self-testable. So if you want to understand what a module like `from subvision.intercept import intercept` does in isolation, just run that module from your terminal like `python3 intercept.py` and read the code following `if __name__ == "__main__":`. This should give you a good idea of what it does, and also be a 'playground' for you to make temporary experiments.
-+ Installing on desktop simply install YOLOX, then installing `hydo-dev` conda environment. However, installing on NVIDIA Jetson platform is more involved and takes much longer. Many usually pip installable packages must be installed from apt and requires other dependencies.
-
 ## Run automated tests
 
 Ensure that you are in the `computer_vision` directory, and that you have `hydo-dev` conda environment activated. Then run:
@@ -171,6 +165,13 @@ act
 + [Computer Vision](computer_vision): Object detection neural network, tracking, and warning algorithms. 
 + [Feedback Interface](feedback_interface): Interface with warning sound speaker.
 + [UI Output](ui_output): Interface with OLED display
+
+## Getting started tips
+
++ The main script is `computer_vision/vision.py`. All submodules are called from there.
++ In many cases, modules are self-testable. So if you want to understand what a module like `from subvision.intercept import intercept` does in isolation, just run that module from your terminal like `python3 intercept.py` and read the code following `if __name__ == "__main__":`. This should give you a good idea of what it does, and also be a 'playground' for you to make temporary experiments.
++ Installing on desktop simply install YOLOX, then installing `hydo-dev` conda environment. However, installing on NVIDIA Jetson platform is more involved and takes much longer. Many usually pip installable packages must be installed from apt and requires other dependencies.
+
 
 # Licensing
 
