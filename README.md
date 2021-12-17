@@ -5,6 +5,8 @@
 
 ---
 
+<!-- Run ./update-readme-toc.sh -->
+<!-- or: doctoc --title '# Table of Contents' --maxlevel 1 README.md -->
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 # Table of Contents
@@ -18,6 +20,8 @@
 - [Licensing](#licensing)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+---
 
 What is velovision?
 -------------------
