@@ -3,24 +3,18 @@
 
 ![velovision tests](https://github.com/hydoai/velovision/actions/workflows/velovision_tests.yml/badge.svg)
 
-Table of Contents
-=================
 ---
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+#Table of Contents
 
-- [Table of Contents](#table-of-contents)
-  - [What is velovision?](#what-is-velovision)
-  - [TODO](#todo)
-  - [Running on a bike](#running-on-a-bike)
-  - [Running on a PC](#running-on-a-pc)
-    - [Tips on working with this code](#tips-on-working-with-this-code)
-    - [Run automated tests](#run-automated-tests)
-  - [Getting Started on NVIDIA Jetson](#getting-started-on-nvidia-jetson)
-  - [Repository Structure](#repository-structure)
-    - [Live Inference Code](#live-inference-code)
+- [TODO](#todo)
+- [Running on a bike](#running-on-a-bike)
+- [Running on a PC](#running-on-a-pc)
+- [Getting Started on NVIDIA Jetson](#getting-started-on-nvidia-jetson)
+- [Repository Structure](#repository-structure)
+- [Live Inference Code](#live-inference-code)
 - [Licensing](#licensing)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -41,20 +35,20 @@ I was inspired by [commaai/openpilot](https://github.com/commaai/openpilot).
   </tr>
 </table>
 
-## TODO
+# TODO
 
 - [ ] Run on Jetson to validate camera input
 - [ ] Cover timing tightly on inference loop, optimize (for example, don't needlessly render visualizations)
 - [ ] Write unit tests for subvision parts
 - [ ] Create jetson-in-the-loop custom test infrastructure
 
-## Running on a bike
+# Running on a bike
 
 velovision comes pre-installed on [HYDO Devkit-One](https://hydo.ai)!
 
 Just attach it, connect it, turn it on and you're ready to go.
 
-## Running on a PC
+# Running on a PC
 
 **Clone this repository**
 
@@ -118,13 +112,13 @@ cd gi-edge/computer_vision
 python3 vision.py -vid0 ~/Downloads/long-overtaking -vid1 ~/Downloads/long-being-overtaken.mp4 -f yolox_exps/nano-foxtrot.py --view_result
 ```
 
-### Tips on working with this code
+## Tips on working with this code
 
 + The main script is `computer_vision/vision.py`. All submodules are called from there.
 + In many cases, modules are self-testable. So if you want to understand what a module like `from subvision.intercept import intercept` does in isolation, just run that module from your terminal like `python3 intercept.py` and read the code following `if __name__ == "__main__":`. This should give you a good idea of what it does, and also be a 'playground' for you to make temporary experiments.
 + Installing on desktop simply install YOLOX, then installing `hydo-dev` conda environment. However, installing on NVIDIA Jetson platform is more involved and takes much longer. Many usually pip installable packages must be installed from apt and requires other dependencies.
 
-### Run automated tests
+## Run automated tests
 
 Ensure that you are in the `computer_vision` directory, and that you have `hydo-dev` conda environment activated. Then run:
 
@@ -144,11 +138,11 @@ cd computer_vision
 act
 ```
 
-## Getting Started on NVIDIA Jetson
+# Getting Started on NVIDIA Jetson
 
 Please see [hydoai/dk-1setup](https://github.com/hydoai/dk1-setup) for instructions on running on Jetson.
 
-## Repository Structure
+# Repository Structure
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -169,7 +163,7 @@ Please see [hydoai/dk-1setup](https://github.com/hydoai/dk1-setup) for instructi
 ```
 *diagram using [asciiflow](https://asciiflow.com)*
 
-### Live Inference Code
+# Live Inference Code
 
 + [Sensing Interface](sensing_interface): Set up camera inputs. Hardware accelerated encoding full FOV front and rear cameras.
 + [UI Input](ui_input): Interface with buttons and switches on the case.
