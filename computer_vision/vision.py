@@ -35,6 +35,12 @@ logger.add(sys.stderr, level="WARNING")
 # INFO for profiling
 # WARNING for warning alarm triggers
 
+def start_camera_pipelines():
+        camera_interface = CameraInterface()
+        camera_interface.start_pipelines()
+        camera_interface.record_nvenc_h265(4, 1280, 720, fps=30, max_length=20)
+        camera_interface.record_nvenc_h265(6, 640, 480, fps=30, max_length=20)
+
 def make_parser():
     parser = argparse.ArgumentParser("YOLOX for Hydo")
     parser.add_argument("-expn", "--experiment-name", type=str, default=None)
@@ -87,9 +93,41 @@ def make_parser():
                         action="store_true", help="Disable pygame ALSA audio output for Docker-based headless testing (github actions)")
     return parser
 
+def resolve_args(args):
+    '''
+    Resolve dependencies between arguments
+    Configure correct args for jetson and desktop runs
+
+    Only parse between arguments, no external variables or side effects!
+    '''
+
+    if args.production_hardware:
+        args.cam_type = 'DK1'
+        args.cam0_index = 3
+        args.cam1_index = 5
+        args.vid0_file = '/dev/video0'
+        args.vid1_file = '/dev/video1'
+        args.trt = True
+        args.device = 'gpu'
+        args.save_result = False
+        args.view_result = False
+        args.tracker_type = 'iou'
+        args.view_intercept_result = False 
+        args.save_intercept_result = False
+        args.no_audio = False
+        args.physical_switches = True
+
+    if args.trt:
+        args.device = 'gpu'
+
+    if args.view_intercept_result and args.save_result:
+        logger.error("Saving the concatenated two vides + intercept plot is not implemented, because VideoWriter needs to know the final output shape. It's possible, but I haven't bothered yet.\n In the meantime, use '--view_result' instead of '--save_result'")
+        raise NotImplementedError
+
+    return args
 
 def core(exp, args):
-    main_results = { # intended for testing
+    main_results = { # counter for testing
         'num_front_warnings': 0,
         'num_rear_warnings': 0,
         'wall_time_elapsed': time.time(),
@@ -103,10 +141,7 @@ def core(exp, args):
         caminfo1 = DK1_rearcam
 
     if args.production_hardware:
-        args.gpu = True
-        args.trt = True
-
-        # ensuring that the inserted microSD card is at /media/[username]/microsdcard
+        # remounting to ensuring that the inserted microSD card is at /media/[username]/microsdcard
         remount_sd_card(device_path, mount_path)
         time.sleep(2)
         # run thread to occasionally delete old videos on microsdcard
@@ -118,22 +153,10 @@ def core(exp, args):
         pins.setup_function('shutdown', safe_shutdown)
         pins.start()
 
-    def start_camera_pipelines():
-        camera_interface = CameraInterface()
-        camera_interface.start_pipelines()
-        camera_interface.record_nvenc_h265(4, 1280, 720, fps=30, max_length=20)
-        camera_interface.record_nvenc_h265(6, 640, 480, fps=30, max_length=20)
-
     if args.production_hardware:
         p = Process(target=start_camera_pipelines)
         p.start()
         time.sleep(10)
-
-    if args.save_result or args.view_result or args.view_intercept_result:
-        args.debug = True
-    if args.view_intercept_result and args.save_result:
-        logger.error("Saving the concatenated two vides + intercept plot is not implemented, because VideoWriter needs to know the final output shape. It's possible, but I haven't bothered yet.\n In the meantime, use '--view_result' instead of '--save_result'")
-        raise NotImplementedError
 
     if not args.experiment_name:
         args.experiment_name = exp.exp_name
@@ -141,13 +164,11 @@ def core(exp, args):
     file_name = os.path.join(exp.output_dir, args.experiment_name)
     os.makedirs(file_name, exist_ok=True)
 
-    vis_folder = None
     if args.save_result:
         vis_folder = os.path.join(file_name, 'visualized_results')
         os.makedirs(vis_folder, exist_ok=True)
-
-    if args.trt:
-        args.device = "gpu"
+    else:
+        vis_folder = None
 
     logger.info(f"Args: {args}")
 
@@ -194,14 +215,6 @@ def core(exp, args):
         decoder = None
 
 
-    # CAPTURE FRAMES FROM VIDEO STREAM
-
-    if args.production_hardware:
-        args.cam0_index = 3
-        args.cam1_index = 5
-        caminfo0 = DK1_frontcam
-        caminfo1= DK1_rearcam
-
     cap0 = cv2.VideoCapture(
         args.vid0_file if args.cam0_index is None else args.cam0_index)
     cap1 = cv2.VideoCapture(
@@ -236,7 +249,7 @@ def core(exp, args):
     fps = max(fps0, fps1)
     # In inference loop,
     # crop input frame to CameraInfo.inference_crop_ratio
-    # and resize to unified reasonable size
+    # then resize to unified size
 
     if args.save_result:
         save_folder = os.path.join(vis_folder, time.strftime(
@@ -466,6 +479,7 @@ def core(exp, args):
 
 if __name__ == "__main__":
     args = make_parser().parse_args()
-    exp = get_exp(args.exp_file, args.name)
-    main_results = core(exp, args)
+    resolved_args = resolve_args(args)
+    exp = get_exp(resolved_args.exp_file, args.name)
+    main_results = core(exp, resolved_args)
     print("finished")
