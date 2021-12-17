@@ -46,12 +46,13 @@ I was inspired by [commaai/openpilot](https://github.com/commaai/openpilot).
 
 # Running on a bike
 
-velovision comes pre-installed on [HYDO Devkit-One](https://hydo.ai)!
+[HYDO Devkit-One](https://hydo.ai) ships with velovision pre-installed and ready to ride.
 
-Just attach it, connect it, turn it on and you're ready to go.
-
-Development instructions at: [hydoai/dk-1setup](https://github.com/hydoai/dk1-setup) for instructions on running on Jetson.
-
+<details>
+  <summary> How to set up Devkit-One from scratch
+  </summary>
+  If you would like to set up Devkit-One from scratch, please see [hydoai/dk1-setup](https://github.com/hydoai/dk1-setup).
+</details>
 
 # Running on a PC
 
