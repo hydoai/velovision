@@ -15,7 +15,7 @@ The desktop development build runs on standard Github Actions runners, but the J
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## How to set up a self-hosted runner
+# How to set up a self-hosted runner
 
 1. Refer to [hydoai/dk1-setup](https://github.com/hydoai/dk1-setup) to set up a Jetson NX for running velovision.
 1. From [https://github.com/hydoai/velovision](https://github.com/hydoai/velovision), go to `Settings` -> `Actions` -> `Runners` -> `New self-hosted runner`.
