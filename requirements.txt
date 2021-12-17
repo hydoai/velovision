@@ -1,4 +1,3 @@
-cmake
 numpy
 opencv-python
 lapsolver
