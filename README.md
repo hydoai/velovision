@@ -1,8 +1,6 @@
 
 ![banner](https://github.com/hydoai/brand-id/raw/main/velovision/velovision-banner-pictures.png)
 
-![velovision tests](https://github.com/hydoai/velovision/actions/workflows/velovision_tests.yml/badge.svg)
-
 ---
 
 <!-- Run ./update-readme-toc.sh -->
@@ -38,6 +36,8 @@ I was inspired by [commaai/openpilot](https://github.com/commaai/openpilot).
 </table>
 
 # TODO
+
+![velovision tests](https://github.com/hydoai/velovision/actions/workflows/velovision_tests.yml/badge.svg)
 
 - [ ] Run on Jetson to validate camera input
 - [ ] Cover timing tightly on inference loop, optimize (for example, don't needlessly render visualizations)
