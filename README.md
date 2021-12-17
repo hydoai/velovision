@@ -12,7 +12,12 @@
 - [Running on a bike](#running-on-a-bike)
 - [Running on a PC](#running-on-a-pc)
 - [Testing](#testing)
+  - [Run manual tests](#run-manual-tests)
+  - [Run automated tests](#run-automated-tests)
 - [Development Tips](#development-tips)
+  - [Todo List](#todo-list)
+  - [Repository Structure](#repository-structure)
+  - [Getting started tips](#getting-started-tips)
 - [Licensing](#licensing)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->

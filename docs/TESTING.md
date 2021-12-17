@@ -1,3 +1,12 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+# Table of Contents
+
+- [Automated Testing](#automated-testing)
+  - [How to set up a self-hosted runner](#how-to-set-up-a-self-hosted-runner)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Automated Testing
 
 We use Github Actions to run automated tests.
