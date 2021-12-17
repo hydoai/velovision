@@ -52,7 +52,7 @@ I was inspired by [commaai/openpilot](https://github.com/commaai/openpilot).
   <summary> How to set up Devkit-One from scratch
   </summary>
   
-If you would like to set up Devkit-One from scratch, please see [hydoai/dk1-setup](https://github.com/hydoai/dk1-setup).
+See [hydoai/dk1-setup](https://github.com/hydoai/dk1-setup) for ground-up setup of Devkit-One.
 
 
 </details>
