@@ -81,7 +81,7 @@ pip3 install -v -e .  # or  python3 setup.py develop
 
 **Download example test videos**
 
-Two sets of videos are used as examples.
+Two sets of videos are used as examples. `Right click -> Save linked file as` to download.
 1. GoPro (1920x1080, 30fps)
 2. Devkit-One Cameras (front: 1280x720 30fps, rear: 640x480 30fps)
 
@@ -90,7 +90,7 @@ Two sets of videos are used as examples.
 + [DevKit-One front](https://storage.hydo.ai/gi-edge-assets/first-blackbox-recordings/front-2021-12-04.mkv)
 + [DevKit-One rear](https://storage.hydo.ai/gi-edge-assets/first-blackbox-recordings/rear-2021-12-04.mkv)
 
-Or, run on the command line:
+Alternatively, download via `wget`:
 
 ```bash
 wget -O ~/Downloads https://storage.hydo.ai/gi-edge-assets/example-footage/long-overtaking.mp4
