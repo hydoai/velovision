@@ -17,8 +17,8 @@ class Predictor:
             cls_names = HYDO_CLASSES,
             trt_file = None,
             decoder = None,
-            device = 'cpu',
-            fp16 = False,
+            device = 'gpu',
+            fp16 = True,
             ):
         self.model = model
         self.cls_names = cls_names
@@ -35,6 +35,7 @@ class Predictor:
             model_trt = TRTModule()
             model_trt.load_state_dict(torch.load(trt_file))
             x = torch.ones(1,3,exp.test_size[0], exp.test_size[1]).cuda()
+            x = x.half() # DEBUG: i tried adding this to fix
             self.model(x) # run once
             self.model = model_trt
 

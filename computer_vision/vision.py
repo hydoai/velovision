@@ -31,7 +31,7 @@ from sdcard_management.remount_sd_card import remount_sd_card, get_username, dev
 # LeetopA203 specific: microSD card slot is at /dev/mmcblk1p1; modify this at remound_sdcard.py
 
 logger.remove()
-logger.add(sys.stderr, level="WARNING")
+logger.add(sys.stderr, level="INFO")
 # INFO for profiling
 # WARNING for warning alarm triggers
 
@@ -58,7 +58,7 @@ def make_parser():
     parser.add_argument("--cam_type", type=str, default="GoProHD", 
                         help="Camera type. Choose among 'GoProHD' and 'DK1'. See PARAMETERS.py for details. This sets the 'caminfo0' and 'caminfo1' internal variables.")
 
-    parser.add_argument("-f", "--exp_file", type=str, default='yolox_exps/nx-alpha.py',
+    parser.add_argument("-f", "--exp_file", type=str, default='yolox_exps/nx-foxtrot.py',
                         help="Please input your experiment description python file (in 'exps' folder)")
     parser.add_argument("-c", "--ckpt", type=str, default=None,
                         help="Specify specific ckpt for evaluation. Otherwise, best_ckpt of exp_file will be used")
@@ -123,7 +123,9 @@ def resolve_args(args):
     if args.view_intercept_result and args.save_result:
         logger.error("Saving the concatenated two vides + intercept plot is not implemented, because VideoWriter needs to know the final output shape. It's possible, but I haven't bothered yet.\n In the meantime, use '--view_result' instead of '--save_result'")
         raise NotImplementedError
-
+    
+    print("args.device:")
+    print(args.device)
     return args
 
 def core(exp, args):
