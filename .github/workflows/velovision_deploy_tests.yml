@@ -1,0 +1,17 @@
+# followed directions from https://autobencoder.com/2020-08-24-conda-actions/
+name: velovision tests
+on:
+    push:
+        branches:
+            - main
+        paths-ignore:
+            - '**.md'
+jobs:
+    inference-loop:
+        runs-on: self-hosted
+        steps:
+            - uses: actions/checkout@v2
+            - name: Run pytest
+              run: |
+                  cd computer_vision
+                  python3 -m pytest .
