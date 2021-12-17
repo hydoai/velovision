@@ -66,13 +66,6 @@ git clone git@github.com:hydoai/velovision.git
 ```bash
 conda env remove hydo-dev # in case there is a previous environment named hydo-dev
 conda env create -f environment.yaml
-```
-
-This creates a conda environment called 'hydo-dev'. 
-
-**Activate it**
-
-```bash
 conda activate hydo-dev
 ```
 
