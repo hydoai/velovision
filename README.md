@@ -144,7 +144,9 @@ cd computer_vision
 act
 ```
 
-# Repository Structure
+# Development Tips
+
+## Repository Structure
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -165,8 +167,6 @@ act
 ```
 *diagram using [asciiflow](https://asciiflow.com)*
 
-## Live Inference Code
-
 + [Sensing Interface](sensing_interface): Set up camera inputs. Hardware accelerated encoding full FOV front and rear cameras.
 + [UI Input](ui_input): Interface with buttons and switches on the case.
 + [Computer Vision](computer_vision): Object detection neural network, tracking, and warning algorithms. 
@@ -175,7 +175,7 @@ act
 
 # Licensing
 
-velovision is released under the Apache-2.0 license, largely because many of the open source libraries used are Apache-2.0. Some parts of the software are released under other licenses as specified.
+velovision is released under the Apache-2.0 open source license. Some parts of the software are released under other licenses as specified.
 
 Any user of this software shall indemnify and hold harmless HYDO, Inc. and its directors, officers, employees, agents, stockholders, affiliates, subcontractors and customers from and against all allegations, claims, actions, suits, demands, damages, liabilities, obligations, losses, settlements, judgments, costs and expenses (including without limitation attorneys’ fees and costs) which arise out of, relate to or result from any use of this software by user.
 
