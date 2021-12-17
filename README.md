@@ -39,12 +39,11 @@ velovision is the world's first computer vision-based active cycling assistance 
 </table>
 
 # Running on a bike
-![hardware in the loop test badge no status](https://img.shields.io/badge/Hardware%20in%20the%20loop%20tests-no%20status-969696.svg?logo=NVIDIA)
-![hardware in the loop test badge passing](https://img.shields.io/badge/Hardware%20in%20the%20loop%20tests-passing-2fbd47.svg?logo=NVIDIA)
-![hardware in the loop test badge failing](https://img.shields.io/badge/Hardware%20in%20the%20loop%20tests-failing-red.svg?logo=NVIDIA)
-
+![velovision deploy tests](https://github.com/hydoai/velovision/actions/workflows/velovision_deploy_tests.yml/badge.svg)
 
 [HYDO Devkit-One](https://hydo.ai) ships with velovision pre-installed and ready to ride.
+
+
 
 <details>
   <summary> How to set up Devkit-One from scratch
@@ -56,7 +55,7 @@ See [hydoai/dk1-setup](https://github.com/hydoai/dk1-setup) for ground-up setup 
 
 # Running on a PC
 
-![velovision tests](https://github.com/hydoai/velovision/actions/workflows/velovision_tests.yml/badge.svg)
+![velovision develop tests](https://github.com/hydoai/velovision/actions/workflows/velovision_develop_tests.yml/badge.svg)
 
 **Clone this repository**
 
