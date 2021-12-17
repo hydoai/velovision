@@ -1,11 +1,29 @@
+
 ![banner](https://github.com/hydoai/brand-id/raw/main/velovision/velovision-banner.png)
 
 ![velovision tests](https://github.com/hydoai/velovision/actions/workflows/velovision_tests.yml/badge.svg)
 
 Table of Contents
 =================
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
 ---
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Table of Contents](#table-of-contents)
+  - [What is velovision?](#what-is-velovision)
+  - [TODO](#todo)
+  - [Running on a bike](#running-on-a-bike)
+  - [Running on a PC](#running-on-a-pc)
+    - [Tips on working with this code](#tips-on-working-with-this-code)
+    - [Run automated tests](#run-automated-tests)
+  - [Getting Started on NVIDIA Jetson](#getting-started-on-nvidia-jetson)
+  - [Repository Structure](#repository-structure)
+    - [Live Inference Code](#live-inference-code)
+- [Licensing](#licensing)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 What is velovision?
 -------------------
