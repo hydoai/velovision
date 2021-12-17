@@ -97,7 +97,9 @@ Two sets of videos are used as examples. `Right click -> Save Link As...` to dow
 + [DevKit-One front](https://storage.hydo.ai/gi-edge-assets/first-blackbox-recordings/front-2021-12-04.mkv)
 + [DevKit-One rear](https://storage.hydo.ai/gi-edge-assets/first-blackbox-recordings/rear-2021-12-04.mkv)
 
-Alternatively, download via `wget`:
+<details>
+  <summary> Alternatively, download via `wget`
+  </summary>
 
 ```bash
 wget -O ~/Downloads https://storage.hydo.ai/gi-edge-assets/example-footage/long-overtaking.mp4
@@ -106,6 +108,8 @@ wget -O ~/Downloads https://storage.hydo.ai/gi-edge-assets/example-footage/long-
 wget -O ~/Downloads https://storage.hydo.ai/gi-edge-assets/first-blackbox-recordings/front-2021-12-04.mkv
 wget -O ~/Downloads https://storage.hydo.ai/gi-edge-assets/first-blackbox-recordings/rear-2021-12-04.mkv
 ```
+  
+</details>
 
 **Run main script**
 
