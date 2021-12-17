@@ -8,6 +8,19 @@ Table of Contents
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+  - [What is velovision?](#what-is-velovision)
+  - [TODO](#todo)
+  - [Running on a bike](#running-on-a-bike)
+  - [Running on a PC](#running-on-a-pc)
+    - [Tips on working with this code](#tips-on-working-with-this-code)
+    - [Run automated tests](#run-automated-tests)
+  - [Getting Started on NVIDIA Jetson](#getting-started-on-nvidia-jetson)
+  - [Repository Structure](#repository-structure)
+    - [Live Session Code: Code that runs when Hydo is on and active.](#live-session-code-code-that-runs-when-hydo-is-on-and-active)
+- [Licensing](#licensing)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 - [TODO](#todo)
 - [Running on a bike](#running-on-a-bike)
 - [Running on a PC](#running-on-a-pc)
