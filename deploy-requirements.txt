@@ -1,0 +1,12 @@
+numpy
+lapsolver
+cython
+thop
+filterpy
+scikit-image
+lap
+loguru
+pygame
+pytest
+
+
