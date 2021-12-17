@@ -35,15 +35,6 @@ I was inspired by [commaai/openpilot](https://github.com/commaai/openpilot).
   </tr>
 </table>
 
-# Development Todo List
-
-![velovision tests](https://github.com/hydoai/velovision/actions/workflows/velovision_tests.yml/badge.svg)
-
-- [ ] Run on Jetson to validate camera input
-- [ ] Cover timing tightly on inference loop, optimize (for example, don't needlessly render visualizations)
-- [ ] Write unit tests for subvision parts
-- [ ] Create jetson-in-the-loop custom test infrastructure
-
 # Running on a bike
 
 [HYDO Devkit-One](https://hydo.ai) ships with velovision pre-installed and ready to ride.
@@ -54,10 +45,11 @@ I was inspired by [commaai/openpilot](https://github.com/commaai/openpilot).
   
 See [hydoai/dk1-setup](https://github.com/hydoai/dk1-setup) for ground-up setup of Devkit-One.
 
-
 </details>
 
 # Running on a PC
+
+![velovision tests](https://github.com/hydoai/velovision/actions/workflows/velovision_tests.yml/badge.svg)
 
 **Clone this repository**
 
@@ -145,6 +137,13 @@ act
 ```
 
 # Development Tips
+
+## Todo List
+
+- [ ] Run on Jetson to validate camera input
+- [ ] Cover timing tightly on inference loop, optimize (for example, don't needlessly render visualizations)
+- [ ] Write unit tests for subvision parts
+- [ ] Create jetson-in-the-loop custom test infrastructure
 
 ## Repository Structure
 
