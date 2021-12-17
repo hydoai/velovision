@@ -33,7 +33,7 @@ velovision is the world's first computer vision-based active cycling assistance 
     <td><a href="https://youtu.be/ND56-PTQYCA" title="chestcam-1"><img src="readme-assets/chestcam-thumbnail-1.png"></a></td>
     <td><a href="https://youtu.be/GUyWp-IDISc" title="chestcam-2"><img src="readme-assets/chestcam-thumbnail-2.png"></a></td>
     <td><a href="https://youtu.be/BhYqEL78wPo" title="chestcam-3"><img src="readme-assets/chestcam-thumbnail-3.png"></a></td>
-    <td><a href="https://youtu.be/MSXN9TsbpYU" title="chestcam-4"><img src="readme-assets/chestman-thumbnail-4.png"></a></td>
+    <td><a href="https://youtu.be/MSXN9TsbpYU" title="chestcam-4"><img src="readme-assets/chestcam-thumbnail-4.png"></a></td>
   </tr>
 </table>
 
