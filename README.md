@@ -11,6 +11,7 @@
 
 - [Running on a bike](#running-on-a-bike)
 - [Running on a PC](#running-on-a-pc)
+- [Testing](#testing)
 - [Development Tips](#development-tips)
 - [Licensing](#licensing)
 
@@ -111,7 +112,9 @@ cd velovision/computer_vision
 python3 vision.py -vid0 ~/Downloads/long-overtaking -vid1 ~/Downloads/long-being-overtaken.mp4 -f yolox_exps/nano-foxtrot.py --view_result
 ```
 
-## Run automated tests
+# Testing
+
+## Run manual tests
 
 Ensure that you are in the `computer_vision` directory, and that you have `hydo-dev` conda environment activated. Then run:
 
@@ -120,9 +123,11 @@ python3 -m pytest
 ```
 You might hear some sounds (front and rear warning sounds) while the test is running.
 
-The tests are run via Github Actions on every push to main branch. See test badge at the top for status.
+## Run automated tests
 
-To run these tests on your local system,
+See [docs/TESTING.md](docs/TESTING.md) to learn more.
+
+To run the same suite of automated tests on your local machine,
 
 [Install nektos/act](https://github.com/nektos/act), then run
 
