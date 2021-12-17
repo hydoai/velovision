@@ -81,7 +81,7 @@ pip3 install -v -e .  # or  python3 setup.py develop
 
 **Download example test videos**
 
-Two sets of videos are used as examples. `Right click -> Save linked file as` to download.
+Two sets of videos are used as examples. `Right click -> Save Link As...` to download.
 1. GoPro (1920x1080, 30fps)
 2. Devkit-One Cameras (front: 1280x720 30fps, rear: 640x480 30fps)
 
