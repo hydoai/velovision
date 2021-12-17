@@ -77,6 +77,7 @@ conda activate hydo-dev
 ```bash
 pip3 install cython; pip3 install 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI'
 
+mkdir temp
 cd temp
 
 git clone git@github.com:Megvii-BaseDetection/YOLOX.git
