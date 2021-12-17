@@ -9,10 +9,9 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 # Table of Contents
 
-- [Development Todo List](#development-todo-list)
 - [Running on a bike](#running-on-a-bike)
 - [Running on a PC](#running-on-a-pc)
-- [Repository Structure](#repository-structure)
+- [Development Tips](#development-tips)
 - [Licensing](#licensing)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
