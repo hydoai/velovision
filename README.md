@@ -14,9 +14,7 @@
 - [TODO](#todo)
 - [Running on a bike](#running-on-a-bike)
 - [Running on a PC](#running-on-a-pc)
-- [Getting Started on NVIDIA Jetson](#getting-started-on-nvidia-jetson)
 - [Repository Structure](#repository-structure)
-- [Live Inference Code](#live-inference-code)
 - [Licensing](#licensing)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
