@@ -26,7 +26,7 @@ Table of Contents
 What is velovision?
 -------------------
 
-[velovision](https://github.com/hydoai/velovision) is the world's first computer vision-based active cycling assistance system. Currently, velovision performs Automatic Overtake Warning (AOW) for  pedestrians, cyclists, and vehicles. See more about [its capabilities](https://hydo.ai) and [limitations](https://hydo.ai).
+velovision is the world's first computer vision-based active cycling assistance system. Currently, velovision performs Automatic Overtake Warning (AOW) for  pedestrians, cyclists, and vehicles. See more about [its capabilities](https://hydo.ai) and [limitations](https://hydo.ai).
 
 VIDEOS GO HERE
 
