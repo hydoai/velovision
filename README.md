@@ -36,7 +36,7 @@ I was inspired by [commaai/openpilot](https://github.com/commaai/openpilot).
 
 # Running on a bike
 
-1[hardware in the loop test badge passing](https://img.shields.io/badge/Hardware%20In%20the%20loop%20tests-passing-1bc900.svg?logo=NVIDIA)
+![hardware in the loop test badge passing](https://img.shields.io/badge/Hardware%20In%20the%20loop%20tests-passing-1bc900.svg?logo=NVIDIA)
 
 [HYDO Devkit-One](https://hydo.ai) ships with velovision pre-installed and ready to ride.
 
