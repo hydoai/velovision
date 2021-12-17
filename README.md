@@ -1,5 +1,5 @@
 
-![banner](https://github.com/hydoai/brand-id/raw/main/velovision/velovision-banner-pictures-bg.png)
+![banner](https://github.com/hydoai/brand-id/raw/main/velovision/velovision-banner-pictures.png)
 
 ![velovision tests](https://github.com/hydoai/velovision/actions/workflows/velovision_tests.yml/badge.svg)
 
