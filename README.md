@@ -23,8 +23,6 @@ What is velovision?
 
 velovision is the world's first computer vision-based active cycling assistance system. Currently, velovision performs Automatic Overtake Warning for  pedestrians, cyclists, and vehicles. See more about [its capabilities](https://hydo.ai) and [limitations](https://hydo.ai).
 
-I was inspired by [commaai/openpilot](https://github.com/commaai/openpilot).
-
 <table>
   <tr>
     <td><a href="https://youtu.be/ND56-PTQYCA" title="chestcam-1"><img src="readme_assets/chestcam-thumbnail-1.png"></a></td>
