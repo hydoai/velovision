@@ -34,7 +34,7 @@ velovision is the world's first computer vision-based active cycling assistance 
 
 ## Milestones
 
-+ 2021/09: HYDO wins K-startup grant via [Hanyang University](https://startup.hanyang.ac.kr/en) in Seoul, South Korea.
++ 2021/09: HYDO wins K-startup seed funding via [Hanyang University](https://startup.hanyang.ac.kr/en) in Seoul, South Korea.
 + 2022/01: `velovision`, our active cycling assistance system, is released under the Apache-2.0 open source license.
 
 # Running on a bike
