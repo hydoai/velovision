@@ -24,4 +24,4 @@ jobs:
             - name: Run pytest
               run: |
                   cd computer_vision
-                  python3 -m pytest .
+                  python3 -m pytest test_vision_deploy.py
