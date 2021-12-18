@@ -55,7 +55,7 @@ def make_parser():
     parser.add_argument("-vid1", "--vid1_file", type=str,
                         default=None, help="Video 1 file path.")
 
-    parser.add_argument("--cam_type", type=str, default="GoProHD", 
+    parser.add_argument("--cam_type", type=str, default="GoProHD",
                         help="Camera type. Choose among 'GoProHD' and 'DK1'. See PARAMETERS.py for details. This sets the 'caminfo0' and 'caminfo1' internal variables.")
 
     parser.add_argument("-f", "--exp_file", type=str, default='yolox_exps/nx-foxtrot.py',
@@ -112,7 +112,7 @@ def resolve_args(args):
         args.save_result = False
         args.view_result = False
         args.tracker_type = 'iou'
-        args.view_intercept_result = False 
+        args.view_intercept_result = False
         args.save_intercept_result = False
         args.no_audio = False
         args.physical_switches = True
@@ -123,7 +123,7 @@ def resolve_args(args):
     if args.view_intercept_result and args.save_result:
         logger.error("Saving the concatenated two vides + intercept plot is not implemented, because VideoWriter needs to know the final output shape. It's possible, but I haven't bothered yet.\n In the meantime, use '--view_result' instead of '--save_result'")
         raise NotImplementedError
-    
+
     print("args.device:")
     print(args.device)
     return args
@@ -229,7 +229,7 @@ def core(exp, args):
 
     # sanity check: CameraInfo width & height should be same as the cap width & height.
     # if fail, check CameraInfo setup in PARAMETERS.py
-    try: 
+    try:
         assert caminfo0.width_res == cap0_width
         assert caminfo0.height_res == cap0_height
         assert caminfo1.width_res == cap1_width
@@ -298,7 +298,7 @@ def core(exp, args):
         ret_val0, frame0 = cap0.read()
         ret_val1, frame1 = cap1.read()
         if not (ret_val0 and ret_val1):
-            break 
+            break
         else:
             avgtimer.start('frame')
 
