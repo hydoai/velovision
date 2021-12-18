@@ -19,12 +19,13 @@
 
 ---
 
-What is velovision?
--------------------
+## What is velovision?
 
 velovision is the world's first computer vision-based active cycling assistance system. Currently, velovision performs Automatic Overtake Warning for  pedestrians, cyclists, and vehicles. 
 
-In 2021, HYDO received K-startup grant via Hanyang University in Seoul, South Korea.
+## Milestones
+
+In 2021, HYDO was granted K-startup funding via Hanyang University in Seoul, South Korea.
 
 In 2022, `velovision`, our active cycling assistance system was released under the Apache-2.0 open source license.
 
