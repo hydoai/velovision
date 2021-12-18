@@ -36,7 +36,7 @@ Velovision is developed by people like you. We provide free & open documentation
 
 ## Project Milestones
 
-+ 2021-09: HYDO wins K-startup grant via Hanyang University in Seoul, South Korea.
++ 2021-09: Jason Sohn wins K-startup grant via Hanyang University in Seoul, South Korea to develop HYDO.
 + 2022-01: `velovision`, our active cycling assistance system, is released under the Apache-2.0 open source license.
 
 # Running on a bike
