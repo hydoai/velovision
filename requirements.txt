@@ -11,3 +11,5 @@ pygame
 pytest
 
 
+# Backport dataclasses for Python 3.6 (included from 3.7)
+dataclasses

@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+
 # Class index to name
 # alphabetically ordered because that's how it's trained
 HYDO_CLASSES = ['bicycle', 'bus', 'car',
@@ -20,27 +22,18 @@ UNIFIED_HEIGHT = 360
 UNIFIED_WIDTH = 640
 
 # HYDO DevKit-One Front/Rear Camera Specifications
+@dataclass 
 class CameraInfo:
-    def __init__(self,
-                 width_res,
-                 height_res,
-                 width_fov,
-                 height_fov,
-                 fps,
-                 install_height,
-                 inference_crop_ratio,
-                 nudge_down=0,
-                 nudge_right=0,
-                 ):
-        self.width_res = width_res
-        self.height_res = height_res
-        self.width_fov = width_fov
-        self.height_fov = height_fov
-        self.fps = fps
-        self.install_height = install_height
-        self.inference_crop_ratio = inference_crop_ratio # for simplicity, ratio is based on width only, in case the output image ratio is not the same as the input image ratio.
-        self.nudge_down = nudge_down # negative numbers for nudge up
-        self.nudge_right = nudge_right #negative numbers for nudge left 
+    width_res: int
+    height_res: int
+    width_fov: float
+    height_fov: float
+    fps: int
+    install_height: float
+    inference_crop_ratio: float # for simplicity, ratio is based on width only, in case the output image ratio is not the same as the input image ratio.
+
+    nudge_down: int = 0 
+    nudge_right: int = 0
 
 DK1_frontcam = CameraInfo(
     width_res=1280,
