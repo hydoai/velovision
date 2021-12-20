@@ -38,7 +38,7 @@ Velovision is developed by people like you. We provide free & open documentation
 
 + 2020-11: Preliminary work begins on idea validation prototype.
 + 2021-09: [Jason Sohn](https://github.com/tensorturtle) wins K-startup grant via Hanyang University in Seoul, South Korea to develop HYDO.
-+ 2022-01: **velovision**, HYDO's active cycling assistance system, is released under the Apache-2.0 open source license.
++ 2021-12: **velovision**, HYDO's active cycling assistance system, is released under the Apache-2.0 open source license.
 
 # Running on a bike
 ![velovision deploy tests](https://github.com/hydoai/velovision/actions/workflows/velovision_deploy_tests.yml/badge.svg)
