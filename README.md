@@ -25,6 +25,10 @@ velovision is the world's first computer vision-based active cycling assistance 
 
 Velovision is developed by people like you. We provide free & open documentation, education, and hardware schematics to get started on creating the future of AI for personal mobility. 
 
+## HYDO in Action
+
+![](readme_assets/foxtrot-intercept-vis.gif)
+
 <table>
   <tr>
     <td><a href="https://youtu.be/ND56-PTQYCA" title="chestcam-1"><img src="readme_assets/chestcam-thumbnail-1.png"></a></td>
