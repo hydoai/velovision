@@ -19,11 +19,11 @@
 
 ---
 
-## What is velovision?
+## What is HYDO velovision?
 
-velovision is the world's first computer vision-based active cycling assistance system. Currently, velovision performs Automatic Overtake Warning for  pedestrians, cyclists, and vehicles. 
+HYDO velovision is the world's first computer vision-based active cycling assistance system. Currently, velovision performs Automatic Overtake Warning for  pedestrians, cyclists, and vehicles. 
 
-I write detailed posts about HYDO on my blog. [Check it out!](https://jasonsohn.com)
+[Jason Sohn](https://jasonsohn.com) is the founder and CEO of HYDO, an artificial intelligence company.
 
 ## HYDO in Action
 
