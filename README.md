@@ -44,7 +44,7 @@ HYDO velovision is created by [Jason Sohn](https://jasonsohn.com).
 + 2021-09: [Jason Sohn](https://jasonsohn.com) receives KRW 7,000,000 in funding for this project from the South Korean government via K-startup grant.
 + 2021-11-25: Patent submitted: "A BICYCLE WARNING DEVICE THROUGH OBJECT AUTOMATIC RECOGNITION AND A METHOD OF OVERTAKING WARNING USING THE SAME". Patent number: 10-2021-0163981.
 + 2021-12: This project graduates the K-startup program with honors.
-+ 2021-12: **Velovision** is made open source.
++ 2021-12: **velovision** is made open source.
 + 2022-01: Development on this project is paused as Jason focuses on neuroscience research. [See latest on his blog](https://jasonsohn.com)
 
 ## More facts about velovision
@@ -56,6 +56,8 @@ HYDO velovision is created by [Jason Sohn](https://jasonsohn.com).
 + The deployed neural network is highly optimized with NVIDIA TensorRT.
 + HYDO Devkit-One, the first hardware platform for velovision, uses a Jetson Xavier NX processor and uses less than 15 watts of power.
 + The [hydo.ai](https://hydo.ai) website is also [available in Korean](https://kr.hydo.ai)
+
+![](readme_assets/dataset-wall.png)
 
 # Running on a bike
 ![velovision deploy tests](https://github.com/hydoai/velovision/actions/workflows/velovision_deploy_tests.yml/badge.svg)
