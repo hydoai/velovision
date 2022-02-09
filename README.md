@@ -23,7 +23,7 @@
 
 HYDO velovision is the world's first computer vision-based active cycling assistance system. Currently, velovision performs Automatic Overtake Warning for  pedestrians, cyclists, and vehicles. 
 
-[Jason Sohn](https://jasonsohn.com) is the founder and CEO of HYDO, an artificial intelligence company.
+HYDO and velovision are created by [Jason Sohn](https://jasonsohn.com)
 
 ## HYDO in Action
 
