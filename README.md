@@ -54,7 +54,7 @@ HYDO velovision is created by [Jason Sohn](https://jasonsohn.com).
 + The neural network is trained on a synthetic dataset derived from over 300GB of self-collected cycling footage.
 + This custom dataset is larger than COCO 2017 train dataset.
 + The deployed neural network is highly optimized with NVIDIA TensorRT.
-+ HYDO Devkit-One, the first hardware platform for velovision, uses a Jetson Xavier NX processor and uses less than 15 watts of power.
++ HYDO Devkit-One uses a Jetson Nano processor and uses less than 10 watts of power. It was quite an effort to achieve real-time object detection performance from such a low power device.
 + The [hydo.ai](https://hydo.ai) website is also [available in Korean](https://kr.hydo.ai)
 
 ![](readme_assets/dataset-wall.png)
