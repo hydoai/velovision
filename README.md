@@ -21,7 +21,7 @@
 
 ## What is HYDO velovision?
 
-HYDO velovision is the world's first computer vision-based active cycling assistance system. It can easily be attached to any bicycle to provide Automatic Overtake Warning sound for  pedestrians, cyclists, and vehicles. It's an ADAS (advanced driver assistance system) for bicycles.
+HYDO velovision is a pioneering active cycling assistance system. This low cost, lightweight system can easily be attached to any bicycle to provide Automatic Overtake Warning sound for  pedestrians, cyclists, and vehicles. It's an ADAS (advanced driver assistance system) for bicycles.
 
 HYDO velovision is created by [Jason Sohn](https://jasonsohn.com).
 
