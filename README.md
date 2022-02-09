@@ -58,6 +58,7 @@ HYDO velovision is created by [Jason Sohn](https://jasonsohn.com).
 + The [hydo.ai](https://hydo.ai) website is also [available in Korean](https://kr.hydo.ai)
 
 ![](readme_assets/dataset-wall.png)
+
 *A slice of the large video dataset, before autolabeling*
 
 # Running on a bike
