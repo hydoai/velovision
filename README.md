@@ -23,7 +23,7 @@
 
 HYDO velovision is the world's first computer vision-based active cycling assistance system. Currently, velovision performs Automatic Overtake Warning for  pedestrians, cyclists, and vehicles. 
 
-HYDO and velovision are created by [Jason Sohn](https://jasonsohn.com)
+HYDO velovision is created by [Jason Sohn](https://jasonsohn.com).
 
 ## HYDO in Action
 
@@ -44,7 +44,7 @@ HYDO and velovision are created by [Jason Sohn](https://jasonsohn.com)
 + 2021-09: [Jason Sohn](https://jasonsohn.com) receives KRW 7,000,000 in funding for this project from the South Korean government via K-startup grant.
 + 2021-11-25: Patent submitted: "A BICYCLE WARNING DEVICE THROUGH OBJECT AUTOMATIC RECOGNITION AND A METHOD OF OVERTAKING WARNING USING THE SAME". Patent number: 10-2021-0163981.
 + 2021-12: This project graduates the K-startup program with honors.
-+ 2021-12: **velovision**, HYDO's active cycling assistance system, is released under the Apache-2.0 open source license.
++ 2021-12: **Velovision** is made open source.
 + 2022-01: Development on this project is paused as Jason focuses on neuroscience research. [See latest on his blog](https://jasonsohn.com)
 
 # Running on a bike
