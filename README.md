@@ -40,9 +40,11 @@ I write detailed posts about HYDO on my blog. [Check it out!](https://jasonsohn.
 
 ## Project Milestones
 
-+ 2020-11: Preliminary work begins on idea validation prototype.
-+ 2021-09: [Jason Sohn](https://github.com/tensorturtle) wins K-startup grant via Hanyang University in Seoul, South Korea to develop HYDO.
++ 2020-11: Initial prototype is created.
++ 2021-09: [Jason Sohn](https://jasonsohn.com) receives KRW 7,000,000 in funding for this project from the South Korean government via K-startup grant.
++ 2021-12: This project graduates the K-startup program with honors.
 + 2021-12: **velovision**, HYDO's active cycling assistance system, is released under the Apache-2.0 open source license.
++ 2022-01: Development on this project is paused as Jason focuses on neuroscience research. [See latest on his blog](https://jasonsohn.com)
 
 # Running on a bike
 ![velovision deploy tests](https://github.com/hydoai/velovision/actions/workflows/velovision_deploy_tests.yml/badge.svg)
@@ -59,7 +61,7 @@ See [hydoai/dk1-setup](https://github.com/hydoai/dk1-setup) for ground-up setup 
 
 </details>
 
-# Running on a PC
+# Running on a PC (development)
 
 ![velovision develop tests](https://github.com/hydoai/velovision/actions/workflows/velovision_develop_tests.yml/badge.svg)
 
@@ -97,6 +99,7 @@ Two sets of videos are used as examples. `Right click -> Save Link As...` to dow
 1. GoPro (1920x1080, 30fps)
 2. Devkit-One Cameras (front: 1280x720 30fps, rear: 640x480 30fps)
 
+(links are currently broken; fix coming soon)
 + [GoPro front](https://storage.hydo.ai/gi-edge-assets/example-footage/long-overtaking.mp4)
 + [GoPro rear](https://storage.hydo.ai/gi-edge-assets/example-footage/long-being-overtaken.mp4)
 + [DevKit-One front](https://storage.hydo.ai/gi-edge-assets/first-blackbox-recordings/front-2021-12-04.mkv)
@@ -151,10 +154,8 @@ act
 
 ## Todo List
 
-- [ ] Run on Jetson to validate camera input
-- [ ] Cover timing tightly on inference loop, optimize (for example, don't needlessly render visualizations)
+- [ ] Set up Jetson with identical hardware for automated tests (github runner)
 - [ ] Write unit tests for subvision parts
-- [ ] Create jetson-in-the-loop custom test infrastructure
 
 ## Repository Structure
 
