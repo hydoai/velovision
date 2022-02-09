@@ -47,15 +47,25 @@ HYDO velovision is created by [Jason Sohn](https://jasonsohn.com).
 + 2021-12: **Velovision** is made open source.
 + 2022-01: Development on this project is paused as Jason focuses on neuroscience research. [See latest on his blog](https://jasonsohn.com)
 
+## More facts about velovision
+
++ **velovision** is mostly written in Python.
++ PyTorch is my deep learning framework of choice.
++ The neural network is trained on a synthetic dataset derived from over 300GB of self-collected cycling footage.
++ This custom dataset is larger than COCO 2017 train dataset.
++ The deployed neural network is highly optimized with NVIDIA TensorRT.
++ HYDO Devkit-One, the first hardware platform for velovision, uses a Jetson Xavier NX processor and uses less than 15 watts of power.
++ The [hydo.ai](https://hydo.ai) website is also [available in Korean](https://kr.hydo.ai)
+
 # Running on a bike
 ![velovision deploy tests](https://github.com/hydoai/velovision/actions/workflows/velovision_deploy_tests.yml/badge.svg)
 
-[HYDO Devkit-One](https://hydo.ai) ships with velovision pre-installed and ready to ride.
+[HYDO Devkit-One](https://hydo.ai) is pre-installed with velovision pre-installed and ready to ride.
 
 
 
 <details>
-  <summary> How to set up Devkit-One from scratch
+  <summary> Developers only
   </summary>
   
 See [hydoai/dk1-setup](https://github.com/hydoai/dk1-setup) for ground-up setup of Devkit-One.
