@@ -45,7 +45,8 @@ HYDO velovision is created by [Jason Sohn](https://jasonsohn.com).
 + 2021-11-25: Patent submitted: "A BICYCLE WARNING DEVICE THROUGH OBJECT AUTOMATIC RECOGNITION AND A METHOD OF OVERTAKING WARNING USING THE SAME". Patent number: 10-2021-0163981.
 + 2021-12: This project graduates the K-startup program with honors.
 + 2021-12: **velovision** is made open source.
-+ 
+
+
 ## More facts about velovision
 
 + **velovision** is mostly written in Python.
