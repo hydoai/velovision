@@ -56,6 +56,7 @@ HYDO velovision is created by [Jason Sohn](https://jasonsohn.com).
 + The deployed neural network is highly optimized with NVIDIA TensorRT.
 + HYDO Devkit-One uses a Jetson Nano processor and uses less than 10 watts of power. It was quite an effort to achieve real-time object detection performance from such a low power device.
 + The [hydo.ai](https://hydo.ai) website is also [available in Korean](https://kr.hydo.ai)
++ The material cost for one Devkit-One unit is around 300 USD.
 
 ![](readme_assets/dataset-wall.png)
 
