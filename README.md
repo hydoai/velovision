@@ -63,7 +63,6 @@ HYDO velovision is created by [Jason Sohn](https://jasonsohn.com).
 *A slice of the large video dataset, before autolabeling*
 
 # Running on a bike
-![velovision deploy tests](https://github.com/hydoai/velovision/actions/workflows/velovision_deploy_tests.yml/badge.svg)
 
 [HYDO Devkit-One](https://hydo.ai) is pre-installed with velovision pre-installed and ready to ride.
 
