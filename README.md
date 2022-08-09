@@ -93,7 +93,7 @@ cd velovision
 conda env remove hydo-dev # in case there is a previous environment named hydo-dev
 conda create -n hydo-dev python=3.6
 conda activate hydo-dev
-pip3 install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
 **Install YOLOX**
