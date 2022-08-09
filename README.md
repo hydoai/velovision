@@ -89,9 +89,11 @@ git clone git@github.com:hydoai/velovision.git
 **Create conda environment** ([How to install conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html))
 
 ```bash
+cd velovision
 conda env remove hydo-dev # in case there is a previous environment named hydo-dev
-conda env create -f environment.yaml
+conda create -n hydo-dev python=3.6
 conda activate hydo-dev
+pip3 install -r requirements.txt
 ```
 
 **Install YOLOX**
